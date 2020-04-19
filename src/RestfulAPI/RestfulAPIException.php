@@ -1,0 +1,9 @@
+<?php
+
+
+namespace Battis\RestfulAPI;
+
+
+class RestfulAPIException extends \Exception
+{
+}

@@ -1,0 +1,12 @@
+{
+    "name": "battis/restful-api",
+    "description": "A framework for rapidly building a RESTful API based on the Slim Framework",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Seth Battis",
+            "email": "seth@battis.net"
+        }
+    ],
+    "require": {}
+}
