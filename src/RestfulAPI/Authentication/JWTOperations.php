@@ -13,6 +13,8 @@ use Exception;
 use Firebase\JWT\JWT;
 use Psr\Http\Message\RequestInterface;
 
+
+// FIXME this should be tidier, cleaner, etc.
 class JWTOperations
 {
     public const
@@ -83,6 +85,19 @@ class JWTOperations
         return false;
     }
 
+    public static function logout()
+    {
+        // TODO implement remote logout
+        setcookie(self::COOKIE_REFRESH, '', [
+            'expires' => time() - 3600,
+            'domain' => $_SERVER['HTTP_HOST'],
+            'path' => getenv('ROOT_PATH'),
+            'secure' => true,
+            'samesite' => 'Strict',
+            'httponly' => true
+        ]);
+    }
+
     private static function getTokenIdentifier(): string
     {
         return self::getTokenServer() . '@v1';
@@ -131,7 +146,7 @@ class JWTOperations
     {
         $refreshTokenData = self::generateToken($apiTokenClaims, getenv('REFRESH_TOKEN_DURATION_IN_MINUTES'));
         $cookieOptions = [
-            'expires' => 1,
+            'expires' => time() - 3600,
             'domain' => $_SERVER['HTTP_HOST'],
             'path' => getenv('ROOT_PATH'),
             'secure' => true,

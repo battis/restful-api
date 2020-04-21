@@ -8,5 +8,16 @@
             "email": "seth@battis.net"
         }
     ],
-    "require": {}
+    "require": {
+        "slim/slim": "^4.5",
+        "slim/psr7": "^1.0",
+        "slim/http": "^1.0",
+        "battis/persistent-object": "*",
+        "battis/hydratable": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "\\Battis\\RestfulAPI\\": "/src/RestfulAPI"
+        }
+    }
 }

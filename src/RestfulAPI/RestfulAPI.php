@@ -21,30 +21,32 @@ class RestfulAPI
     use Hydratable;
 
     const
-        _APP_ROOT_PATH = 'app_root_path',
-        _APP_VERSION = 'app_version',
+        _API_ROOT = 'app_root_path',
+        _API_VERSION = 'app_version',
         _PDO = 'pdo',
         _TABLE_PREFIX = 'table_prefix',
         _DEPENDENCIES = 'dependencies',
         _HANDLERS = 'handlers',
         _MIDDLEWARE = 'middleware',
         _ROUTES = 'routes',
-        _QUERY_ROUTES = 'query_routes';
+        _QUERY_ROUTES = 'query_routes',
+        _DEBUGGING = 'debugging';
 
 
     /** @var App */
     private $app;
 
     private $config = [
-        self::_APP_ROOT_PATH => '/',
-        self::_APP_VERSION => 'v1',
+        self::_API_ROOT => '/',
+        self::_API_VERSION => 'v1',
         self::_PDO => null,
         self::_TABLE_PREFIX => '',
         self::_DEPENDENCIES => [],
         self::_HANDLERS => [],
         self::_MIDDLEWARE => [],
         self::_ROUTES => [],
-        self::_QUERY_ROUTES => false
+        self::_QUERY_ROUTES => false,
+        self::_DEBUGGING => false
     ];
 
     public static function create($config)
@@ -63,6 +65,7 @@ class RestfulAPI
             );
 
             $this->app = AppFactory::create();
+            $this->app->getContainer()['settings']['displayErrorDetails'] = $this->config[self::_DEBUGGING];
 
             $container = $this->app->getContainer();
             foreach ($this->config[self::_DEPENDENCIES] as $key => $dependency) {
@@ -76,8 +79,8 @@ class RestfulAPI
                 $this->app->addMiddleware($middleware);
             }
 
-            $this->app->group("{$this->config[self::_APP_ROOT_PATH]}/api", function (RouteCollector $env) {
-                $env->group("/{$this->config[self::_APP_VERSION]}", function (RouteCollector $api) {
+            $this->app->group("{$this->config[self::_API_ROOT]}/api", function (RouteCollector $env) {
+                $env->group("/{$this->config[self::_API_VERSION]}", function (RouteCollector $api) {
                     foreach ($this->config[self::_ROUTES] as $route) {
                         /** @var RestfulEndpointProxy $route */
                         $route->attachTo($api);
@@ -85,28 +88,7 @@ class RestfulAPI
 
                     if ($this->config[self::_QUERY_ROUTES]) {
                         $api->get('/routes[/]', function (Request $request, Response $response) {
-                            $routes = array_reduce(
-                                $this->app->getRouteCollector()->getRoutes(),
-                                function ($target, Route $route) {
-                                    $target[$route->getIdentifier()] = [
-                                        'name' => $route->getName(),
-                                        'pattern' => $route->getPattern(),
-                                        'methods' => $route->getMethods(),
-                                        'default_arguments' => $route->getArguments(),
-                                        'groups' => array_reduce(
-                                            $route->getGroups(),
-                                            function ($patterns, RouteGroupInterface $group) {
-                                                array_push($patterns, $group->getPattern());
-                                                return $patterns;
-                                            },
-                                            []
-                                        )
-                                    ];
-                                    return $target;
-                                },
-                                []
-                            );
-                            return $response->withJson($routes);
+                            return $response->withJson(self::routes($this->app));
                         })->setName('routes');
                     }
                 });
@@ -114,7 +96,7 @@ class RestfulAPI
 
             $this->app->run();
         } catch (Exception $exception) {
-            if (getenv('DEBUGGING')) {
+            if ($this->config[self::_DEBUGGING]) {
                 echo <<<EOT
 <p><b>Error {$exception->getCode()}:</b> {$exception->getMessage()}</p>
 <p>File {$exception->getFile()}, line {$exception->getLine()}</p>
@@ -124,5 +106,30 @@ EOT;
                 echo(json_encode(['error' => 'unrecognized request']));
             }
         }
+    }
+
+    private static function routes(App $app) {
+        return array_reduce(
+            $app->getRouteCollector()->getRoutes(),
+            function ($target, Route $route)
+            {
+                $target[$route->getIdentifier()] = [
+                    'name' => $route->getName(),
+                    'pattern' => $route->getPattern(),
+                    'methods' => $route->getMethods(),
+                    'default_arguments' => $route->getArguments(),
+                    'groups' => array_reduce(
+                        $route->getGroups(),
+                        function ($patterns, RouteGroupInterface $group) {
+                            array_push($patterns, $group->getPattern());
+                            return $patterns;
+                        },
+                        []
+                    )
+                ];
+                return $target;
+            },
+            []
+        );
     }
 }
