@@ -5,7 +5,6 @@ namespace Battis\RestfulAPI\Authentication;
 
 
 use Battis\PersistentObject\PersistentObjectException;
-use Battis\PersistentObject\PerUser\User;
 use Battis\RestfulAPI\RestfulObject;
 use Battis\RestfulAPI\RestfulUser;
 use DateTime;
@@ -41,6 +40,10 @@ class JWTOperations
     public const IDENTIFIER_BLACKLIST = [];
 
     private static $tokenServer;
+    /**
+     * @var string
+     */
+    private static $objectType = RestfulObject::class;
 
     /**
      * @param RestfulUser $user
@@ -58,16 +61,15 @@ class JWTOperations
     }
 
     /**
-     * @param RequestInterface $request
+     * @param array $decodedToken
      * @param array $claims
      * @return bool
      * @throws PersistentObjectException
      */
-    public static function validateTokenClaims(RequestInterface $request, array $claims = []): bool
+    public static function validateTokenClaims(array $decodedToken, array $claims = []): bool
     {
-        $token = $request->getAttribute(self::ATTR_TOKEN);
-        if (self::validateToken($token, $claims)) {
-            RestfulObject::assignUser($token[self::CLAIM_USER_ID]);
+        if (self::validateToken($decodedToken, $claims)) {
+            (static::$objectType)::assignUser($decodedToken[self::CLAIM_USER_ID]);
             return true;
         }
         return false;
@@ -174,7 +176,7 @@ class JWTOperations
         );
 
         foreach ($claims as $claim => $value) {
-            if (empty($token[$claim]) || (is_string($value) && $token[$claim] !== $value) || (is_callable($value) && $value($token[$claim]) === false)) {
+            if (empty($token[$claim]) || (is_string($value) && $token[$claim] !== $value) || (is_callable($value) && false === $value($token[$claim]))) {
                 return false;
             }
         }
@@ -184,6 +186,11 @@ class JWTOperations
     private static function validateRefreshToken($refreshToken)
     {
         return self::validateToken($refreshToken, []);
+    }
+
+    public static function bindObjectType(string $class)
+    {
+        static::$objectType = $class;
     }
 
 }

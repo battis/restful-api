@@ -316,7 +316,7 @@ class RestfulEndpoint
         }
         // exclude IncludeRestfulChildren::ATTR and similar
         return array_filter($data, function ($field) {
-            return is_array($field) === false;
+            return false === is_array($field);
         });
     }
 
