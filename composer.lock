@@ -4,8 +4,72 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "123faafb7f48843beddfba8f4a680152",
+    "content-hash": "d8b113f91e7fe8fd7546b1891e98d8ba",
     "packages": [
+        {
+            "name": "battis/hydratable",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/battis/hydratable.git",
+                "reference": "1c65392a5749993e25caa171a523ef30549343f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/battis/hydratable/zipball/1c65392a5749993e25caa171a523ef30549343f2",
+                "reference": "1c65392a5749993e25caa171a523ef30549343f2",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Seth Battis",
+                    "email": "seth@battis.net"
+                }
+            ],
+            "description": "Hydrate serialized objects with defaults and overrides",
+            "time": "2020-08-03T19:36:39+00:00"
+        },
+        {
+            "name": "battis/persistent-object",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/battis/persistent-object.git",
+                "reference": "00960bf0f82125374fac60577dae813a5af4015d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/battis/persistent-object/zipball/00960bf0f82125374fac60577dae813a5af4015d",
+                "reference": "00960bf0f82125374fac60577dae813a5af4015d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-pdo": "*",
+                "php": "^7.3"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Seth Battis",
+                    "email": "seth@battis.net"
+                }
+            ],
+            "description": "An object-oriented approach to database storage, without the overhead of database abstraction layers",
+            "time": "2020-04-26T17:01:37+00:00"
+        },
         {
             "name": "fig/http-message-util",
             "version": "1.1.4",
@@ -526,16 +590,16 @@
         },
         {
             "name": "slim/psr7",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim-Psr7.git",
-                "reference": "7ca5b5d96687b7c563238715cc80b12675d8b895"
+                "reference": "3c76899e707910779f13d7af95fde12310b0a5ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim-Psr7/zipball/7ca5b5d96687b7c563238715cc80b12675d8b895",
-                "reference": "7ca5b5d96687b7c563238715cc80b12675d8b895",
+                "url": "https://api.github.com/repos/slimphp/Slim-Psr7/zipball/3c76899e707910779f13d7af95fde12310b0a5ae",
+                "reference": "3c76899e707910779f13d7af95fde12310b0a5ae",
                 "shasum": ""
             },
             "require": {
@@ -596,7 +660,7 @@
                 "psr-7",
                 "psr7"
             ],
-            "time": "2020-01-04T23:05:43+00:00"
+            "time": "2020-05-01T14:24:20+00:00"
         },
         {
             "name": "slim/slim",
@@ -695,7 +759,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "battis/persistent-object": 20,
+        "battis/hydratable": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

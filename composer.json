@@ -12,8 +12,8 @@
         "slim/slim": "^4.5",
         "slim/psr7": "^1.0",
         "slim/http": "^1.0",
-        "battis/persistent-object": "*",
-        "battis/hydratable": "*"
+        "battis/persistent-object": "dev-master",
+        "battis/hydratable": "dev-master"
     },
     "autoload": {
         "psr-4": {
