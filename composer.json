@@ -8,6 +8,8 @@
             "email": "seth@battis.net"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "slim/slim": "^4.5",
         "slim/psr7": "^1.0",

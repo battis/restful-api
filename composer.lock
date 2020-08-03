@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8b113f91e7fe8fd7546b1891e98d8ba",
+    "content-hash": "d15bccb57b760095122651fc43f61c9d",
     "packages": [
         {
             "name": "battis/hydratable",
@@ -758,12 +758,12 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "battis/persistent-object": 20,
         "battis/hydratable": 20
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": []
