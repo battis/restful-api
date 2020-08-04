@@ -10,7 +10,6 @@ use Battis\RestfulAPI\RestfulUser;
 use DateTime;
 use Exception;
 use Firebase\JWT\JWT;
-use Psr\Http\Message\RequestInterface;
 
 
 // FIXME this should be tidier, cleaner, etc.
@@ -69,7 +68,9 @@ class JWTOperations
     public static function validateTokenClaims(array $decodedToken, array $claims = []): bool
     {
         if (self::validateToken($decodedToken, $claims)) {
-            (static::$objectType)::assignUser($decodedToken[self::CLAIM_USER_ID]);
+            /** @var RestfulObject $obj */
+            $obj = static::$objectType;
+            $obj::assignUser($decodedToken[self::CLAIM_USER_ID]);
             return true;
         }
         return false;
