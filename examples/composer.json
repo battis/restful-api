@@ -1,0 +1,28 @@
+{
+  "name": "battis/restful-api-example",
+  "description": "Example app using the Restful API library",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "license": "GPL-3.0",
+  "authors": [
+    {
+      "name": "Seth Battis",
+      "email": "seth@battis.net"
+    }
+  ],
+  "require": {
+    "vlucas/phpdotenv": "*",
+    "monolog/monolog": "^2.1.0",
+    "battis/restful-api": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Example\\": "src"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env'); \""
+    ]
+  }
+}

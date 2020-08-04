@@ -11,15 +11,19 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
+        "php":  "^7.1",
         "slim/slim": "^4.5",
         "slim/psr7": "^1.0",
         "slim/http": "^1.0",
+        "firebase/php-jwt": "^v5.2.0",
+        "tuupola/cors-middleware": "^1.1",
+        "tuupola/slim-jwt-auth": "^3.4",
         "battis/persistent-object": "dev-master",
         "battis/hydratable": "dev-master"
     },
     "autoload": {
         "psr-4": {
-            "\\Battis\\RestfulAPI\\": "/src/RestfulAPI"
+            "Battis\\": "src"
         }
     }
 }

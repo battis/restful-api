@@ -1,0 +1,58 @@
+<?php
+
+
+namespace Battis\RestfulAPI\Middleware\Application;
+
+
+use Battis\Hydratable\Hydratable;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Slim\Http\ServerRequest;
+
+class IncludeRestfulChildren implements MiddlewareInterface
+{
+    use Hydratable;
+
+    const
+        ATTR = 'include';
+
+    const
+        _ATTRIBUTE = 'attribute',
+        _PARAMETER = 'parameter',
+        _DEFAULT_INCLUDE = 'default_include';
+
+    private $config = [
+        self::_ATTRIBUTE => self::ATTR,
+        self::_PARAMETER => self::ATTR,
+        self::_DEFAULT_INCLUDE => []
+    ];
+
+    public function __construct($init = [])
+    {
+        $this->config = $this->hydrate($init, $this->config);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $request = new ServerRequest($request);
+        $include = $request->getParsedBodyParam(
+            $this->config[self::_PARAMETER],
+            $request->getQueryParam(
+                $this->config[self::_PARAMETER],
+                $this->config[self::_DEFAULT_INCLUDE]
+            )
+        );
+        return $handler->handle(
+            $request->withAttribute(
+                $this->config[self::_ATTRIBUTE],
+                $include
+            )
+        );
+    }
+}
+
