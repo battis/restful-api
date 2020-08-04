@@ -12,18 +12,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/battis/hydratable.git",
-                "reference": "1c65392a5749993e25caa171a523ef30549343f2"
+                "reference": "982f2660f9e34e81588c3d54916d0a1edde60c4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/battis/hydratable/zipball/1c65392a5749993e25caa171a523ef30549343f2",
-                "reference": "1c65392a5749993e25caa171a523ef30549343f2",
+                "url": "https://api.github.com/repos/battis/hydratable/zipball/982f2660f9e34e81588c3d54916d0a1edde60c4a",
+                "reference": "982f2660f9e34e81588c3d54916d0a1edde60c4a",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.3"
             },
             "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Battis\\": "src"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0"
@@ -35,7 +40,7 @@
                 }
             ],
             "description": "Hydrate serialized objects with defaults and overrides",
-            "time": "2020-08-03T19:36:39+00:00"
+            "time": "2020-08-04T21:03:13+00:00"
         },
         {
             "name": "battis/persistent-object",
@@ -43,12 +48,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/battis/persistent-object.git",
-                "reference": "00960bf0f82125374fac60577dae813a5af4015d"
+                "reference": "3f56e66a782de89d75d0a4b1f4f1fe65b372b49b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/battis/persistent-object/zipball/00960bf0f82125374fac60577dae813a5af4015d",
-                "reference": "00960bf0f82125374fac60577dae813a5af4015d",
+                "url": "https://api.github.com/repos/battis/persistent-object/zipball/3f56e66a782de89d75d0a4b1f4f1fe65b372b49b",
+                "reference": "3f56e66a782de89d75d0a4b1f4f1fe65b372b49b",
                 "shasum": ""
             },
             "require": {
@@ -57,6 +62,11 @@
                 "php": "^7.3"
             },
             "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Battis\\": "src"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0"
@@ -68,7 +78,7 @@
                 }
             ],
             "description": "An object-oriented approach to database storage, without the overhead of database abstraction layers",
-            "time": "2020-04-26T17:01:37+00:00"
+            "time": "2020-08-04T21:02:54+00:00"
         },
         {
             "name": "fig/http-message-util",
