@@ -1,13 +1,13 @@
 <?php
 
-use Battis\OctoPrintPool\Routes\Auth;
-use Battis\OctoPrintPool\Routes\Users;
-use Battis\OctoPrintPool\Routes\Widgets;
 use Battis\RestfulAPI\Authentication\JWTOperations;
 use Battis\RestfulAPI\Middleware\Application\IncludeRestfulChildren;
 use Battis\RestfulAPI\RestfulAPI as API;
 use Dotenv\Dotenv;
 use Example\ExampleObject;
+use Example\Routes\Auth;
+use Example\Routes\Users;
+use Example\Routes\Widgets;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;

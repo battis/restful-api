@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Battis\OctoPrintPool\Routes;
+namespace Example\Routes;
 
 
 use Example\ExampleUser as User;

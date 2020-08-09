@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Battis\OctoPrintPool\Routes;
+namespace Example\Routes;
 
 
-use Battis\OctoPrintPool\User;
+use Example\ExampleUser as User;
 use Battis\PersistentObject\Parts\Condition;
 use Battis\RestfulAPI\Authentication\JWTOperations;
 use Battis\RestfulAPI\Routing\RestfulEndpoint;
@@ -33,7 +33,7 @@ class Auth extends RestfulEndpoint
                 }
                 return $response->withStatus(401);
             },
-            'loginPath'
+            'login'
         );
         $this->post(
             '/refresh[/]',
@@ -54,7 +54,8 @@ class Auth extends RestfulEndpoint
             function(Request $request, Response $response) {
                 JWTOperations::logout();
                 return $response->withJson(null);
-            }
+            },
+            'logout'
         );
     }
 }

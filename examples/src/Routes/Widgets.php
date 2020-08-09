@@ -1,14 +1,11 @@
 <?php
 
 
-namespace Battis\OctoPrintPool\Routes;
+namespace Example\Routes;
 
 
-use Battis\PersistentObject\Parts\Condition;
 use Battis\RestfulAPI\Routing\RestfulEndpoint;
 use Example\Model\Widget;
-use Slim\Http\Response;
-use Slim\Http\ServerRequest;
 
 class Widgets extends RestfulEndpoint
 {
