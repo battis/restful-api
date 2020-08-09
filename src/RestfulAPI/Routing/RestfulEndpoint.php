@@ -126,7 +126,7 @@ class RestfulEndpoint
             }
         )->setName($this->routeName($prefix, $suffix !== null ? $suffix : $this->name));
 
-        if (array_search($pattern, $this->preflight[$pattern]) === false) {
+        if (array_search($pattern, $this->preflight) === false) {
             $this->routeCollector->options($pattern, function (ServerRequestInterface $request, ResponseInterface $response): ResponseInterface {
                 return $response;
             });
