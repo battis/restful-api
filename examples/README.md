@@ -11,3 +11,5 @@ Right now, these are really just notes so that _I_ can reuse my own code. Better
   - Update `api.config.php` (enjoy the handy middleware already defined for authentication and CORS):
     1. Call `JWTOperations::bindObjectType()` to bind to your base object type, which will then cause the appropriate base user object type to be used when authenticating requests.
     2. Include your route definitions in `API::_ROUTES`.
+ - TODO script creation of first user
+ - TODO script creation of app template

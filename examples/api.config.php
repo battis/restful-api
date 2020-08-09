@@ -19,7 +19,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 date_default_timezone_set('America/New_York');
 
-Dotenv::create(__DIR__)->load();
+Dotenv::createImmutable(__DIR__)->load();
 
 $debugging = filter_var(getenv('DEBUGGING'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 if ($debugging) {
@@ -31,7 +31,13 @@ $root = getenv('ROOT_PATH');
 $serverUri = "https://{$_SERVER['HTTP_HOST']}$root";
 $version = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
-// FIXME there has GOT to be a better way
+// TODO convert this into a settings object that is hydratable?
+$corsOrigin = json_decode(getenv('CORS_ORIGIN'));
+if (($i = array_search('@', $corsOrigin, true)) !== false) {
+    $corsOrigin[$i] = 'http' . ($_SERVER['HTTPS'] ? 's' : '') . "://{$_SERVER['HTTP_HOST']}";
+}
+
+// TODO Fix this hack -- necessary to extend RestfulObject to include $USER_BINDING for auth lookups
 JWTOperations::bindObjectType(ExampleObject::class);
 
 API::create([
@@ -106,8 +112,9 @@ API::create([
             }
         ]),
         new CorsMiddleware([
-            'origin' => [getenv('DEBUGGING') === true ? '*' : "https://{$_SERVER['HTTP_HOST']}"],
-            'headers.allow' => ['Authorization', 'Accept', 'Content-Type']
+            'origin' => $corsOrigin,
+            'headers.allow' => json_decode(getenv('CORS_HEADERS')),
+            'methods' => json_decode(getenv('CORS_METHODS'))
         ])
     ],
 
