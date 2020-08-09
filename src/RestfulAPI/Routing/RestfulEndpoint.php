@@ -9,11 +9,12 @@ use Battis\PersistentObject\PerUser\User;
 use Battis\RestfulAPI\Middleware\Application\IncludeRestfulChildren;
 use Battis\RestfulAPI\RestfulObject;
 use Battis\RestfulAPI\RestfulUser;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\Http\Response;
 use Slim\Http\ServerRequest as Request;
 use Slim\Interfaces\RouteCollectorProxyInterface as RouteCollector;
 use Slim\Interfaces\RouteInterface;
-use function foo\func;
 
 class RestfulEndpoint
 {
@@ -50,6 +51,9 @@ class RestfulEndpoint
     /** @var RestfulObject|RestfulUser */
     private $boundObject;
 
+    /** @var string[] */
+    private $preflight;
+
     /**
      * RestfulEndpoint constructor.
      * @param string $endpointName_or_objectBinding
@@ -85,6 +89,7 @@ class RestfulEndpoint
         $this->parentRouteCollector->group($this->endpointName(), function (RouteCollector $routeCollector) {
             $this->routeCollector = $routeCollector;
         })->add(new IncludeRestfulChildren());
+        $this->preflight = [];
     }
 
     public static function endpoint()
@@ -114,12 +119,21 @@ class RestfulEndpoint
         }
         /** @var RouteInterface $route */
         $method = strtolower($method);
-        return $this->routeCollector->$method(
+        $route = $this->routeCollector->$method(
             $this->preprocessPattern($pattern),
             function (Request $request, Response $response, array $args = []) use ($callable) {
                 return $callable($request, $response, $args);
             }
         )->setName($this->routeName($prefix, $suffix !== null ? $suffix : $this->name));
+
+        if (array_search($pattern, $this->preflight[$pattern]) === false) {
+            $this->routeCollector->options($pattern, function (ServerRequestInterface $request, ResponseInterface $response): ResponseInterface {
+                return $response;
+            });
+            array_push($this->preflight, $pattern);
+        }
+
+        return $route;
     }
 
     /**
