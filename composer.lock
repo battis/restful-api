@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7192b03256ed2da47dc8fbed0b4e9b4c",
+    "content-hash": "c30287fe76ceeb5001a2fa6bf75bc784",
     "packages": [
         {
             "name": "battis/hydratable",
@@ -48,12 +48,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/battis/persistent-object.git",
-                "reference": "3f56e66a782de89d75d0a4b1f4f1fe65b372b49b"
+                "reference": "7fee6c03a6ad7986325b761cb1ce356d3ccbd528"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/battis/persistent-object/zipball/3f56e66a782de89d75d0a4b1f4f1fe65b372b49b",
-                "reference": "3f56e66a782de89d75d0a4b1f4f1fe65b372b49b",
+                "url": "https://api.github.com/repos/battis/persistent-object/zipball/7fee6c03a6ad7986325b761cb1ce356d3ccbd528",
+                "reference": "7fee6c03a6ad7986325b761cb1ce356d3ccbd528",
                 "shasum": ""
             },
             "require": {
@@ -78,7 +78,7 @@
                 }
             ],
             "description": "An object-oriented approach to database storage, without the overhead of database abstraction layers",
-            "time": "2020-08-04T21:02:54+00:00"
+            "time": "2020-08-06T21:45:46+00:00"
         },
         {
             "name": "fig/http-message-util",
@@ -1117,7 +1117,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1"
+        "php": "^7.1",
+        "ext-json": "*"
     },
     "platform-dev": []
 }
