@@ -3,6 +3,7 @@
     "description": "A template to quickly start writing a RESTful API server",
     "type": "project",
     "license": "GPL-3.0",
+    "stability": "stable",
     "autoload": {
         "psr-4": {
             "Battis\\RestfulServer\\": "src/"
