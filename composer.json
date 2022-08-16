@@ -1,0 +1,31 @@
+{
+    "name": "battis/restful-server",
+    "description": "A template to quickly start writing a RESTful API server",
+    "type": "project",
+    "license": "GPL-3.0",
+    "autoload": {
+        "psr-4": {
+            "Battis\\RestfulServer\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Seth Battis",
+            "email": "seth@battis.net"
+        }
+    ],
+    "require": {
+        "slim/slim": "^4.10",
+        "slim/psr7": "^1.5",
+        "slim/http": "^1.2",
+        "tuupola/cors-middleware": "^1.3",
+        "chadicus/slim-oauth2": "^3.1",
+        "monolog/monolog": "^2.8",
+        "doctrine/orm": "^2.13",
+        "ext-json": "*",
+        "symfony/cache": "^5.4",
+        "doctrine/dbal": "^3.4",
+        "doctrine/annotations": "^1.13",
+        "symfony/yaml": "^5.4"
+    }
+}
