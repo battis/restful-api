@@ -1,5 +1,5 @@
 {
-    "name": "battis/restful-server",
+    "name": "battis/restful-api",
     "description": "A template to quickly start writing a RESTful API server",
     "type": "project",
     "license": "GPL-3.0",
