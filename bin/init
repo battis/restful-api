@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+use Dotenv\Dotenv;
+use OAuth2\Storage\Pdo as PdoStorage;
+
+require_once __DIR__ . "/../vendor/autoload.php";
+
+Dotenv::createImmutable(__DIR__ . "/..")->load();
+
+$pdo = new PDO($_ENV["DB__PHP_DSN"], $_ENV["DB__USER"], $_ENV["DB__PASSWORD"]);
+$storage = new PdoStorage($pdo);
+foreach (explode(";", $storage->getBuildSql()) as $statement) {
+    try {
+        $result = $pdo->exec($statement);
+    } catch (Throwable $e) {
+        echo $e->getMessage() . PHP_EOL;
+    }
+}
+echo "OAuth2 server storage initialized" . PHP_EOL;
+

@@ -3,6 +3,7 @@
 namespace Battis\RESTfulServer;
 
 use DI\Container;
+use Illuminate\Database\Capsule\Manager;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
@@ -72,4 +73,12 @@ $container->set(PhpRenderer::class, function () {
     return new PhpRenderer(
         __DIR__ . "/../vendor/chadicus/slim-oauth2-routes/templates"
     );
+});
+
+$container->set(Manager::class, function (ContainerInterface $container) {
+    $capsule = new Manager();
+    $settings = $container->get(PDO::class);
+    $capsule->addConnection(array_filter($settings));
+    $capsule->bootEloquent();
+    return $capsule;
 });

@@ -24,10 +24,14 @@ return [
     ],
 
     PDO::class => [
-        "dsn" =>
-            $_ENV["DB__PHP_DSN"] ?: "sqlite:" . __DIR__ . "/../var/db.sqlite",
+        "driver" => $_ENV["DB__CONNECTION"] ?: "sqlite",
+        "host" => $_ENV["DB__HOST"] ?: null,
+        "port" => $_ENV["DB__PORT"] ?: null,
+        "database" => $_ENV["DB__DATABASE"] ?: null,
         "username" => $_ENV["DB__USER"] ?: null,
         "password" => $_ENV["DB__PASSWORD"] ?: null,
+        "dsn" =>
+            $_ENV["DB__PHP_DSN"] ?: "sqlite:" . __DIR__ . "/../var/db.sqlite",
     ],
 
     Logger::class => [
