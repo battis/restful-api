@@ -1,10 +1,6 @@
 <?php
 
-namespace Battis\RESTfulServer;
-
-use Monolog\Logger;
-use OAuth2\Server as OAuth2Server;
-use PDO;
+use Psr\Log\LoggerInterface;
 use Tuupola\Middleware\CorsMiddleware;
 
 return [
@@ -24,28 +20,17 @@ return [
     ],
 
     PDO::class => [
-        "driver" => $_ENV["DB__CONNECTION"] ?: "sqlite",
+        "driver" => $_ENV["DB__DRIVER"] ?: null,
         "host" => $_ENV["DB__HOST"] ?: null,
         "port" => $_ENV["DB__PORT"] ?: null,
         "database" => $_ENV["DB__DATABASE"] ?: null,
         "username" => $_ENV["DB__USER"] ?: null,
         "password" => $_ENV["DB__PASSWORD"] ?: null,
-        "dsn" =>
-            $_ENV["DB__PHP_DSN"] ?: "sqlite:" . __DIR__ . "/../var/db.sqlite",
     ],
 
-    Logger::class => [
+    LoggerInterface::class => [
         "name" => $_ENV["APP_NAME"],
-        "path" => __DIR__ . "/../../logs/server.log",
-    ],
-
-    OAuth2Server::class => [
-        "access_lifetime" =>
-            $_ENV["SERVER__ACCESS_TOKEN_DURATION_IN_MINUTES"] * 60 ?: 3600,
-        "always_issue_new_refresh_token" => true,
-        "refresh_token_lifetime" =>
-            $_ENV["SERVER__REFRESH_TOKEN_DURATION_IN_MINUTES"] * 60 ?:
-            6 * 7 * 24 * 60 * 60,
-        "www_realm" => $_ENV["WWW_REALM"] ?: $_ENV["APP_NAME"],
+        "path" =>
+            __DIR__ . "/../../" . $_ENV["LOG__PATH"] ?: "./logs/server.log",
     ],
 ];

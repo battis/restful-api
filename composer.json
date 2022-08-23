@@ -5,7 +5,7 @@
     "license": "GPL-3.0",
     "autoload": {
         "psr-4": {
-            "Battis\\RESTfulServer\\": "src"
+            "Battis\\RESTfulAPI\\": "src"
         }
     },
     "authors": [
@@ -15,18 +15,18 @@
         }
     ],
     "require": {
+        "psr/log": "^1.1",
         "vlucas/phpdotenv": "^5.0",
         "php-di/php-di": "^6.2.2",
         "slim/slim": "^4.5.0",
         "slim/psr7": "^1.2.0",
         "slim/http": "^1.0.0",
-        "slim/php-view": "^3.2",
-        "chadicus/slim-oauth2": "^3.1",
+        "league/oauth2-server": "^8.3",
         "tuupola/cors-middleware": "^1.1",
         "monolog/monolog": "^2.0",
+        "robmorgan/phinx": "^0.12.12",
         "illuminate/database": "^8.83",
         "ext-pdo": "*",
-        "ext-json": "*",
-        "robmorgan/phinx": "^0.12.12"
+        "ext-json": "*"
     }
 }

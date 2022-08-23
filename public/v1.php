@@ -19,4 +19,4 @@
 
     then the relative path would be __DIR__ . "/../../../../server/src/api.v1.php";
  */
-require_once __DIR__ . "/../../server/src/api.v1.php";
+require_once __DIR__ . "/../../server/src/app.php";

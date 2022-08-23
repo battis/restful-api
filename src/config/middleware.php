@@ -1,7 +1,5 @@
 <?php
 
-namespace Battis\RESTfulServer;
-
 use DI\Container;
 use Psr\Container\ContainerInterface;
 use Slim\App;

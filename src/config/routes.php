@@ -1,7 +1,5 @@
 <?php
 
-namespace Battis\RESTfulServer;
-
 use Chadicus\Slim\OAuth2;
 use Slim\App;
 
