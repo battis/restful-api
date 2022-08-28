@@ -18,7 +18,7 @@ return [
             "adapter" => $_ENV["DB__DRIVER"],
             "host" => $_ENV["DB__HOST"],
             "name" => $_ENV["DB__DATABASE"],
-            "user" => $_ENV["DB__USERNAME"],
+            "user" => $_ENV["DB__USER"],
             "pass" => $_ENV["DB__PASSWORD"],
             "port" => $_ENV["DB__PORT"] ?: 3306,
             "charset" => $_ENV["DB__CHARSET"] ?: "utf8",

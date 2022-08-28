@@ -1,5 +1,7 @@
 <?php
 
+use Defuse\Crypto\Key;
+use League\OAuth2\Server\AuthorizationServer;
 use Psr\Log\LoggerInterface;
 use Tuupola\Middleware\CorsMiddleware;
 
@@ -32,5 +34,32 @@ return [
         "name" => $_ENV["APP_NAME"],
         "path" =>
             __DIR__ . "/../../" . $_ENV["LOG__PATH"] ?: "./logs/server.log",
+    ],
+    AuthorizationServer::class => [
+        "private_key_path" =>
+            realpath(
+                __DIR__ . "/../../" . $_ENV["OAUTH2__KEY_PATH"] . "/private.key"
+            ) ?:
+            realpath(__DIR__ . "/../../var/oauth2/private.key"),
+        "encryption_key" => Key::loadFromAsciiSafeString(
+            $_ENV["OAUTH2__SERVER_KEY"]
+        ),
+        "auth_code_ttl" => new DateInterval(
+            $_ENV["OAUTH2__AUTH_CODE_TTL"] ?: "PT5M"
+        ),
+        "access_token_ttl" => new DateInterval(
+            $_ENV["OAUTH2__ACCESS_CODE_TTL"] ?: "PT1H"
+        ),
+        "refresh_token_ttl" => new DateInterval(
+            $_ENV["OAUTH2__REFRESH_TOKEN_TTL"] ?: "P1M"
+        ),
+    ],
+
+    ResourceServer::class => [
+        "public_key_path" =>
+            realpath(
+                __DIR__ . "/../../" . $_ENV["OAUTH2__KEY_PATH"] . "/public.key"
+            ) ?:
+            realpath(__DIR__ . "/../../var/oauth2/public.key"),
     ],
 ];

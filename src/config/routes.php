@@ -1,43 +1,25 @@
 <?php
 
-use Chadicus\Slim\OAuth2;
+use Battis\OAuth2\Server\OAuth2Controller;
+use Battis\OAuth2\Server\OAuth2Middleware;
 use Slim\App;
+use Slim\Http\Response;
+use Slim\Http\ServerRequest;
 
 /** @var App $app */
 /** @var Container $container */
 
 $version = basename($_SERVER["SCRIPT_FILENAME"], ".php");
-$app->setBasePath($_ENV["PUBLIC_PATH"] . "/api/$version");
+$app->setBasePath($_ENV["PUBLIC_PATH"]);
 
-/**********************************************************************
- * OAuth Server
- */
+$app->group("/oauth2", OAuth2Controller::class);
 
-$server = $container->get(OAuth2\Server::class);
-$renderer = $container->get(Slim\Views\PhpRenderer::class);
-
-$app->map(
-    ["GET", "POST"],
-    OAuth2\Routes\Authorize::ROUTE,
-    new OAuth2\Routes\Authorize($server, $renderer)
-)->setName("authorize");
-$app->post(
-    OAuth2\Routes\Token::ROUTE,
-    new OAuth2\Routes\Token($server)
-)->setName("token");
-$app->map(
-    ["GET", "POST"],
-    OAuth2\Routes\ReceiveCode::ROUTE,
-    new OAuth2\Routes\ReceiveCode($renderer)
-)->setName("receive-code");
-
-$authorization = new OAuth2\Middleware\Authorization(
-    $server,
-    $app->getContainer()
-);
-
-// ********************************************************************
-
-$app->group("/", function ($api) {
-    // TODO API routes here
-})->add($authorization);
+$app->group("/api/$version", function ($api) {
+    $api->get("/example", function (
+        ServerRequest $request,
+        Response $response
+    ) {
+        // TODO this is just an example
+        return $response->withJson($request->getParsedBody());
+    });
+})->add(OAuth2Middleware::class);

@@ -14,19 +14,22 @@
             "email": "seth@battis.net"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:battis/oauth2-server.git"
+        }
+    ],
     "require": {
         "psr/log": "^1.1",
         "vlucas/phpdotenv": "^5.0",
         "php-di/php-di": "^6.2.2",
         "slim/slim": "^4.5.0",
-        "slim/psr7": "^1.2.0",
         "slim/http": "^1.0.0",
-        "league/oauth2-server": "^8.3",
         "tuupola/cors-middleware": "^1.1",
+        "battis/oauth2-server": "dev-main",
         "monolog/monolog": "^2.0",
         "robmorgan/phinx": "^0.12.12",
-        "illuminate/database": "^8.83",
-        "ext-pdo": "*",
-        "ext-json": "*"
+        "illuminate/database": "^8.83"
     }
 }

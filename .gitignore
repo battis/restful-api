@@ -6,6 +6,7 @@
 /coverage/
 *.cache
 /db.sqlite
+/external/
 
 # Runtime
 /logs/*
