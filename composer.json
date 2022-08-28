@@ -1,0 +1,25 @@
+{
+  "name": "battis/oauth2-server",
+  "description": "League-based OAuth2 Server for Slim Framework",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Battis\\Oauth2\\Server\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Seth Battis",
+      "email": "seth@battis.net"
+    }
+  ],
+  "require": {
+    "league/oauth2-server": "^8.3",
+    "illuminate/database": "^8.83",
+    "robmorgan/phinx": "^0.12.12",
+    "sofa/eloquence-mappable": "^7.0",
+    "psr/container": "^1.0",
+    "ext-json": "*",
+    "slim/http": "^1.2"
+  }
+}
