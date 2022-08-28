@@ -8,7 +8,10 @@ Dotenv::createImmutable(__DIR__)->load();
 
 return [
     "paths" => [
-        "migrations" => "%%PHINX_CONFIG_DIR%%/db/migrations",
+        "migrations" => [
+            "%%PHINX_CONFIG_DIR%%/db/migrations",
+            "%%PHINX_CONFIG_DIR%%/vendor/battis/oauth2-server/db/migrations",
+        ],
         "seeds" => "%%PHINX_CONFIG_DIR%%/db/seeds",
     ],
     "environments" => [
