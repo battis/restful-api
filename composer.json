@@ -4,7 +4,7 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "Battis\\Oauth2\\Server\\": "src/"
+      "Battis\\OAuth2\\": "src/"
     }
   },
   "authors": [
@@ -20,6 +20,7 @@
     "sofa/eloquence-mappable": "^7.0",
     "psr/container": "^1.0",
     "ext-json": "*",
-    "slim/http": "^1.2"
+    "slim/http": "^1.2",
+    "composer/composer": "^2.4"
   }
 }

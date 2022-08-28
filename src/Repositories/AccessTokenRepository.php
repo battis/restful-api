@@ -1,8 +1,8 @@
 <?php
 
-namespace Battis\OAuth2\Server\Repositories;
+namespace Battis\OAuth2\Repositories;
 
-use Battis\OAuth2\Server\Entities\AccessToken;
+use Battis\OAuth2\Entities\AccessToken;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;

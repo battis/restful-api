@@ -1,6 +1,6 @@
 <?php
 
-namespace Battis\OAuth2\Server\Entities;
+namespace Battis\OAuth2\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;

@@ -1,9 +1,8 @@
 <?php
 
-namespace Battis\OAuth2\Server\Repositories;
+namespace Battis\OAuth2\Repositories;
 
-use Battis\OAuth2\Server\Entities\User;
-use Illuminate\Database\Eloquent\Model;
+use Battis\OAuth2\Entities\User;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 

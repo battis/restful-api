@@ -1,6 +1,6 @@
 <?php
 
-namespace Battis\OAuth2\Server\Entities\Traits;
+namespace Battis\OAuth2\Entities\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Battis\OAuth2\Server\Repositories;
+namespace Battis\OAuth2\Repositories;
 
-use Battis\OAuth2\Server\Entities\RefreshToken;
+use Battis\OAuth2\Entities\RefreshToken;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 

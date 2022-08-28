@@ -1,16 +1,17 @@
 <?php
 
-namespace Battis\OAuth2\Server;
+namespace Battis\OAuth2\Actions;
 
-use Battis\OAuth2\Server\Entities\User;
+use Battis\OAuth2\Entities\User;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Response;
 use Slim\Http\ServerRequest;
 
-class OAuth2Controller
+class Authorize
 {
+  /** @var ContainerInterface */
   private $container;
 
   public function __construct(ContainerInterface $container)
@@ -18,13 +19,7 @@ class OAuth2Controller
     $this->container = $container;
   }
 
-  public function __invoke($routeGroup)
-  {
-    $routeGroup->post("/auth", self::class . ".authorize");
-    $routeGroup->post("/token", self::class . ".token");
-  }
-
-  public function authorize(ServerRequest $request, Response $response)
+  public function __invoke(ServerRequest $request, Response $response)
   {
     /** @var AuthorizationServer $server */
     $server = $this->container->get(AuthorizationServer::class);
@@ -37,17 +32,6 @@ class OAuth2Controller
         $user->verify($request->getParsedBodyParam("password"))
       );
       return $server->completeAuthorizationRequest($authRequest, $response);
-    } catch (OAuthServerException $e) {
-      return $e->generateHttpResponse($response);
-    }
-  }
-
-  public function token(ServerRequest $request, Response $response)
-  {
-    /** @var AuthorizationServer $server */
-    $server = $this->container->get(AuthorizationServer::class);
-    try {
-      return $server->respondToAccessTokenRequest($request, $response);
     } catch (OAuthServerException $e) {
       return $e->generateHttpResponse($response);
     }

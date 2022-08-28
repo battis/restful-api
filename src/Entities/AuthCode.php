@@ -1,8 +1,8 @@
 <?php
 
-namespace Battis\OAuth2\Server\Entities;
+namespace Battis\OAuth2\Entities;
 
-use Battis\OAuth2\Server\Entities\Traits\SerializeScopesTrait;
+use Battis\OAuth2\Entities\Traits\SerializeScopesTrait;
 use Illuminate\Database\Eloquent\Model;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AuthCodeTrait;

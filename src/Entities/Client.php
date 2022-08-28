@@ -1,13 +1,12 @@
 <?php
 
-namespace Battis\OAuth2\Server\Entities;
+namespace Battis\OAuth2\Entities;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ClientTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
-use Serializable;
 use Sofa\Eloquence\Eloquence;
 use Sofa\Eloquence\Mappable;
 

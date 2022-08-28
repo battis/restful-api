@@ -1,0 +1,26 @@
+{
+  "name": "battis/oauth2-server-example",
+  "description": "Sample setup for OAuth2 Server",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Seth Battis",
+      "email": "seth@battis.net"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:battis/oauth2-server.git"
+    }
+  ],
+  "require": {
+    "slim/slim": "^4.10",
+    "slim/http": "^1.2",
+    "robmorgan/phinx": "^0.12.12",
+    "illuminate/database": "^8.83",
+    "php-di/php-di": "^6.4",
+    "guzzlehttp/psr7": "^2.4",
+    "battis/oauth2-server": "dev-main"
+  }
+}
