@@ -8,9 +8,10 @@ class Controller
 {
   const ENDPOINT = "/oauth2";
 
-  public function __invoke($routeGroup)
+  public function __invoke($oauth2)
   {
-    $routeGroup->post("/auth", Actions\Authorize::class);
-    $routeGroup->post("/token", Actions\AccessToken::class);
+    $oauth2->get("/login", Actions\LoginAction::class);
+    $oauth2->post("/auth", Actions\AuthorizeAction::class);
+    $oauth2->post("/token", Actions\AccessTokenAction::class);
   }
 }

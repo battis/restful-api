@@ -10,17 +10,17 @@
   ],
   "repositories": [
     {
-      "type": "vcs",
-      "url": "git@github.com:battis/oauth2-server.git"
+      "type": "path",
+      "url": "../"
     }
   ],
   "require": {
     "slim/slim": "^4.10",
+    "slim/psr7": "^1.5",
     "slim/http": "^1.2",
     "robmorgan/phinx": "^0.12.12",
     "illuminate/database": "^8.83",
     "php-di/php-di": "^6.4",
-    "guzzlehttp/psr7": "^2.4",
     "battis/oauth2-server": "dev-main"
   }
 }

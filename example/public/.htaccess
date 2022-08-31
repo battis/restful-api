@@ -6,5 +6,5 @@ RewriteEngine On
 # make Authorization header accessible to PHP as $_SERVER['HTTP_AUTHORIZATION']
 RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-# rewrite API requests to handler by version number
-RewriteRule (v\d+)(/.*)*$ $1.php [QSA,L]
+# rewrite API requests to handler
+RewriteRule .* slim.php [QSA,L]
