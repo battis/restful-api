@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "0f808254c0b1487219c5a8c63840274d68d31067"
+                "reference": "32a0b78e5c917d2d49b06eb58c3e48ca3d08372a"
             },
             "require": {
                 "composer/composer": "^2.4",

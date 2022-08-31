@@ -10,10 +10,14 @@ use League\OAuth2\Server\Grant\RefreshTokenGrant;
 $reflection = new ReflectionClass(ClassLoader::class);
 $projectRoot = dirname($reflection->getFileName(), 3);
 
+// better to load from $_ENV than to hard code!
 return [
   "composer.projectRoot" => $projectRoot,
-  "oauth2.privateKey" => "$projectRoot/var/oauth2/private.key",
-  "oauth2.publicKey" => "$projectRoot/var/oauth2/public.key",
+  "db.dsn" => "mysql:host=localhost;port=3306;dbname=example",
+  "db.username" => "example",
+  "db.password" => "s00p3rS3kr37",
+  "oauth2.privateKey" => "{$projectRoot}/var/oauth2/private.key",
+  "oauth2.publicKey" => "{$projectRoot}/var/oauth2/public.key",
   "oauth2.encryptionKey" => Key::loadFromAsciiSafeString(
     "def00000b1a6feeefadb00454998cd54c98bd8e0d0aa5f0466679a58545d52c66d49a890f30d7087de5d679721c230b358a76937977e30a3c42004b70e94583255c67023"
   ),

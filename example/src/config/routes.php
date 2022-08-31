@@ -13,11 +13,7 @@ $app->group(OAuth2\Controller::ENDPOINT, OAuth2\Controller::class);
 
 $app
   ->group("/api", function ($api) {
-    $api->get("/example", function (
-      ServerRequest $request,
-      Response $response
-    ) {
-      // TODO this is just an example
+    $api->get("/echo", function (ServerRequest $request, Response $response) {
       return $response->withJson($request->getQueryParams());
     });
   })
