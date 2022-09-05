@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Login</title>
-    </head>
-    <body>
-        <h1>Login</h1>
-    </body>
-</html>
+<?php
+
+require __DIR__ . "/../vendor/battis/user-session/templates/login.php";

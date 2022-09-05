@@ -1,6 +1,6 @@
 <?php
 
-namespace Battis\OAuth2\Entities;
+namespace Battis\OAuth2\Server\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;

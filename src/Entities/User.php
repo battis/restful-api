@@ -1,14 +1,17 @@
 <?php
 
-namespace Battis\OAuth2\Entities;
+namespace Battis\OAuth2\Server\Entities;
 
-use Battis\OAuth2\Entities\Traits\SerializeScopesTrait;
+use Battis\OAuth2\Server\Entities\Traits\SerializeScopesTrait;
+use Battis\UserSession\Entities\UserEntityInterface as UserSessionUserEntityInterface;
 use Illuminate\Database\Eloquent\Model;
-use League\OAuth2\Server\Entities\UserEntityInterface;
+use League\OAuth2\Server\Entities\UserEntityInterface as OAuth2ServerUserEntityInterface;
 use Sofa\Eloquence\Eloquence;
 use Sofa\Eloquence\Mappable;
 
-class User extends Model implements UserEntityInterface
+class User extends Model implements
+  OAuth2ServerUserEntityInterface,
+  UserSessionUserEntityInterface
 {
   // Laravel/OAuth2-Server
   public function getIdentifier()
@@ -25,7 +28,7 @@ class User extends Model implements UserEntityInterface
 
   protected $hidden = ["password"];
 
-  public function verify($password)
+  public function passwordVerify(string $password): bool
   {
     return password_verify($password, $this->password);
   }

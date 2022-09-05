@@ -1,6 +1,6 @@
 <?php
 
-use Battis\OAuth2;
+use Battis\OAuth2\Server as OAuth2;
 use Slim\App;
 use Slim\Http\Response;
 use Slim\Http\ServerRequest;
@@ -18,4 +18,4 @@ $app
     });
   })
   // secure the API endpoints with the OAuth2\Middleware
-  ->add(OAuth2\Middleware::class);
+  ->add(OAuth2\Middleware\RequireAccessToken::class);

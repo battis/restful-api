@@ -1,6 +1,5 @@
 <?php
 
-use DI\Container;
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 
@@ -15,5 +14,7 @@ $app = AppFactory::createFromContainer($container);
 include __DIR__ . "/config/dependencies.php";
 include __DIR__ . "/config/middleware.php";
 include __DIR__ . "/config/routes.php";
+
+$app->addErrorMiddleware(true, true, true);
 
 $app->run();

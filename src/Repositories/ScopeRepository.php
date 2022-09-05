@@ -1,9 +1,9 @@
 <?php
 
-namespace Battis\OAuth2\Repositories;
+namespace Battis\OAuth2\Server\Repositories;
 
-use Battis\OAuth2\Entities\Scope;
-use Battis\OAuth2\Entities\User;
+use Battis\OAuth2\Server\Entities\Scope;
+use Battis\OAuth2\Server\Entities\User;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 

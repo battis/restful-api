@@ -1,6 +1,6 @@
 <?php
 
-use Battis\OAuth2;
+use Battis\OAuth2\Server as OAuth2;
 use DI\Container;
 
 /** @var Container $container */

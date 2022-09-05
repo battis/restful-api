@@ -1,17 +1,26 @@
 <?php
 
-namespace Battis\OAuth2;
+namespace Battis\OAuth2\Server;
 
-use Battis\OAuth2\Actions;
+use Battis\OAuth2\Server\Actions;
+use Battis\UserSession;
+use Battis\UserSession\Middleware\RequireAuthentication;
 
 class Controller
 {
-  const ENDPOINT = "/oauth2";
+  const ENDPOINT = "/";
 
-  public function __invoke($oauth2)
+  public function __invoke($api)
   {
-    $oauth2->get("/login", Actions\LoginAction::class);
-    $oauth2->post("/auth", Actions\AuthorizeAction::class);
-    $oauth2->post("/token", Actions\AccessTokenAction::class);
+    $api->group(
+      basename(UserSession\Controller::ENDPOINT),
+      UserSession\Controller::class
+    );
+    $api->group("oauth2", function ($oauth2) {
+      $oauth2
+        ->post("/authorize", Actions\AuthorizeCodeGrant::class)
+        ->add(RequireAuthentication::class);
+      $oauth2->post("/access_token", Actions\AcquireAccessToken::class);
+    });
   }
 }

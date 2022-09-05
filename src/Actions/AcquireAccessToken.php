@@ -1,15 +1,14 @@
 <?php
 
-namespace Battis\OAuth2\Actions;
+namespace Battis\OAuth2\Server\Actions;
 
-use Battis\OAuth2\Entities\User;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Psr\Container\ContainerInterface;
 use Slim\Http\Response;
 use Slim\Http\ServerRequest;
 
-class AuthorizeAction
+class AcquireAccessToken
 {
   /** @var ContainerInterface */
   private $container;
@@ -23,15 +22,8 @@ class AuthorizeAction
   {
     /** @var AuthorizationServer $server */
     $server = $this->container->get(AuthorizationServer::class);
-
     try {
-      $authRequest = $server->validateAuthorizationRequest($request);
-      $user = User::find($request->getParsedBodyParam("username"));
-      $authRequest->setUser($user);
-      $authRequest->setAuthorizationApproved(
-        $user->verify($request->getParsedBodyParam("password"))
-      );
-      return $server->completeAuthorizationRequest($authRequest, $response);
+      return $server->respondToAccessTokenRequest($request, $response);
     } catch (OAuthServerException $e) {
       return $e->generateHttpResponse($response);
     }

@@ -1,13 +1,16 @@
 <?php
 
-namespace Battis\OAuth2;
+namespace Battis\OAuth2\Server;
 
-use Battis\OAuth2\Repositories\AccessTokenRepository;
-use Battis\OAuth2\Repositories\AuthCodeRepository;
-use Battis\OAuth2\Repositories\ClientRepository;
-use Battis\OAuth2\Repositories\RefreshTokenRepository;
-use Battis\OAuth2\Repositories\ScopeRepository;
-use Battis\OAuth2\Repositories\UserRepository;
+use Battis\OAuth2\Server\Repositories\AccessTokenRepository;
+use Battis\OAuth2\Server\Repositories\AuthCodeRepository;
+use Battis\OAuth2\Server\Repositories\ClientRepository;
+use Battis\OAuth2\Server\Repositories\RefreshTokenRepository;
+use Battis\OAuth2\Server\Repositories\ScopeRepository;
+use Battis\OAuth2\Server\Repositories\UserRepository;
+use Battis\UserSession;
+use Composer\Autoload\ClassLoader;
+use DateInterval;
 use DI\Container;
 use Illuminate\Database\Capsule\Manager;
 use League\OAuth2\Server\AuthorizationServer;
@@ -21,6 +24,7 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
 use Psr\Container\ContainerInterface;
+use ReflectionClass;
 use Slim\Views\PhpRenderer;
 
 use function DI\autowire;
@@ -29,27 +33,65 @@ use function DI\get;
 
 class Dependencies
 {
+  const DB_DSN = "battis.oauth2Server.db.dsn";
+  const DB_USERNAME = "battis.oauth2Sserver.db.userName";
+  const DB_PASSWORD = "battis.oauth2Sserver.db.password";
+
+  const PATH_PRIVATE_KEY = "battis.oauth2Sserver.pathToPrivateKey";
+  const PATH_PUBLIC_KEY = "battis.oauth2Sserver.pathToPublicKey";
+  const ENCRYPTION_KEY = "battis.oauth2Sserver.encryptionKey";
+
+  const TTL_AUTH_CODE = "battis.oauth2Sserver.ttl.authCode";
+  const TTL_ACCESS_TOKEN = "battis.oauth2Sserver.ttl.accessToken";
+  const TTL_REFRESH_TOKEN = "battis.oauth2Sserver.ttl.refreshToken";
+
+  const GRANT_TYPES = "battis.oauth2Sserver.grantTypes";
+
+  private static $appRoot;
+
+  private static function setDefaults(Container $container)
+  {
+    $reflection = new ReflectionClass(ClassLoader::class);
+    self::$appRoot = dirname($reflection->getFileName(), 3);
+    $var = self::$appRoot . "/var/oauth2";
+    foreach (
+      [
+        self::PATH_PRIVATE_KEY => "$var/private.key",
+        self::PATH_PUBLIC_KEY => "$var/public.key",
+        self::TTL_AUTH_CODE => "PT5M",
+        self::TTL_ACCESS_TOKEN => "PT1H",
+        self::TTL_REFRESH_TOKEN => "P1M",
+        self::GRANT_TYPES => [],
+      ]
+      as $key => $value
+    ) {
+      if (!$container->has($key)) {
+        $container->set($key, $value);
+      } else {
+        $value = $container->get($key);
+      }
+
+      switch ($key) {
+        case self::TTL_AUTH_CODE:
+        case self::TTL_ACCESS_TOKEN:
+        case self::TTL_REFRESH_TOKEN:
+          if (false == $value instanceof DateInterval) {
+            $container->set($key, new DateInterval($value));
+          }
+          break;
+      }
+    }
+  }
+
   public static function prepare(Container $container)
   {
-    // prepare Eloquent ORM manager
-    $container->set(Manager::class, function (ContainerInterface $container) {
-      $capsule = new Manager();
-      $capsule->addConnection([
-        "dsn" => $container->get("db.dsn"),
-        "username" => $container->get("db.username"),
-        "password" => $container->get("db.password"),
-      ]);
-      $capsule->bootEloquent();
-      return $capsule;
-    });
+    self::setDefaults($container);
 
-    // prepare Slim PHP template renderer (for login & authorize endpoints)
     $container->set(
       PhpRenderer::class,
       autowire()->constructorParameter(
         "templatePath",
-        $container->get("composer.projectRoot") .
-          "/vendor/battis/oauth2-server/templates"
+        self::$appRoot . "/vendor/battis/oauth2-server/templates"
       )
     );
 
@@ -72,22 +114,19 @@ class Dependencies
     $container->set(
       AuthorizationServer::class,
       autowire()
-        ->constructorParameter("privateKey", get("oauth2.privateKey"))
-        ->constructorParameter("encryptionKey", get("oauth2.encryptionKey"))
+        ->constructorParameter("privateKey", get(self::PATH_PRIVATE_KEY))
+        ->constructorParameter("encryptionKey", get(self::ENCRYPTION_KEY))
     );
 
     $container->set(
       ResourceServer::class,
-      autowire()->constructorParameter("publicKey", get("oauth2.publicKey"))
+      autowire()->constructorParameter("publicKey", get(self::PATH_PUBLIC_KEY))
     );
 
     // prepare to inject grant types
     $container->set(
       AuthCodeGrant::class,
-      autowire()->constructorParameter(
-        "authCodeTTL",
-        get("oauth2.ttl.authCode")
-      )
+      autowire()->constructorParameter("authCodeTTL", get(self::TTL_AUTH_CODE))
     );
 
     $container->set(RefreshTokenGrant::class, function (
@@ -96,7 +135,7 @@ class Dependencies
       $grant = new RefreshTokenGrant(
         $container->get(RefreshTokenRepositoryInterface::class)
       );
-      $grant->setRefreshTokenTTL($container->get("oauth2.ttl.refreshToken"));
+      $grant->setRefreshTokenTTL($container->get(self::TTL_REFRESH_TOKEN));
       return $grant;
     });
 
@@ -105,11 +144,28 @@ class Dependencies
     // enable configured grant types
     /** @var AuthorizationServer $server */
     $server = $container->get(AuthorizationServer::class);
-    foreach ($container->get("oauth2.grantTypes") as $grantType) {
+    foreach ($container->get(self::GRANT_TYPES) as $grantType) {
       $server->enableGrantType(
         $container->get($grantType),
-        $container->get("oauth2.ttl.accessToken")
+        $container->get(self::TTL_ACCESS_TOKEN)
       );
     }
+
+    // prepare Eloquent ORM manager
+    if (!$container->has(Manager::class)) {
+      $container->set(Manager::class, function (ContainerInterface $container) {
+        $capsule = new Manager();
+        $capsule->addConnection([
+          "dsn" => $container->get(self::DB_DSN),
+          "username" => $container->get(self::DB_USERNAME),
+          "password" => $container->get(self::DB_PASSWORD),
+        ]);
+        $capsule->bootEloquent();
+        return $capsule;
+      });
+    }
+
+    // prepare UserSession
+    UserSession\Dependencies::prepare($container);
   }
 }

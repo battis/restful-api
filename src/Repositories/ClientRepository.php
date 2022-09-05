@@ -1,8 +1,8 @@
 <?php
 
-namespace Battis\OAuth2\Repositories;
+namespace Battis\OAuth2\Server\Repositories;
 
-use Battis\OAuth2\Entities\Client;
+use Battis\OAuth2\Server\Entities\Client;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
 class ClientRepository implements ClientRepositoryInterface
