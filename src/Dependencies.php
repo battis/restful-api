@@ -2,17 +2,17 @@
 
 namespace Battis\OAuth2\Server;
 
+use Battis\OAuth2\Server\Repositories\UserRepository;
 use Battis\OAuth2\Server\Repositories\AccessTokenRepository;
 use Battis\OAuth2\Server\Repositories\AuthCodeRepository;
 use Battis\OAuth2\Server\Repositories\ClientRepository;
 use Battis\OAuth2\Server\Repositories\RefreshTokenRepository;
 use Battis\OAuth2\Server\Repositories\ScopeRepository;
-use Battis\OAuth2\Server\Repositories\UserRepository;
 use Battis\UserSession;
+use Battis\UserSession\Repositories\UserRepositoryInterface as UserSessionUserRepositoryInterface;
 use Composer\Autoload\ClassLoader;
 use DateInterval;
 use DI\Container;
-use Illuminate\Database\Capsule\Manager;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
 use League\OAuth2\Server\Grant\RefreshTokenGrant;
@@ -21,9 +21,8 @@ use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
-use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use League\OAuth2\Server\Repositories\UserRepositoryInterface as OAuth2ServerUserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
-use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use Slim\Views\PhpRenderer;
 
@@ -33,9 +32,14 @@ use function DI\get;
 
 class Dependencies
 {
-  const DB_DSN = "battis.oauth2Server.db.dsn";
-  const DB_USERNAME = "battis.oauth2Sserver.db.userName";
-  const DB_PASSWORD = "battis.oauth2Sserver.db.password";
+  const DB_CONNECTION = "battis.oauth2Server.db";
+  const DB_DRIVER = "driver";
+  const DB_HOST = "host";
+  const DB_PORT = "port";
+  const DB_NAME = "dbname";
+  const DB_USERNAME = "user";
+  const DB_PASSWORD = "password";
+  const DB_CHARSET = "charset";
 
   const PATH_PRIVATE_KEY = "battis.oauth2Sserver.pathToPrivateKey";
   const PATH_PUBLIC_KEY = "battis.oauth2Sserver.pathToPublicKey";
@@ -89,13 +93,12 @@ class Dependencies
 
     $container->set(
       PhpRenderer::class,
-      autowire()->constructorParameter(
-        "templatePath",
+      autowire()->constructor(
         self::$appRoot . "/vendor/battis/oauth2-server/templates"
       )
     );
 
-    // prepare to inject repository implementations
+    // prepare repository interface definitions
     foreach (
       [
         AccessTokenRepositoryInterface::class => AccessTokenRepository::class,
@@ -103,14 +106,18 @@ class Dependencies
         ClientRepositoryInterface::class => ClientRepository::class,
         RefreshTokenRepositoryInterface::class => RefreshTokenRepository::class,
         ScopeRepositoryInterface::class => ScopeRepository::class,
-        UserRepositoryInterface::class => UserRepository::class,
+        OAuth2ServerUserRepositoryInterface::class => UserRepository::class,
       ]
       as $interface => $implementation
     ) {
       $container->set($interface, create($implementation));
     }
+    $container->set(
+      UserSessionUserRepositoryInterface::class,
+      get(OAuth2ServerUserRepositoryInterface::class)
+    );
 
-    // prepare to inject OAuth2 servers
+    // prepare OAuth2 server definitions
     $container->set(
       AuthorizationServer::class,
       autowire()
@@ -123,21 +130,16 @@ class Dependencies
       autowire()->constructorParameter("publicKey", get(self::PATH_PUBLIC_KEY))
     );
 
-    // prepare to inject grant types
+    // prepare grant type definitions
     $container->set(
       AuthCodeGrant::class,
       autowire()->constructorParameter("authCodeTTL", get(self::TTL_AUTH_CODE))
     );
 
-    $container->set(RefreshTokenGrant::class, function (
-      ContainerInterface $container
-    ) {
-      $grant = new RefreshTokenGrant(
-        $container->get(RefreshTokenRepositoryInterface::class)
-      );
-      $grant->setRefreshTokenTTL($container->get(self::TTL_REFRESH_TOKEN));
-      return $grant;
-    });
+    $container->set(
+      RefreshTokenGrant::class,
+      autowire()->method("setRefreshTokenTTL", get(self::TTL_REFRESH_TOKEN))
+    );
 
     // client credentials, implicit  and password grant types require no additional configuration
 
@@ -151,21 +153,7 @@ class Dependencies
       );
     }
 
-    // prepare Eloquent ORM manager
-    if (!$container->has(Manager::class)) {
-      $container->set(Manager::class, function (ContainerInterface $container) {
-        $capsule = new Manager();
-        $capsule->addConnection([
-          "dsn" => $container->get(self::DB_DSN),
-          "username" => $container->get(self::DB_USERNAME),
-          "password" => $container->get(self::DB_PASSWORD),
-        ]);
-        $capsule->bootEloquent();
-        return $capsule;
-      });
-    }
-
-    // prepare UserSession
+    // prepare UserSession definitions
     UserSession\Dependencies::prepare($container);
   }
 }

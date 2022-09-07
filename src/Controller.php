@@ -18,9 +18,9 @@ class Controller
     );
     $api->group("oauth2", function ($oauth2) {
       $oauth2
-        ->post("/authorize", Actions\AuthorizeCodeGrant::class)
+        ->get("/authorize", Actions\AuthorizeCodeGrant::class)
         ->add(RequireAuthentication::class);
-      $oauth2->post("/access_token", Actions\AcquireAccessToken::class);
+      $oauth2->get("/access_token", Actions\AcquireAccessToken::class);
     });
   }
 }

@@ -1,3 +1,3 @@
 <?php
 
-require_once __DIR__ . "/../src/api.php";
+require_once __DIR__ . "/../app.php";
