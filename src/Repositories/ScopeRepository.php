@@ -4,7 +4,7 @@ namespace Battis\OAuth2\Server\Repositories;
 
 use Battis\OAuth2\Server\Entities\Scope;
 use Battis\OAuth2\Server\Repositories\Traits\DBAL;
-use DI\Annotation\Inject;
+use Doctrine\DBAL\Connection;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
@@ -14,11 +14,15 @@ class ScopeRepository implements ScopeRepositoryInterface
 
     protected $table = "oauth2_scopes";
 
-    /**
-     * @Inject
-     * @var UserRepository
-     */
     private $userRepository;
+
+    public function __construct(
+        Connection $connection,
+        UserRepository $userRepository
+    ) {
+        $this->connection = $connection;
+        $this->userRepository = $userRepository;
+    }
 
     public function getScopeEntityByIdentifier($identifier)
     {

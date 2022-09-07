@@ -4,6 +4,7 @@ namespace Battis\OAuth2\Server\Repositories;
 
 use Battis\OAuth2\Server\Entities\AuthCode;
 use Battis\OAuth2\Server\Repositories\Traits\DBAL;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
@@ -14,6 +15,11 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
     use DBAL;
 
     protected $table = "oauth2_auth_codes";
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
 
     public function getNewAuthCode()
     {

@@ -1,26 +1,28 @@
 {
-  "name": "battis/oauth2-server",
-  "description": "League-based OAuth2 Server for Slim Framework",
-  "license": "MIT",
-  "autoload": {
-    "psr-4": {
-      "Battis\\OAuth2\\Server\\": "src/"
+    "name": "battis/oauth2-server",
+    "description": "League-based OAuth2 Server for Slim Framework",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Battis\\OAuth2\\Server\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Seth Battis",
+            "email": "seth@battis.net"
+        }
+    ],
+    "require": {
+        "ext-json": "*",
+        "battis/user-session": "^2.0",
+        "doctrine/dbal": "^3.4",
+        "league/oauth2-server": "^8.3",
+        "psr/container": "^1.0",
+        "slim/http": "^1.2",
+        "slim/php-view": "^3.2"
+    },
+    "config": {
+        "sort-packages": true
     }
-  },
-  "authors": [
-    {
-      "name": "Seth Battis",
-      "email": "seth@battis.net"
-    }
-  ],
-  "require": {
-    "battis/user-session": "^1.0",
-    "ext-json": "*",
-    "league/oauth2-server": "^8.3",
-    "psr/container": "^1.0",
-    "slim/http": "^1.2",
-    "slim/php-view": "^3.2",
-    "doctrine/dbal": "^3.4",
-    "doctrine/annotations": "^1.13"
-  }
 }

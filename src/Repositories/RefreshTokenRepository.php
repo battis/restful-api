@@ -5,6 +5,7 @@ namespace Battis\OAuth2\Server\Repositories;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Battis\OAuth2\Server\Entities\RefreshToken;
 use Battis\OAuth2\Server\Repositories\Traits\DBAL;
+use Doctrine\DBAL\Connection;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
@@ -14,6 +15,11 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     use DBAL;
 
     protected $table = "oauth2_refresh_tokens";
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
 
     public function getNewRefreshToken()
     {

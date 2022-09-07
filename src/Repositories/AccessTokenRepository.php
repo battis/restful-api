@@ -4,6 +4,7 @@ namespace Battis\OAuth2\Server\Repositories;
 
 use Battis\OAuth2\Server\Entities\AccessToken;
 use Battis\OAuth2\Server\Repositories\Traits\DBAL;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -15,6 +16,11 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     use DBAL;
 
     protected $table = "oauth2_access_tokens";
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
 
     public function getNewToken(
         ClientEntityInterface $clientEntity,

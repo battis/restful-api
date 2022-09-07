@@ -2,29 +2,23 @@
 
 namespace Battis\OAuth2\Server\Repositories\Traits;
 
-use DI\Annotation\Inject;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 
 trait DBAL
 {
-    /**
-     * @Inject
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var QueryBuilder
-     */
-    private $_queryBuilder;
+    /**  @var QueryBuilder */
+    private $dbal_queryBuilder;
 
     protected function queryBuilder()
     {
-        if (empty($this->queryBuilder)) {
-            $this->_queryBuilder = $this->connection->createQueryBuilder();
+        if (empty($this->dbal_queryBuilder)) {
+            $this->dbal_queryBuilder = $this->connection->createQueryBuilder();
         }
-        return $this->_queryBuilder;
+        return $this->dbal_queryBuilder;
     }
 
     protected function q()

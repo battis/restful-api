@@ -1,29 +1,29 @@
 {
-  "name": "battis/oauth2-server-example",
-  "description": "Sample setup for OAuth2 Server",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Seth Battis",
-      "email": "seth@battis.net"
+    "name": "battis/oauth2-server-example",
+    "description": "Sample setup for OAuth2 Server",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Seth Battis",
+            "email": "seth@battis.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Example\\": "src"
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../"
+        }
+    ],
+    "require": {
+        "slim/slim": "^4.10",
+        "slim/psr7": "^1.5",
+        "slim/http": "^1.2",
+        "php-di/php-di": "^6.4",
+        "battis/oauth2-server": "dev-main"
     }
-  ],
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../"
-    }
-  ],
-  "require": {
-    "slim/slim": "^4.10",
-    "slim/psr7": "^1.5",
-    "slim/http": "^1.2",
-    "robmorgan/phinx": "^0.12.12",
-    "illuminate/database": "^8.83",
-    "php-di/php-di": "^6.4",
-    "battis/oauth2-server": "dev-main",
-    "php-di/slim-bridge": "^3.2",
-    "doctrine/orm": "^2.13",
-    "symfony/cache": "^5.4"
-  }
 }

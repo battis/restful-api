@@ -4,6 +4,7 @@ namespace Battis\OAuth2\Server\Repositories;
 
 use Battis\OAuth2\Server\Entities\Client;
 use Battis\OAuth2\Server\Repositories\Traits\DBAL;
+use Doctrine\DBAL\Connection;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
 class ClientRepository implements ClientRepositoryInterface
@@ -11,6 +12,11 @@ class ClientRepository implements ClientRepositoryInterface
     use DBAL;
 
     protected $table = "oauth2_clients";
+
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
 
     /**
      * @param string $clientIdentifier
