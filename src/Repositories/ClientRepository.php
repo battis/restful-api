@@ -25,13 +25,14 @@ class ClientRepository implements ClientRepositoryInterface
     public function getClientEntity($clientIdentifier)
     {
         return $this->queryBuilder()
-            ->select($this->table)
+            ->select("*")
+            ->from($this->table)
             ->where(
                 $this->q()
                     ->expr()
-                    ->eq("client_id", ":client_id")
+                    ->eq("identifier", ":i")
             )
-            ->setParameter("client_id", $clientIdentifier)
+            ->setParameter("i", $clientIdentifier)
             ->executeQuery()
             ->fetchOne() ?:
             null;
@@ -54,14 +55,14 @@ class ClientRepository implements ClientRepositoryInterface
                     ->and(
                         $this->q()
                             ->expr()
-                            ->eq("client_id", "?"),
+                            ->eq("identifier", ":i"),
                         $this->q()
                             ->expr()
-                            ->eq("client_secret", "?")
+                            ->eq("client_secret", ":s")
                     )
             )
-            ->setParameter(0, $clientIdentifier)
-            ->setParameter(1, $clientSecret)
+            ->setParameter("i", $clientIdentifier)
+            ->setParameter("s", $clientSecret)
             ->executeQuery()
             ->fetchAssociative();
         return empty($client["grant_types"]) ||

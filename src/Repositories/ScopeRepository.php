@@ -2,10 +2,12 @@
 
 namespace Battis\OAuth2\Server\Repositories;
 
+use Battis\OAuth2\Server\Entities\Interfaces\Scopeable;
 use Battis\OAuth2\Server\Entities\Scope;
 use Battis\OAuth2\Server\Repositories\Traits\DBAL;
 use Doctrine\DBAL\Connection;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
 class ScopeRepository implements ScopeRepositoryInterface
@@ -28,13 +30,14 @@ class ScopeRepository implements ScopeRepositoryInterface
     {
         $data =
             $this->queryBuilder()
-                ->select($this->table)
+                ->select("*")
+                ->from($this->table)
                 ->where(
                     $this->q()
                         ->expr()
-                        ->eq("scope", "?")
+                        ->eq("scope", ":s")
                 )
-                ->setParameter(0, $identifier)
+                ->setParameter("s", $identifier)
                 ->executeQuery()
                 ->fetchAssociative() ?:
             null;
@@ -54,25 +57,42 @@ class ScopeRepository implements ScopeRepositoryInterface
     public function finalizeScopes(
         array $scopes,
         $grantType,
-        ClientEntityInterface $clientEntity,
+        ClientEntityInterface $client,
         $userIdentifier = null
     ) {
-        $finalizedScopes = [];
+        $grantScopes =
+            $grantType instanceof Scopeable ? $grantType->getScope() : [];
+        $clientScopes =
+            $client instanceof Scopeable ? $client->getScopes() : [];
         $user = $userIdentifier
             ? $this->userRepository->getUserEntityByUsername($userIdentifier)
             : null;
-        // FIXME:
-        foreach ($scopes as $proposedScope) {
-            if (
-                (empty($clientEntity->scopes) ||
-                    in_array($proposedScope, $clientEntity->scopes)) &&
-                (empty($user) ||
-                    (empty($user->scopes) ||
-                        in_array($proposedScope, $user->scopes)))
-            ) {
-                array_push($finalizedScopes, $proposedScope);
-            }
-        }
-        return $finalizedScopes;
+        $userScopes =
+            $user && $user instanceof Scopeable ? $user->getScopes() : [];
+
+        return array_filter($scopes, function (
+            ScopeEntityInterface $scope
+        ) use ($grantScopes, $clientScopes, $userScopes) {
+            return $this->inScope($grantScopes, $scope) &&
+                $this->inScope($clientScopes, $scope) &&
+                $this->inScope($userScopes, $scope);
+        });
+    }
+
+    /**
+     * @param ScopeEntityInterface[] $haystack
+     * @param ScopeEntityInterface $needle
+     * @return bool
+     */
+    private function inScope(array $haystack, ScopeEntityInterface $needle)
+    {
+        return empty($haystack) ||
+            array_reduce($haystack, function (
+                $matchedAnotherScope = false,
+                ScopeEntityInterface $straw
+            ) use ($needle) {
+                return $matchedAnotherScope ||
+                    $straw->getIdentifier() == $needle->getIdentifier();
+            });
     }
 }
