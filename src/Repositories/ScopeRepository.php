@@ -2,9 +2,9 @@
 
 namespace Battis\OAuth2\Server\Repositories;
 
+use Battis\CRUD\Manager;
 use Battis\OAuth2\Server\Entities\Interfaces\Scopeable;
 use Battis\OAuth2\Server\Entities\Scope;
-use Battis\OAuth2\Server\Repositories\Traits\DBAL;
 use Doctrine\DBAL\Connection;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
@@ -12,39 +12,19 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 
 class ScopeRepository implements ScopeRepositoryInterface
 {
-    use DBAL;
-
-    protected $table = "oauth2_scopes";
-
     private $userRepository;
 
     public function __construct(
         Connection $connection,
         UserRepository $userRepository
     ) {
-        $this->connection = $connection;
+        Manager::setConnection($connection);
         $this->userRepository = $userRepository;
     }
 
     public function getScopeEntityByIdentifier($identifier)
     {
-        $data =
-            $this->queryBuilder()
-                ->select("*")
-                ->from($this->table)
-                ->where(
-                    $this->q()
-                        ->expr()
-                        ->eq("scope", ":s")
-                )
-                ->setParameter("s", $identifier)
-                ->executeQuery()
-                ->fetchAssociative() ?:
-            null;
-        if ($data) {
-            return Scope::fromArray($data);
-        }
-        return null;
+        return Scope::read($identifier);
     }
 
     /**

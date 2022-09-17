@@ -2,20 +2,17 @@
 
 namespace Battis\OAuth2\Server\Repositories;
 
+use Battis\CRUD\Manager;
 use Battis\OAuth2\Server\Entities\AuthCode;
-use Battis\OAuth2\Server\Repositories\Traits\TokenRepositoryTrait;
 use Doctrine\DBAL\Connection;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 
 class AuthCodeRepository implements AuthCodeRepositoryInterface
 {
-    use TokenRepositoryTrait;
-
     public function __construct(Connection $connection)
     {
-        $this->table = "oauth2_auth_codes";
-        $this->connection = $connection;
+        Manager::setConnection($connection);
     }
 
     public function getNewAuthCode()
@@ -25,7 +22,7 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
 
     public function persistNewAuthCode(AuthCodeEntityInterface $authCodeEntity)
     {
-        $this->persistToken([
+        AuthCode::create([
             "identifier" => $authCodeEntity->getIdentifier(),
             "expiryDateTime" => $authCodeEntity->getExpiryDateTime(),
             "userIdentifier" => $authCodeEntity->getUserIdentifier(),
@@ -36,11 +33,11 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
 
     public function revokeAuthCode($codeId)
     {
-        $this->revokeToken($codeId);
+        AuthCode::delete($codeId);
     }
 
     public function isAuthCodeRevoked($codeId)
     {
-        $this->isTokenRevoked($codeId);
+        return AuthCode::read($codeId) === null;
     }
 }

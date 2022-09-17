@@ -2,6 +2,7 @@
 
 namespace Battis\OAuth2\Server\Entities;
 
+use Battis\CRUD\StoredObject;
 use Battis\OAuth2\Server\Entities\Interfaces\Scopeable;
 use Battis\OAuth2\Server\Entities\Interfaces\TokenGrantable;
 use Battis\OAuth2\Server\Entities\Interfaces\UserAssignable;
@@ -10,13 +11,16 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ClientTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 
-class Client implements
+class Client extends StoredObject implements
     ClientEntityInterface,
     UserAssignable,
     Scopeable,
     TokenGrantable
 {
     use EntityTrait, ClientTrait;
+
+    protected static $crud_tableName = "oauth2_clients";
+    protected static $crud_primaryKey = "identifier";
 
     /** @var ?string */
     private $userIdentifier = null;

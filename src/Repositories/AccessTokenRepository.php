@@ -2,8 +2,8 @@
 
 namespace Battis\OAuth2\Server\Repositories;
 
+use Battis\CRUD\Manager;
 use Battis\OAuth2\Server\Entities\AccessToken;
-use Battis\OAuth2\Server\Repositories\Traits\TokenRepositoryTrait;
 use Doctrine\DBAL\Connection;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -11,12 +11,9 @@ use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
-    use TokenRepositoryTrait;
-
     public function __construct(Connection $connection)
     {
-        $this->table = "oauth2_access_tokens";
-        $this->connection = $connection;
+        Manager::setConnection($connection);
     }
 
     public function getNewToken(
@@ -36,7 +33,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     public function persistNewAccessToken(
         AccessTokenEntityInterface $accessTokenEntity
     ) {
-        $this->persistToken([
+        AccessToken::create([
             "identifier" => $accessTokenEntity->getIdentifier(),
             "expiryDateTime" => $accessTokenEntity->getExpiryDateTime(),
             "userIdentifier" => $accessTokenEntity->getUserIdentifier(),
@@ -49,11 +46,11 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 
     public function revokeAccessToken($tokenId)
     {
-        $this->revokeToken($tokenId);
+        AccessToken::delete($tokenId);
     }
 
     public function isAccessTokenRevoked($tokenId)
     {
-        return $this->isTokenRevoked($tokenId);
+        return AccessToken::read($tokenId) === null;
     }
 }

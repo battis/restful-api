@@ -2,20 +2,17 @@
 
 namespace Battis\OAuth2\Server\Repositories;
 
+use Battis\CRUD\Manager;
 use Battis\OAuth2\Server\Entities\RefreshToken;
-use Battis\OAuth2\Server\Repositories\Traits\TokenRepositoryTrait;
 use Doctrine\DBAL\Connection;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
-    use TokenRepositoryTrait;
-
     public function __construct(Connection $connection)
     {
-        $this->table = "oauth2_refresh_tokens";
-        $this->connection = $connection;
+        Manager::setConnection($connection);
     }
 
     public function getNewRefreshToken()
@@ -26,7 +23,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     public function persistNewRefreshToken(
         RefreshTokenEntityInterface $refreshTokenEntity
     ) {
-        $this->persistToken([
+        RefreshToken::create([
             "identifier" => $refreshTokenEntity->getIdentifier(),
             "expiryDateTime" => $refreshTokenEntity->getExpiryDateTime(),
             "accessTokenIdentifier" => $refreshTokenEntity
@@ -37,11 +34,11 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 
     public function revokeRefreshToken($tokenId)
     {
-        $this->revokeToken($tokenId);
+        RefreshToken::delete($tokenId);
     }
 
     public function isRefreshTokenRevoked($tokenId)
     {
-        return $this->isTokenRevoked($tokenId);
+        return RefreshToken::read($tokenId) === null;
     }
 }

@@ -4,21 +4,43 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82249b6b906e51048ce2f87e8b70b587",
+    "content-hash": "d5660486d3dcd0fdae76c60c33ceafee",
     "packages": [
         {
-            "name": "battis/user-session",
-            "version": "v2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/battis/user-session.git",
-                "reference": "7a7ff39f9fcc1a4a29d2d567d0a178365923b77c"
-            },
+            "name": "battis/crud",
+            "version": "dev-main",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/battis/user-session/zipball/7a7ff39f9fcc1a4a29d2d567d0a178365923b77c",
-                "reference": "7a7ff39f9fcc1a4a29d2d567d0a178365923b77c",
-                "shasum": ""
+                "type": "path",
+                "url": "../crud",
+                "reference": "aead354ff4763fb6e02bf3684a4a4e2f3e755426"
+            },
+            "require": {
+                "doctrine/dbal": "^3.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Battis\\CRUD\\": "src"
+                }
+            },
+            "authors": [
+                {
+                    "name": "Seth Battis",
+                    "email": "seth@battis.net"
+                }
+            ],
+            "description": "Doctrine DBAL-based CRUD implementation",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "battis/user-session",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../user-session",
+                "reference": "7a7ff39f9fcc1a4a29d2d567d0a178365923b77c"
             },
             "require": {
                 "bryanjhv/slim-session": "^4.0",
@@ -33,7 +55,6 @@
                     "Battis\\UserSession\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -44,11 +65,9 @@
                 }
             ],
             "description": "User session management for Slim Framework",
-            "support": {
-                "issues": "https://github.com/battis/user-session/issues",
-                "source": "https://github.com/battis/user-session/tree/v2.0"
-            },
-            "time": "2022-09-07T21:18:28+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "bryanjhv/slim-session",
@@ -570,16 +589,16 @@
         },
         {
             "name": "laravel/serializable-closure",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/serializable-closure.git",
-                "reference": "d78fd36ba031a1a695ea5a406f29996948d7011b"
+                "reference": "47afb7fae28ed29057fdca37e16a84f90cc62fae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/d78fd36ba031a1a695ea5a406f29996948d7011b",
-                "reference": "d78fd36ba031a1a695ea5a406f29996948d7011b",
+                "url": "https://api.github.com/repos/laravel/serializable-closure/zipball/47afb7fae28ed29057fdca37e16a84f90cc62fae",
+                "reference": "47afb7fae28ed29057fdca37e16a84f90cc62fae",
                 "shasum": ""
             },
             "require": {
@@ -626,7 +645,7 @@
                 "issues": "https://github.com/laravel/serializable-closure/issues",
                 "source": "https://github.com/laravel/serializable-closure"
             },
-            "time": "2022-08-26T15:25:27+00:00"
+            "time": "2022-09-08T13:45:54+00:00"
         },
         {
             "name": "lcobucci/clock",
@@ -907,16 +926,16 @@
         },
         {
             "name": "league/uri",
-            "version": "6.7.1",
+            "version": "6.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/uri.git",
-                "reference": "2d7c87a0860f3126a39f44a8a9bf2fed402dcfea"
+                "reference": "d3b50812dd51f3fbf176344cc2981db03d10fe06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/uri/zipball/2d7c87a0860f3126a39f44a8a9bf2fed402dcfea",
-                "reference": "2d7c87a0860f3126a39f44a8a9bf2fed402dcfea",
+                "url": "https://api.github.com/repos/thephpleague/uri/zipball/d3b50812dd51f3fbf176344cc2981db03d10fe06",
+                "reference": "d3b50812dd51f3fbf176344cc2981db03d10fe06",
                 "shasum": ""
             },
             "require": {
@@ -994,7 +1013,7 @@
                 "docs": "https://uri.thephpleague.com",
                 "forum": "https://thephpleague.slack.com",
                 "issues": "https://github.com/thephpleague/uri/issues",
-                "source": "https://github.com/thephpleague/uri/tree/6.7.1"
+                "source": "https://github.com/thephpleague/uri/tree/6.7.2"
             },
             "funding": [
                 {
@@ -1002,7 +1021,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-29T09:48:18+00:00"
+            "time": "2022-09-13T19:50:42+00:00"
         },
         {
             "name": "league/uri-interfaces",
@@ -2177,7 +2196,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "battis/crud": 20,
+        "battis/user-session": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
