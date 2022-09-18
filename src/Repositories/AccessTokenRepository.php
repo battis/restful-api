@@ -2,18 +2,18 @@
 
 namespace Battis\OAuth2\Server\Repositories;
 
-use Battis\CRUD\Manager;
+use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\AccessToken;
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
-    public function __construct(Connection $connection)
+    public function __construct(DBAL\Connection $connection)
     {
-        Manager::setConnection($connection);
+        CRUD\Manager::get($connection);
     }
 
     public function getNewToken(

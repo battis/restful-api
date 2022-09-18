@@ -2,12 +2,12 @@
 
 namespace Battis\OAuth2\Server\Entities;
 
-use Battis\CRUD\StoredObject;
+use Battis\CRUD;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\Traits\RefreshTokenTrait;
 
-class RefreshToken extends StoredObject implements RefreshTokenEntityInterface
+class RefreshToken extends CRUD\Record implements RefreshTokenEntityInterface
 {
     use EntityTrait, RefreshTokenTrait;
 

@@ -2,12 +2,13 @@
 
 namespace Battis\OAuth2\Server\Repositories;
 
+use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\Interfaces\TokenGrantable;
 use Battis\OAuth2\Server\Entities\Interfaces\UserAssignable;
 use Battis\OAuth2\Server\Entities\User;
 use Battis\UserSession\Entities\UserEntityInterface;
 use Battis\UserSession\Repositories as UserSession;
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 
@@ -17,9 +18,9 @@ class UserRepository implements
 {
     protected $table = "users";
 
-    public function __construct(Connection $connection)
+    public function __construct(DBAL\Connection $connection)
     {
-        $this->connection = $connection;
+        CRUD\Manager::get($connection);
     }
 
     public function getUserEntityByUsername(

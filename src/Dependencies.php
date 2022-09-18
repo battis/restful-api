@@ -67,9 +67,9 @@ class Dependencies
         string $encryptionKeyType = self::ENCRYPTION_KEY_PATH_TO_DEFUSE,
         string $pathToTemplates = "{PACKAGE_ROOT}/templates"
     ): array {
-        $authCodeTTL = self::toDateInterval($authCodeTTL ?? "PT5M");
-        $accessTokenTTL = self::toDateInterval($accessTokenTTL ?? "PT1H");
-        $refreshTokenTTL = self::toDateInterval($refreshTokenTTL ?? "P1M");
+        $authCodeTTL = $authCodeTTL ?? "PT5M";
+        $accessTokenTTL = $accessTokenTTL ?? "PT1H";
+        $refreshTokenTTL = $refreshTokenTTL ?? "P1M";
 
         if (!($privateKey instanceof CryptKey)) {
             $privateKey = self::expandPath(
@@ -139,7 +139,9 @@ class Dependencies
                 return new AuthCodeGrant(
                     $authCodeRepo,
                     $refreshTokenRepo,
-                    $container->get(self::TTL_REFRESH_TOKEN)
+                    self::toDateInterval(
+                        $container->get(self::TTL_REFRESH_TOKEN)
+                    )
                 );
             },
             RefreshTokenGrant::class => function (
@@ -148,7 +150,9 @@ class Dependencies
             ) {
                 $grant = new RefreshTokenGrant($refreshTokenRepo);
                 $grant->setRefreshTokenTTL(
-                    $container->get(self::TTL_REFRESH_TOKEN)
+                    self::toDateInterval(
+                        $container->get(self::TTL_REFRESH_TOKEN)
+                    )
                 );
                 return $grant;
             },
@@ -168,7 +172,9 @@ class Dependencies
                 foreach ($container->get(self::GRANT_TYPES) as $grantType) {
                     $server->enableGrantType(
                         $container->get($grantType),
-                        $container->get(self::TTL_ACCESS_TOKEN)
+                        self::toDateInterval(
+                            $container->get(self::TTL_ACCESS_TOKEN)
+                        )
                     );
                 }
                 return $server;

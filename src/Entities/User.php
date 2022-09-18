@@ -2,7 +2,7 @@
 
 namespace Battis\OAuth2\Server\Entities;
 
-use Battis\CRUD\StoredObject;
+use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\Interfaces\Scopeable;
 use Battis\OAuth2\Server\Entities\Interfaces\TokenGrantable;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
@@ -10,7 +10,7 @@ use League\OAuth2\Server\Entities\UserEntityInterface;
 use Battis\UserSession;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 
-class User extends StoredObject implements
+class User extends CRUD\Record implements
     UserEntityInterface,
     UserSession\Entities\UserEntityInterface,
     Scopeable,
@@ -18,16 +18,16 @@ class User extends StoredObject implements
 {
     use EntityTrait;
 
-    protected $crud_primaryKey = "identifier";
+    protected static $crud_primaryKey = "identifier";
 
     /* @var string password hash */
-    private $password;
+    protected $password;
 
     /** @var ScopeEntityInterface[] */
-    private $scopes = [];
+    protected $scopes = [];
 
     /** @var string[] */
-    private $grant_types = [];
+    protected $grant_types = [];
 
     public function passwordVerify(string $password): bool
     {

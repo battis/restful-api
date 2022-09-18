@@ -2,12 +2,12 @@
 
 namespace Battis\OAuth2\Server\Entities;
 
-use Battis\CRUD\StoredObject;
+use Battis\CRUD;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\Traits\ScopeTrait;
 
-class Scope extends StoredObject implements ScopeEntityInterface
+class Scope extends CRUD\Record implements ScopeEntityInterface
 {
     use EntityTrait, ScopeTrait;
 

@@ -2,16 +2,16 @@
 
 namespace Battis\OAuth2\Server\Repositories;
 
-use Battis\CRUD\Manager;
+use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\Client;
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 
 class ClientRepository implements ClientRepositoryInterface
 {
-    public function __construct(Connection $connection)
+    public function __construct(DBAL\Connection $connection)
     {
-        Manager::setConnection($connection);
+        CRUD\Manager::get($connection);
     }
 
     /**

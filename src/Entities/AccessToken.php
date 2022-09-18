@@ -2,14 +2,14 @@
 
 namespace Battis\OAuth2\Server\Entities;
 
-use Battis\CRUD\StoredObject;
+use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\Interfaces\UserAssignable;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 
-class AccessToken extends StoredObject implements
+class AccessToken extends CRUD\Record implements
     AccessTokenEntityInterface,
     UserAssignable
 {

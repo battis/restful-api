@@ -2,10 +2,10 @@
 
 namespace Battis\OAuth2\Server\Repositories;
 
-use Battis\CRUD\Manager;
+use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\Interfaces\Scopeable;
 use Battis\OAuth2\Server\Entities\Scope;
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
@@ -15,10 +15,10 @@ class ScopeRepository implements ScopeRepositoryInterface
     private $userRepository;
 
     public function __construct(
-        Connection $connection,
+        DBAL\Connection $connection,
         UserRepository $userRepository
     ) {
-        Manager::setConnection($connection);
+        CRUD\Manager::get($connection);
         $this->userRepository = $userRepository;
     }
 

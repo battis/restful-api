@@ -2,6 +2,7 @@
     "name": "battis/oauth2-server-example",
     "description": "Sample setup for OAuth2 Server",
     "license": "MIT",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Seth Battis",
@@ -17,6 +18,14 @@
         {
             "type": "path",
             "url": "../"
+        },
+        {
+            "type": "path",
+            "url": "../../crud"
+        },
+        {
+            "type": "path",
+            "url": "../../user-session"
         }
     ],
     "require": {
@@ -25,5 +34,8 @@
         "slim/http": "^1.2",
         "php-di/php-di": "^6.4",
         "battis/oauth2-server": "dev-main"
+    },
+    "config": {
+        "sort-packages": true
     }
 }
