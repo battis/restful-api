@@ -2,8 +2,7 @@
 
 namespace Battis\CRUD;
 
-use Battis\CRUD\Exceptions\DatabaseException;
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Exception;
 
@@ -12,45 +11,33 @@ class Manager
     /** @var self */
     private static $instance;
 
-    /** @var Connection */
-    private $dbal;
+    /** @var DBAL\Connection */
+    private $connection;
 
-    public static function get(Connection $dbal = null): self
+    public static function get(DBAL\Connection $connection = null): self
     {
         if (empty(self::$instance)) {
-            if (empty($dbal)) {
-                throw new Exception(
-                    "Cannot create Manager without DBAL connection"
-                );
-            }
-            self::$instance = new self($dbal);
+            self::$instance = new self($connection);
         }
         return self::$instance;
     }
 
-    public static function setConnection(Connection $dbal)
+    private function __construct(DBAL\Connection $connection)
     {
-        new self($dbal);
+        assert(
+            $connection !== null,
+            new Exception("Cannot create Manager without DBAL connection")
+        );
+        $this->connection = $connection;
     }
 
-    private function __construct(Connection $dbal)
+    public function connection(): DBAL\Connection
     {
-        assert($dbal !== null, new DatabaseException());
-        $this->dbal = $dbal;
-    }
-
-    public function connection(): Connection
-    {
-        return $this->dbal;
+        return $this->connection;
     }
 
     public function queryBuilder(): QueryBuilder
     {
-        return $this->dbal->createQueryBuilder();
-    }
-
-    public function deferStatement(QueryBuilder $statement)
-    {
-        array_push($this->delayedStatements, $statement);
+        return $this->connection->createQueryBuilder();
     }
 }

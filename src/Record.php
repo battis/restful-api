@@ -3,13 +3,15 @@
 namespace Battis\CRUD;
 
 use Exception;
+use PDOException;
 use ReflectionClass;
 use ReflectionProperty;
 
-class StoredObject
+class Record
 {
     protected static $crud_tableName;
     protected static $crud_primaryKey = "id";
+    protected static $crud_propertyMapping = [];
 
     /**
      * Construct a new instance of the object from an associative array of data properties.
@@ -18,11 +20,6 @@ class StoredObject
      */
     public function __construct(array $data = [])
     {
-        if (empty(static::$crud_tableName)) {
-            static::$crud_tableName = Helper::pluralize(
-                Helper::camelCase_to_snake_case(basename(static::class))
-            );
-        }
         if (!empty($data)) {
             $this->assign($data);
         }
@@ -33,16 +30,16 @@ class StoredObject
      *
      * @param array $data Associative array of properties (keys that do not exactly match a declared property will be ignored)
      *
-     * @return self|null
+     * @return static|null
      */
-    public static function create(array $data): ?self
+    public static function create(array $data)
     {
         $data = static::filterData($data);
         $dbal = Manager::get();
         if (
             $dbal
                 ->queryBuilder()
-                ->insert(static::$crud_tableName)
+                ->insert(static::getTableName())
                 ->values(self::parameterize($data))
                 ->setParameters($data)
                 ->executeStatement() == 1
@@ -57,19 +54,19 @@ class StoredObject
      *
      * @param mixed $id Primary key value
      *
-     * @return self|null
+     * @return static|null
      */
-    public static function read($id): ?self
+    public static function read($id)
     {
         $q = Manager::get()->queryBuilder();
         $response = $q
             ->select("*")
-            ->from(static::$crud_tableName)
-            ->where($q->expr()->eq(static::$crud_primaryKey, "?"))
+            ->from(static::getTableName())
+            ->where($q->expr()->eq(static::getPrimaryKey(), "?"))
             ->setParameter(0, $id)
             ->executeQuery();
         if ($response->rowCount() === 1) {
-            return new self($response->fetchAssociative());
+            return new static($response->fetchAssociative());
         }
         return null;
     }
@@ -79,12 +76,12 @@ class StoredObject
      *
      * @param array $data Optional associative array of properties to match (keys that do not exactly match a declared property will be ignored)
      *
-     * @return self[]
+     * @return static[]
      */
     public static function retrieve(array $data = []): array
     {
         $q = Manager::get()->queryBuilder();
-        $q->select("*")->from(static::$crud_tableName);
+        $q->select("*")->from(static::getTableName());
 
         if (!empty($data)) {
             $data = static::filterData($data);
@@ -101,7 +98,7 @@ class StoredObject
 
         $result = [];
         while ($row = $response->fetchAssociative()) {
-            array_push($result, new self($row));
+            array_push($result, new static($row));
         }
         return $result;
     }
@@ -111,12 +108,12 @@ class StoredObject
      *
      * @param array $data Associative array of properties (keys that do not exactly match a declared property will be ignored). *Must* include a primary key property to identify the record to be updated.
      *
-     * @return self|null
+     * @return static|null
      */
-    public static function update(array $data): ?self
+    public static function update(array $data)
     {
-        if (key_exists(static::$crud_primaryKey, $data)) {
-            $result = self::read($data[static::$crud_primaryKey]);
+        if (key_exists(static::getPrimaryKey(), $data)) {
+            $result = self::read($data[static::getPrimaryKey()]);
             $result->save($data);
             return $result;
         }
@@ -128,17 +125,17 @@ class StoredObject
      *
      * @param mixed $id Primary key value
      *
-     * @return self|null
+     * @return static|null
      */
-    public static function delete($id): ?self
+    public static function delete($id)
     {
         $result = static::read($id);
         if ($result) {
             $q = Manager::get()->queryBuilder();
             if (
                 $q
-                    ->delete(static::$crud_tableName)
-                    ->where($q->expr()->eq(static::$crud_primaryKey, "?"))
+                    ->delete(static::getTableName())
+                    ->where($q->expr()->eq(static::getPrimaryKey(), "?"))
                     ->setParameter(0, $id)
                     ->executeStatement() > 0
             ) {
@@ -173,7 +170,8 @@ class StoredObject
     {
         $data = static::filterData($data);
         foreach ($data as $key => $value) {
-            $this->$key = $value;
+            $prop = array_search($key, static::$crud_propertyMapping) ?: $key;
+            $this->$prop = $value;
         }
     }
 
@@ -185,26 +183,47 @@ class StoredObject
     private static function parameterize(array $data)
     {
         return array_combine(
-            array_keys($data),
+            array_map(
+                fn($key) => static::$crud_propertyMapping[$key] ?? $key,
+                array_keys($data)
+            ),
             array_map(fn($key) => ":$key", array_keys($data))
         );
     }
 
-    private function getPrimaryKey()
+    private static function getTableName(): string
     {
-        $primaryKey = static::$crud_primaryKey;
-        return $this->$primaryKey;
+        if (empty(static::$crud_tableName)) {
+            $reflection = new ReflectionClass(static::class);
+            static::$crud_tableName = Helper::pluralize(
+                Helper::camelCase_to_snake_case(
+                    basename($reflection->getFileName(), ".php")
+                )
+            );
+        }
+        return static::$crud_tableName;
+    }
+
+    private static function getPrimaryKey(): string
+    {
+        return static::$crud_primaryKey;
+    }
+
+    private function getPrimaryKeyValue()
+    {
+        $prop = static::getPrimaryKey();
+        return $this->$prop;
     }
 
     public function save(array $data = []): void
     {
         $data = static::filterData(array_merge((array) $this, $data));
         $q = Manager::get()->queryBuilder();
-        $q->update(static::$crud_tableName)
+        $q->update(static::getTableName())
             ->values(self::parameterize($data))
             ->setParameters($data)
             ->executeStatement();
-        $updated = static::read($this->getPrimaryKey());
+        $updated = static::read($this->getPrimaryKeyValue());
         if ($updated) {
             $this->cloneIntoSelf($updated);
         } else {
