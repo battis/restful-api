@@ -3,15 +3,11 @@
 namespace Battis\CRUD;
 
 use Exception;
-use PDOException;
-use ReflectionClass;
-use ReflectionProperty;
 
 class Record
 {
-    protected static $crud_tableName;
-    protected static $crud_primaryKey = "id";
-    protected static $crud_propertyMapping = [];
+    /** @var Spec|null */
+    protected static $spec;
 
     /**
      * Construct a new instance of the object from an associative array of data properties.
@@ -25,6 +21,19 @@ class Record
         }
     }
 
+    protected static function getSpec(): Spec
+    {
+        if (empty(static::$spec)) {
+            static::$spec = static::defineSpec();
+        }
+        return static::$spec;
+    }
+
+    protected static function defineSpec(): Spec
+    {
+        return new Spec(static::class);
+    }
+
     /**
      * Insert a new record into the database and return on an instance of this object representing that record, if successfully inserted.
      *
@@ -34,13 +43,14 @@ class Record
      */
     public static function create(array $data)
     {
-        $data = static::filterData($data);
+        $s = static::getSpec();
+        $data = $s->mapPropetiesToFields($data);
         $dbal = Manager::get();
         if (
             $dbal
                 ->queryBuilder()
-                ->insert(static::getTableName())
-                ->values(self::parameterize($data))
+                ->insert($s->getTableName())
+                ->values($s->getNamedParameters($data))
                 ->setParameters($data)
                 ->executeStatement() == 1
         ) {
@@ -58,11 +68,12 @@ class Record
      */
     public static function read($id)
     {
+        $s = static::getSpec();
         $q = Manager::get()->queryBuilder();
         $response = $q
             ->select("*")
-            ->from(static::getTableName())
-            ->where($q->expr()->eq(static::getPrimaryKey(), "?"))
+            ->from($s->getTableName())
+            ->where($q->expr()->eq($s->getPrimaryKeyFieldName(), "?"))
             ->setParameter(0, $id)
             ->executeQuery();
         if ($response->rowCount() === 1) {
@@ -81,10 +92,11 @@ class Record
     public static function retrieve(array $data = []): array
     {
         $q = Manager::get()->queryBuilder();
-        $q->select("*")->from(static::getTableName());
+        $s = static::getSpec();
+        $q->select("*")->from($s->getTableName());
 
         if (!empty($data)) {
-            $data = static::filterData($data);
+            $data = $s->mapPropetiesToFields($data);
             $q = $q
                 ->where(
                     join(
@@ -112,8 +124,10 @@ class Record
      */
     public static function update(array $data)
     {
-        if (key_exists(static::getPrimaryKey(), $data)) {
-            $result = self::read($data[static::getPrimaryKey()]);
+        $s = static::getSpec();
+        $data = $s->mapPropetiesToFields($data);
+        if (key_exists($s->getPrimaryKeyFieldName(), $data)) {
+            $result = self::read($data[$s->getPrimaryKeyFieldName()]);
             $result->save($data);
             return $result;
         }
@@ -129,13 +143,14 @@ class Record
      */
     public static function delete($id)
     {
+        $s = static::getSpec();
         $result = static::read($id);
         if ($result) {
             $q = Manager::get()->queryBuilder();
             if (
                 $q
-                    ->delete(static::getTableName())
-                    ->where($q->expr()->eq(static::getPrimaryKey(), "?"))
+                    ->delete($s->getTableName())
+                    ->where($q->expr()->eq($s->getPrimaryKeyFieldName(), "?"))
                     ->setParameter(0, $id)
                     ->executeStatement() > 0
             ) {
@@ -145,33 +160,16 @@ class Record
         return null;
     }
 
-    private static function filterData($data): array
-    {
-        $reflector = new ReflectionClass(static::class);
-        $props = array_reduce(
-            $reflector->getProperties(),
-            fn(array $props, ReflectionProperty $prop) => !preg_match(
-                "/^crud_/",
-                $prop->getName()
-            )
-                ? array_merge($props, [$prop->getName()])
-                : $props,
-            []
-        );
-        $data = array_filter(
-            $data,
-            fn($key) => in_array($key, $props),
-            ARRAY_FILTER_USE_KEY
-        );
-        return $data;
-    }
-
     private function assign(array $data)
     {
-        $data = static::filterData($data);
-        foreach ($data as $key => $value) {
-            $prop = array_search($key, static::$crud_propertyMapping) ?: $key;
-            $this->$prop = $value;
+        $s = static::getSpec();
+        $data = $s->mapFieldsToProperties($data);
+        foreach ($data as $property => $value) {
+            if ($setter = $s->getSetter($property)) {
+                $this->$setter($value);
+            } else {
+                $this->$property = $value;
+            }
         }
     }
 
@@ -180,47 +178,21 @@ class Record
         $this->assign((array) $other);
     }
 
-    private static function parameterize(array $data)
-    {
-        return array_combine(
-            array_map(
-                fn($key) => static::$crud_propertyMapping[$key] ?? $key,
-                array_keys($data)
-            ),
-            array_map(fn($key) => ":$key", array_keys($data))
-        );
-    }
-
-    private static function getTableName(): string
-    {
-        if (empty(static::$crud_tableName)) {
-            $reflection = new ReflectionClass(static::class);
-            static::$crud_tableName = Helper::pluralize(
-                Helper::camelCase_to_snake_case(
-                    basename($reflection->getFileName(), ".php")
-                )
-            );
-        }
-        return static::$crud_tableName;
-    }
-
-    private static function getPrimaryKey(): string
-    {
-        return static::$crud_primaryKey;
-    }
-
     private function getPrimaryKeyValue()
     {
-        $prop = static::getPrimaryKey();
-        return $this->$prop;
+        $property = static::getSpec()->getPrimaryKeyPropertyName();
+        return $this->$property;
     }
 
     public function save(array $data = []): void
     {
-        $data = static::filterData(array_merge((array) $this, $data));
+        $s = static::getSpec();
+        $data = $s->mapPropetiesToFields(
+            array_merge((array) $this, $s->mapFieldsToProperties($data))
+        );
         $q = Manager::get()->queryBuilder();
-        $q->update(static::getTableName())
-            ->values(self::parameterize($data))
+        $q->update($s->getTableName())
+            ->values($s->getNamedParameters($data))
             ->setParameters($data)
             ->executeStatement();
         $updated = static::read($this->getPrimaryKeyValue());

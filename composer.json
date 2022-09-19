@@ -1,18 +1,30 @@
 {
-  "name": "battis/crud",
-  "description": "Doctrine DBAL-based CRUD implementation",
-  "authors": [
-    {
-      "name": "Seth Battis",
-      "email": "seth@battis.net"
+    "name": "battis/crud",
+    "description": "Doctrine DBAL-based CRUD implementation",
+    "authors": [
+        {
+            "name": "Seth Battis",
+            "email": "seth@battis.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Battis\\CRUD\\": "src"
+        }
+    },
+    "require": {
+        "doctrine/dbal": "^3.4"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Battis\\CRUD\\Tests\\": "tests"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0",
+        "phpdocumentor/phpdocumentor": "^3.0"
+    },
+    "config": {
+        "sort-packages": true
     }
-  ],
-  "autoload": {
-    "psr-4": {
-      "Battis\\CRUD\\": "src"
-    }
-  },
-  "require": {
-    "doctrine/dbal": "^3.4"
-  }
 }
