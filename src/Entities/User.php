@@ -18,7 +18,12 @@ class User extends CRUD\Record implements
 {
     use EntityTrait;
 
-    protected static $crud_primaryKey = "identifier";
+    protected static function defineSpec(): CRUD\Spec
+    {
+        return new CRUD\Spec(self::class, null, "identifier", [
+            "identifier" => "username",
+        ]);
+    }
 
     /* @var string password hash */
     protected $password;

@@ -12,15 +12,24 @@
             "dist": {
                 "type": "path",
                 "url": "../crud",
-                "reference": "51112b79d023185adc3c41f938bacdb2d71105e3"
+                "reference": "3d5bd5c9d11325c3c32b213c9d901362813fc3e3"
             },
             "require": {
                 "doctrine/dbal": "^3.4"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "^3.0",
+                "phpunit/phpunit": "^9.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Battis\\CRUD\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Battis\\CRUD\\Tests\\": "tests"
                 }
             },
             "authors": [

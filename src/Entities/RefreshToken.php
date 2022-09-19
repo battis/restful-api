@@ -11,8 +11,19 @@ class RefreshToken extends CRUD\Record implements RefreshTokenEntityInterface
 {
     use EntityTrait, RefreshTokenTrait;
 
-    protected static $crud_tableName = "oauth2_refresh_tokens";
-    protected static $crud_primaryKey = "identifier";
+    protected static function defineSpec(): CRUD\Spec
+    {
+        return new CRUD\Spec(
+            self::class,
+            "oauth2_refresh_tokens",
+            "identifier",
+            [
+                "identifier" => "token",
+                "expiryDateTime" => "expiry",
+                "accessTokenIdentifier" => "access_token_id",
+            ]
+        );
+    }
 
     public function __construct(array $data = [])
     {

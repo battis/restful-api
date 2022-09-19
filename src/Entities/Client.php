@@ -19,8 +19,13 @@ class Client extends CRUD\Record implements
 {
     use EntityTrait, ClientTrait;
 
-    protected static $crud_tableName = "oauth2_clients";
-    protected static $crud_primaryKey = "identifier";
+    protected static function defineSpec(): CRUD\Spec
+    {
+        return new CRUD\Spec(self::class, "oauth2_clients", "identifier", [
+            "identifier" => "client_id",
+            "userIdentifier" => "user_id",
+        ]);
+    }
 
     /** @var ?string */
     protected $userIdentifier = null;

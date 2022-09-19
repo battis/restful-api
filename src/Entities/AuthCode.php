@@ -12,6 +12,13 @@ class AuthCode extends CRUD\Record implements AuthCodeEntityInterface
 {
     use AuthCodeTrait, TokenEntityTrait, EntityTrait;
 
-    protected static $crud_tableName = "oauth2_auth_codes";
-    protected static $crud_primaryKey = "identifier";
+    protected static function defineSpec(): CRUD\Spec
+    {
+        return new CRUD\Spec(self::class, "oauth2_auth_codes", "identifier", [
+            "identifier" => "code",
+            "expiryDateTime" => "expiry",
+            "userIdentifier" => "user_id",
+            "clientIdentifier" => "client_id",
+        ]);
+    }
 }

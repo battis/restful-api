@@ -15,14 +15,26 @@ class AccessToken extends CRUD\Record implements
 {
     use AccessTokenTrait, TokenEntityTrait, EntityTrait;
 
-    protected static $crud_tableName = "oauth2_access_tokens";
-    protected static $crud_primaryKey = "identifier";
+    protected static function defineSpec(): CRUD\Spec
+    {
+        return new CRUD\Spec(
+            self::class,
+            "oauth2_access_tokens",
+            "identifier",
+            [
+                "identifier" => "token",
+                "expiryDateTime" => "expiry",
+                "userIdentifier" => "user_id",
+                "clientIdentifier" => "client_id",
+            ]
+        );
+    }
 
     public function __construct(array $data = [])
     {
-        if (in_array("clientIdentifier", $data)) {
-            $this->client = Client::read($data["clientIdentifer"]);
-            unset($data["clientIdentifier"]);
+        if (in_array("client_id", $data)) {
+            $this->client = Client::read($data["client_id"]);
+            unset($data["client_id"]);
         }
         parent::__construct($data);
     }

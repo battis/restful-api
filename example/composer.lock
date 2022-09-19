@@ -12,15 +12,24 @@
             "dist": {
                 "type": "path",
                 "url": "../../crud",
-                "reference": "51112b79d023185adc3c41f938bacdb2d71105e3"
+                "reference": "3d5bd5c9d11325c3c32b213c9d901362813fc3e3"
             },
             "require": {
                 "doctrine/dbal": "^3.4"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "^3.0",
+                "phpunit/phpunit": "^9.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
                     "Battis\\CRUD\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Battis\\CRUD\\Tests\\": "tests"
                 }
             },
             "authors": [
@@ -40,7 +49,7 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "568bfa99bf42fc44498d62f9dff2b92739f71068"
+                "reference": "54833ad520df4e755151ea98b1ecfec5e1fcc28c"
             },
             "require": {
                 "battis/crud": "dev-main",
@@ -331,12 +340,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "7727e46aeced2eeb77f6ce8c587d903d1454b5b5"
+                "reference": "0361d33d942f0dfd82bf568799aa68bff13399e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/7727e46aeced2eeb77f6ce8c587d903d1454b5b5",
-                "reference": "7727e46aeced2eeb77f6ce8c587d903d1454b5b5",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/0361d33d942f0dfd82bf568799aa68bff13399e2",
+                "reference": "0361d33d942f0dfd82bf568799aa68bff13399e2",
                 "shasum": ""
             },
             "require": {
@@ -351,14 +360,14 @@
             "require-dev": {
                 "doctrine/coding-standard": "10.0.0",
                 "jetbrains/phpstorm-stubs": "2022.2",
-                "phpstan/phpstan": "1.8.2",
+                "phpstan/phpstan": "1.8.3",
                 "phpstan/phpstan-strict-rules": "^1.3",
-                "phpunit/phpunit": "9.5.21",
+                "phpunit/phpunit": "9.5.24",
                 "psalm/plugin-phpunit": "0.17.0",
                 "squizlabs/php_codesniffer": "3.7.1",
                 "symfony/cache": "^5.4|^6.0",
                 "symfony/console": "^4.4|^5.4|^6.0",
-                "vimeo/psalm": "4.24.0"
+                "vimeo/psalm": "4.27.0"
             },
             "suggest": {
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
@@ -434,7 +443,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-17T22:02:53+00:00"
+            "time": "2022-09-18T15:12:55+00:00"
         },
         {
             "name": "doctrine/deprecations",

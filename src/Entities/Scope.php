@@ -11,6 +11,10 @@ class Scope extends CRUD\Record implements ScopeEntityInterface
 {
     use EntityTrait, ScopeTrait;
 
-    protected static $crud_tableName = "oauth2_scopes";
-    protected static $crud_primaryKey = "identifier";
+    protected static function defineSpec(): CRUD\Spec
+    {
+        return new CRUD\Spec(self::class, null, "identifier", [
+            "identifier" => "scope",
+        ]);
+    }
 }
