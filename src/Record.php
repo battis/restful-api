@@ -2,6 +2,7 @@
 
 namespace Battis\CRUD;
 
+use Doctrine\DBAL\Types\Type;
 use Exception;
 
 class Record
@@ -23,9 +24,10 @@ class Record
 
     protected static function getSpec(): Spec
     {
-        if (empty(static::$spec)) {
-            static::$spec = static::defineSpec();
-        }
+        // TODO: sort out late static binding and static properties and why this isn't working
+        //if (empty(static::$spec)) {
+        static::$spec = static::defineSpec();
+        //}
         return static::$spec;
     }
 
@@ -44,14 +46,23 @@ class Record
     public static function create(array $data)
     {
         $s = static::getSpec();
-        $data = $s->mapPropetiesToFields($data);
+        $data = $s->mapPropertiesToFields($data);
         $dbal = Manager::get();
         if (
             $dbal
                 ->queryBuilder()
                 ->insert($s->getTableName())
                 ->values($s->getNamedParameters($data))
-                ->setParameters($data)
+                ->setParameters(
+                    $data,
+                    array_combine(
+                        array_keys($data),
+                        array_map(
+                            fn($value) => Type::getType(gettype($value)),
+                            array_values($data)
+                        )
+                    )
+                )
                 ->executeStatement() == 1
         ) {
             return static::read($dbal->connection()->lastInsertId());
@@ -96,7 +107,7 @@ class Record
         $q->select("*")->from($s->getTableName());
 
         if (!empty($data)) {
-            $data = $s->mapPropetiesToFields($data);
+            $data = $s->mapPropertiesToFields($data);
             $q = $q
                 ->where(
                     join(
@@ -125,7 +136,7 @@ class Record
     public static function update(array $data)
     {
         $s = static::getSpec();
-        $data = $s->mapPropetiesToFields($data);
+        $data = $s->mapPropertiesToFields($data);
         if (key_exists($s->getPrimaryKeyFieldName(), $data)) {
             $result = self::read($data[$s->getPrimaryKeyFieldName()]);
             $result->save($data);
@@ -187,12 +198,18 @@ class Record
     public function save(array $data = []): void
     {
         $s = static::getSpec();
-        $data = $s->mapPropetiesToFields(
+        $data = $s->mapPropertiesToFields(
             array_merge((array) $this, $s->mapFieldsToProperties($data))
         );
         $q = Manager::get()->queryBuilder();
         $q->update($s->getTableName())
-            ->values($s->getNamedParameters($data))
+            ->values(
+                $s->getNamedParameters($data),
+                array_map(
+                    fn($value) => Type::getType(gettype($value)),
+                    array_values($data)
+                )
+            )
             ->setParameters($data)
             ->executeStatement();
         $updated = static::read($this->getPrimaryKeyValue());

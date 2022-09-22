@@ -86,10 +86,10 @@ class Spec
         $this->propertyToFieldMapping[$property] = $field;
     }
 
-    public function mapPropetiesToFields(array $data): array
+    public function mapPropertiesToFields(array $data): array
     {
         return array_combine(
-            array_map($this->mapPropertyToField, array_keys($data)),
+            array_map([$this, "mapPropertyToField"], array_keys($data)),
             array_values($data)
         );
     }
