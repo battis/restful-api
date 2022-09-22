@@ -2,8 +2,9 @@
 
 namespace Battis\OAuth2\Server\Actions;
 
-use Battis\OAuth2\Server\Entities\User;
+use Battis\UserSession;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Slim\Http\Response;
 use Slim\Http\ServerRequest;
@@ -15,9 +16,17 @@ class AuthorizeCodeGrant
      */
     private $authorizationServer;
 
-    public function __construct(AuthorizationServer $authorizationServer)
-    {
+    /**
+     * @var UserSession\Manager
+     */
+    private $manager;
+
+    public function __construct(
+        AuthorizationServer $authorizationServer,
+        UserSession\Manager $manager
+    ) {
         $this->authorizationServer = $authorizationServer;
+        $this->manager = $manager;
     }
 
     public function __invoke(ServerRequest $request, Response $response)
@@ -26,11 +35,11 @@ class AuthorizeCodeGrant
             $authRequest = $this->authorizationServer->validateAuthorizationRequest(
                 $request
             );
-            $user = User::read($request->getParsedBodyParam("username"));
+            // FIXME: this is a hack
+            /** @var UserEntityInterface $user */
+            $user = $this->manager->getCurrentUser();
             $authRequest->setUser($user);
-            $authRequest->setAuthorizationApproved(
-                $user->passwordVerify($request->getParsedBodyParam("password"))
-            );
+            $authRequest->setAuthorizationApproved(true); // FIXME: oy
             return $this->authorizationServer->completeAuthorizationRequest(
                 $authRequest,
                 $response

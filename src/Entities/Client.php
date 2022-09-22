@@ -23,7 +23,10 @@ class Client extends CRUD\Record implements
     {
         return new CRUD\Spec(self::class, "oauth2_clients", "identifier", [
             "identifier" => "client_id",
+            "name" => "display_name",
             "userIdentifier" => "user_id",
+            "redirectUri" => "redirect_uri",
+            "isConfidential" => "confidential",
         ]);
     }
 
