@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../crud",
-                "reference": "52accd53dbfa7224209c76f662bb79cac22b24aa"
+                "reference": "4cdc17030ea7a4499454a0f967096f2815cd6e3e"
             },
             "require": {
                 "doctrine/dbal": "^3.4"
@@ -49,7 +49,7 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "0333b4f4a25c3711c5b72228c38664599ee1fc1c"
+                "reference": "05d5d4e476e8e33b785bab6470490a8f3081a366"
             },
             "require": {
                 "battis/crud": "dev-main",
@@ -340,12 +340,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "116a60f8478892d785f6a156218e534581030b81"
+                "reference": "2ab785585ed257717760eb6ddcd12bfb96f97639"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/116a60f8478892d785f6a156218e534581030b81",
-                "reference": "116a60f8478892d785f6a156218e534581030b81",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/2ab785585ed257717760eb6ddcd12bfb96f97639",
+                "reference": "2ab785585ed257717760eb6ddcd12bfb96f97639",
                 "shasum": ""
             },
             "require": {
@@ -443,7 +443,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-19T15:06:58+00:00"
+            "time": "2022-09-23T14:11:25+00:00"
         },
         {
             "name": "doctrine/deprecations",

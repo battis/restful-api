@@ -4,5 +4,8 @@ namespace Battis\OAuth2\Server\Entities\Interfaces;
 
 interface UserAssignable
 {
-    function getUserIdentifier(): ?string;
+    /**
+     * @return string|int|null
+     */
+    function getUserIdentifier();
 }

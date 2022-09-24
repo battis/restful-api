@@ -1,7 +1,6 @@
 <?php
 
 use DI\Container;
-use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 
 /** @var Container $container */
 

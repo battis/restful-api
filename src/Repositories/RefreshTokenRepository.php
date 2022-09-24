@@ -25,7 +25,9 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     ) {
         RefreshToken::create([
             "identifier" => $refreshTokenEntity->getIdentifier(),
-            "expiryDateTime" => $refreshTokenEntity->getExpiryDateTime(),
+            "expiryDateTime" => $refreshTokenEntity
+                ->getExpiryDateTime()
+                ->format("Y-m-d H:i:s"),
             "accessTokenIdentifier" => $refreshTokenEntity
                 ->getAccessToken()
                 ->getIdentifier(),

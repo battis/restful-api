@@ -6,6 +6,7 @@ use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\Interfaces\Scopeable;
 use Battis\OAuth2\Server\Entities\Interfaces\TokenGrantable;
 use Battis\OAuth2\Server\Entities\Interfaces\UserAssignable;
+use Battis\OAuth2\Server\Repositories\ScopeRepository;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ClientTrait;
@@ -39,9 +40,22 @@ class Client extends CRUD\Record implements
     /** @var string[] */
     protected $grant_types = [];
 
+    /** @var string|null */
+    protected $description;
+
     public function getUserIdentifier(): ?string
     {
         return $this->user_id;
+    }
+
+    public function setScopes($value)
+    {
+        if (!is_array($value)) {
+            $value = json_decode($value);
+        }
+        foreach ($value as $scope) {
+            $this->scopes[] = Scope::read($scope);
+        }
     }
 
     public function getScopes(): array
@@ -52,5 +66,10 @@ class Client extends CRUD\Record implements
     public function getGrantTypes(): array
     {
         return $this->grant_types;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
     }
 }

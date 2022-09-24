@@ -11,10 +11,18 @@ class Scope extends CRUD\Record implements ScopeEntityInterface
 {
     use EntityTrait, ScopeTrait;
 
+    /** @var string|null */
+    protected $description;
+
     protected static function defineSpec(): CRUD\Spec
     {
         return new CRUD\Spec(self::class, null, "identifier", [
             "identifier" => "scope",
         ]);
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
     }
 }

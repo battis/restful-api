@@ -4,6 +4,7 @@ namespace Battis\OAuth2\Server\Entities;
 
 use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\Interfaces\UserAssignable;
+use DateTimeImmutable;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
@@ -13,7 +14,10 @@ class AccessToken extends CRUD\Record implements
     AccessTokenEntityInterface,
     UserAssignable
 {
-    use AccessTokenTrait, TokenEntityTrait, EntityTrait;
+    use AccessTokenTrait, EntityTrait;
+    use TokenEntityTrait {
+        setExpiryDateTime as traitSetExpiryDateTime;
+    }
 
     protected static function defineSpec(): CRUD\Spec
     {
@@ -37,5 +41,13 @@ class AccessToken extends CRUD\Record implements
             unset($data["client_id"]);
         }
         parent::__construct($data);
+    }
+
+    public function setExpiryDateTime($value)
+    {
+        if (!($value instanceof DateTimeImmutable)) {
+            $value = new DateTimeImmutable($value);
+        }
+        return $this->traitSetExpiryDateTime($value);
     }
 }
