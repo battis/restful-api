@@ -24,11 +24,9 @@ class AuthCodeRepository implements AuthCodeRepositoryInterface
     {
         AuthCode::create([
             "identifier" => $authCodeEntity->getIdentifier(),
-            "expiryDateTime" => $authCodeEntity
-                ->getExpiryDateTime()
-                ->format("Y-m-d H:i:s"),
+            "expiryDateTime" => $authCodeEntity->getExpiryDateTime(),
             "userIdentifier" => $authCodeEntity->getUserIdentifier(),
-            "scopes" => json_encode($authCodeEntity->getScopes()),
+            "scopes" => $authCodeEntity->getScopes(),
             "clientIdentifier" => $authCodeEntity->getClient()->getIdentifier(),
         ]);
     }

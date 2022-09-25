@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../crud",
-                "reference": "4cdc17030ea7a4499454a0f967096f2815cd6e3e"
+                "reference": "aefe535ab5b55ae5c8875c855610a2f738029f3a"
             },
             "require": {
                 "doctrine/dbal": "^3.4"

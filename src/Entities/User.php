@@ -39,13 +39,12 @@ class User extends CRUD\Record implements
         return password_verify($password, $this->password);
     }
 
-    public function setScopes($value)
+    public function setScopes($scopes)
     {
-        if (!is_array($value)) {
-            $value = json_decode($value);
-        }
-        foreach ($value as $scope) {
-            $this->scopes[] = Scope::read($scope);
+        if (is_array($scopes)) {
+            foreach ($scopes as $scope) {
+                $this->scopes[] = Scope::read($scope);
+            }
         }
     }
 

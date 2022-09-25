@@ -35,11 +35,9 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     ) {
         AccessToken::create([
             "identifier" => $accessTokenEntity->getIdentifier(),
-            "expiryDateTime" => $accessTokenEntity
-                ->getExpiryDateTime()
-                ->format("Y-m-d H:i:s"),
+            "expiryDateTime" => $accessTokenEntity->getExpiryDateTime(),
             "userIdentifier" => $accessTokenEntity->getUserIdentifier(),
-            "scopes" => json_encode($accessTokenEntity->getScopes()),
+            "scopes" => $accessTokenEntity->getScopes(),
             "clientIdentifier" => $accessTokenEntity
                 ->getClient()
                 ->getIdentifier(),

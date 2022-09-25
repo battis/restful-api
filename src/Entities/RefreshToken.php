@@ -3,17 +3,13 @@
 namespace Battis\OAuth2\Server\Entities;
 
 use Battis\CRUD;
-use DateTimeImmutable;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 use League\OAuth2\Server\Entities\Traits\RefreshTokenTrait;
 
 class RefreshToken extends CRUD\Record implements RefreshTokenEntityInterface
 {
-    use EntityTrait;
-    use RefreshTokenTrait {
-        setExpiryDateTime as traitSetExpiryDateTime;
-    }
+    use RefreshTokenTrait, EntityTrait;
 
     protected static function defineSpec(): CRUD\Spec
     {
@@ -38,13 +34,5 @@ class RefreshToken extends CRUD\Record implements RefreshTokenEntityInterface
             unset($data["accessTokenIdentifier"]);
         }
         parent::__construct($data);
-    }
-
-    public function setExpiryDateTime($value)
-    {
-        if (!($value instanceof DateTimeImmutable)) {
-            $value = new DateTimeImmutable($value);
-        }
-        return $this->traitSetExpiryDateTime($value);
     }
 }

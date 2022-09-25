@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../crud",
-                "reference": "4cdc17030ea7a4499454a0f967096f2815cd6e3e"
+                "reference": "aefe535ab5b55ae5c8875c855610a2f738029f3a"
             },
             "require": {
                 "doctrine/dbal": "^3.4"
@@ -49,7 +49,7 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "05d5d4e476e8e33b785bab6470490a8f3081a366"
+                "reference": "41ecb4ceeb30027fb8477ad5611938d807f71465"
             },
             "require": {
                 "battis/crud": "dev-main",
