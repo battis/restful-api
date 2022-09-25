@@ -2,7 +2,6 @@
 
 namespace Battis\CRUD;
 
-use Doctrine\DBAL\Types\Type;
 use Exception;
 
 class Record
@@ -53,16 +52,7 @@ class Record
                 ->queryBuilder()
                 ->insert($s->getTableName())
                 ->values($s->getNamedParameters($data))
-                ->setParameters(
-                    $data,
-                    array_combine(
-                        array_keys($data),
-                        array_map(
-                            fn($value) => Type::getType(gettype($value)),
-                            array_values($data)
-                        )
-                    )
-                )
+                ->setParameters($data, $s->mapPhpTypesToDoctrineTypes($data))
                 ->executeStatement() == 1
         ) {
             return static::read($dbal->connection()->lastInsertId());
@@ -88,7 +78,8 @@ class Record
             ->setParameter(0, $id)
             ->executeQuery();
         if ($response->rowCount() === 1) {
-            return new static($response->fetchAssociative());
+            $data = $s->mapFieldsToProperties($response->fetchAssociative());
+            return new static($data);
         }
         return null;
     }
@@ -121,6 +112,7 @@ class Record
 
         $result = [];
         while ($row = $response->fetchAssociative()) {
+            $row = $s->mapFieldsToProperties($row);
             array_push($result, new static($row));
         }
         return $result;
@@ -177,7 +169,7 @@ class Record
         $data = $s->mapFieldsToProperties($data);
         foreach ($data as $property => $value) {
             if ($setter = $s->getSetter($property)) {
-                $this->$setter($value);
+                $this->$setter($s->toExpectedArgumentType($setter, $value));
             } else {
                 $this->$property = $value;
             }
@@ -203,14 +195,8 @@ class Record
         );
         $q = Manager::get()->queryBuilder();
         $q->update($s->getTableName())
-            ->values(
-                $s->getNamedParameters($data),
-                array_map(
-                    fn($value) => Type::getType(gettype($value)),
-                    array_values($data)
-                )
-            )
-            ->setParameters($data)
+            ->values($s->getNamedParameters($data))
+            ->setParameters($data) // FIXME: convert to DB types
             ->executeStatement();
         $updated = static::read($this->getPrimaryKeyValue());
         if ($updated) {

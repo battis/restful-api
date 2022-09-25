@@ -2,6 +2,8 @@
 
 namespace Battis\CRUD;
 
+use DateTime;
+use DateTimeImmutable;
 use Exception;
 use ReflectionClass;
 use ReflectionException;
@@ -129,6 +131,35 @@ class Spec
         } catch (ReflectionException $e) {
             return null;
         }
+    }
+
+    public function toExpectedArgumentType($setter, $value)
+    {
+        /** @var ReflectionNamedType */
+        $type = $this->reflection
+            ->getMethod($setter)
+            ->getParameters()[0]
+            ->getType();
+        if ($type) {
+            $class = $type->getName();
+            return new $class($value);
+        }
+        return $value;
+    }
+
+    public function mapPhpTypesToDoctrineTypes(array $data): array
+    {
+        $result = [];
+        foreach ($data as $key => $value) {
+            if ($value instanceof DateTimeImmutable) {
+                $result[$key] = "datetime_immutable";
+            } elseif ($value instanceof DateTime) {
+                $result[$key] = "datetime";
+            } elseif (is_array($value)) {
+                $result[$key] = "json";
+            }
+        }
+        return $result;
     }
 
     private function snake_case_to_PascalCase(string $snake_case): string
