@@ -142,6 +142,9 @@ class Spec
             ->getType();
         if ($type) {
             $class = $type->getName();
+            if ($class == "array") {
+                return json_decode($value) ?? [];
+            }
             return new $class($value);
         }
         return $value;
