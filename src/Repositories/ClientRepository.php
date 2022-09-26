@@ -31,11 +31,12 @@ class ClientRepository implements ClientRepositoryInterface
      */
     public function validateClient($clientIdentifier, $clientSecret, $grantType)
     {
-        $client = Client::retrieve([
+        $clients = Client::retrieve([
             "identifier" => $clientIdentifier,
             "client_secret" => $clientSecret,
         ]);
-        // FIXME: validate grantType
-        return !!$client;
+        return !empty($clients) &&
+            (empty($clients[0]->getGrantTypes()) ||
+                in_array($grantType, $clients[0]->getGrantTypes()));
     }
 }

@@ -49,12 +49,11 @@
             "dist": {
                 "type": "path",
                 "url": "..",
-                "reference": "41ecb4ceeb30027fb8477ad5611938d807f71465"
+                "reference": "c2af4ba4d720fa4545cc90661297abb8d97acb08"
             },
             "require": {
                 "battis/crud": "dev-main",
                 "battis/user-session": "dev-main",
-                "doctrine/dbal": "^3.4",
                 "ext-json": "*",
                 "league/oauth2-server": "^8.3",
                 "psr/container": "^1.0",
@@ -87,11 +86,10 @@
             "dist": {
                 "type": "path",
                 "url": "../../user-session",
-                "reference": "7a7ff39f9fcc1a4a29d2d567d0a178365923b77c"
+                "reference": "623cd571067d3adce35b8c1b2f64bf6fbfa07716"
             },
             "require": {
                 "bryanjhv/slim-session": "^4.0",
-                "php-di/php-di": "^6.0",
                 "slim/http": "^1.2",
                 "slim/php-view": "^3.0",
                 "slim/psr7": "^1.0"

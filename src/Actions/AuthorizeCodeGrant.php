@@ -54,7 +54,6 @@ class AuthorizeCodeGrant
                 $authRequest = $this->authorizationServer->validateAuthorizationRequest(
                     $request
                 );
-                // FIXME: this is a hack
                 /** @var UserEntityInterface $user */
                 $user = $this->manager->getCurrentUser();
                 $authRequest->setUser($user);

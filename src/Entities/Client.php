@@ -61,6 +61,11 @@ class Client extends CRUD\Record implements
         return $this->scopes;
     }
 
+    public function setGrantTypes(array $grantTypes)
+    {
+        $this->grant_types = $grantTypes;
+    }
+
     public function getGrantTypes(): array
     {
         return $this->grant_types;

@@ -20,7 +20,7 @@ return [
         "routerCacheFile" => string("{app.root}/var/slim/routerCacheFile"),
     ],
 
-    // FIXME: better to load from $_ENV than to hard code!
+    // Better to load from $_ENV than to hard code!
     DBAL\Connection::class => fn() => DBAL\DriverManager::getConnection([
         "driver" => "pdo_mysql",
         "host" => "127.0.0.1",
