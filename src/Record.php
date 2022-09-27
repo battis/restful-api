@@ -45,17 +45,17 @@ class Record
     public static function create(array $data)
     {
         $s = static::getSpec();
-        $data = $s->mapPropertiesToFields($data);
-        $dbal = Manager::get();
         if (
-            $dbal
-                ->queryBuilder()
-                ->insert($s->getTableName())
-                ->values($s->getNamedParameters($data))
-                ->setParameters($data, $s->mapPhpTypesToDoctrineTypes($data))
-                ->executeStatement() == 1
+            $id = Connection::createQuery()
+                ->insertInto(
+                    $s->getTableName(),
+                    $s->translatePhpTypesToDbTypes(
+                        $s->mapPropertiesToFields($data)
+                    )
+                )
+                ->execute()
         ) {
-            return static::read($dbal->connection()->lastInsertId());
+            return static::read($id);
         }
         return null;
     }
@@ -70,16 +70,13 @@ class Record
     public static function read($id)
     {
         $s = static::getSpec();
-        $q = Manager::get()->queryBuilder();
-        $response = $q
-            ->select("*")
-            ->from($s->getTableName())
-            ->where($q->expr()->eq($s->getPrimaryKeyFieldName(), "?"))
-            ->setParameter(0, $id)
-            ->executeQuery();
-        if ($response->rowCount() === 1) {
-            $data = $s->mapFieldsToProperties($response->fetchAssociative());
-            return new static($data);
+        if (
+            $data = Connection::createQuery()
+                ->from($s->getTableName())
+                ->where("`" . $s->getPrimaryKeyFieldName() . "` = ?", $id)
+                ->fetch()
+        ) {
+            return new static($s->mapFieldsToProperties($data));
         }
         return null;
     }
@@ -93,27 +90,18 @@ class Record
      */
     public static function retrieve(array $data = []): array
     {
-        $q = Manager::get()->queryBuilder();
         $s = static::getSpec();
-        $q->select("*")->from($s->getTableName());
 
+        $query = Connection::createQuery()->from($s->getTableName());
         if (!empty($data)) {
-            $data = $s->mapPropertiesToFields($data);
-            $q = $q
-                ->where(
-                    join(
-                        " AND ",
-                        array_map(fn($key) => "$key = :$key", array_keys($data))
-                    )
-                )
-                ->setParameters($data);
+            $query = $query->where($data);
         }
-        $response = $q->executeQuery();
-
         $result = [];
-        while ($row = $response->fetchAssociative()) {
-            $row = $s->mapFieldsToProperties($row);
-            array_push($result, new static($row));
+        if ($response = $query->execute()) {
+            while ($row = $response->fetch()) {
+                $row = $s->mapFieldsToProperties($row);
+                array_push($result, new static($row));
+            }
         }
         return $result;
     }
@@ -148,17 +136,8 @@ class Record
     {
         $s = static::getSpec();
         $result = static::read($id);
-        if ($result) {
-            $q = Manager::get()->queryBuilder();
-            if (
-                $q
-                    ->delete($s->getTableName())
-                    ->where($q->expr()->eq($s->getPrimaryKeyFieldName(), "?"))
-                    ->setParameter(0, $id)
-                    ->executeStatement() > 0
-            ) {
-                return $result;
-            }
+        if (Connection::createQuery()->delete($s->getTableName(), $id)) {
+            return $result;
         }
         return null;
     }
@@ -190,19 +169,30 @@ class Record
     public function save(array $data = []): void
     {
         $s = static::getSpec();
-        $data = $s->mapPropertiesToFields(
-            array_merge((array) $this, $s->mapFieldsToProperties($data))
-        );
-        $q = Manager::get()->queryBuilder();
-        $q->update($s->getTableName())
-            ->values($s->getNamedParameters($data))
-            ->setParameters($data) // FIXME: convert to DB types
-            ->executeStatement();
-        $updated = static::read($this->getPrimaryKeyValue());
-        if ($updated) {
-            $this->cloneIntoSelf($updated);
-        } else {
-            throw new Exception("Record no longer available");
+        if (
+            Connection::createQuery()
+                ->update(
+                    $s->getTableName(),
+                    $s->translatePhpTypesToDbTypes(
+                        $s->mapPropertiesToFields(
+                            array_merge(
+                                (array) $this,
+                                $s->mapFieldsToProperties($data)
+                            )
+                        )
+                    )
+                )
+                ->where(
+                    "`" . $s->getPrimaryKeyFieldName() . "` = ?",
+                    $this->getPrimaryKeyValue()
+                )
+        ) {
+            $updated = static::read($this->getPrimaryKeyValue());
+            if ($updated) {
+                $this->cloneIntoSelf($updated);
+                return;
+            }
         }
+        throw new Exception("Record no longer available");
     }
 }

@@ -4,6 +4,7 @@ namespace Battis\CRUD;
 
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Exception;
 use ReflectionClass;
 use ReflectionException;
@@ -112,6 +113,47 @@ class Spec
     public function mapFieldToProperty(string $field): string
     {
         return array_search($field, $this->propertyToFieldMapping) ?: $field;
+    }
+
+    public function translatePhpTypesToDbTypes(array $data): array
+    {
+        $result = [];
+        foreach ($data as $key => $value) {
+            if ($value instanceof DateTimeInterface) {
+                $result[$key] = $value->format("Y-m-d H:i:s");
+            } elseif (is_array($value)) {
+                $result[$key] = json_encode($value);
+            } else {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
+    }
+
+    public function translateDbTypesToPhpTypes(array $data): array
+    {
+        $result = [];
+        foreach ($data as $key => $value) {
+            if (
+                $this->reflection
+                    ->getProperty($key)
+                    ->getType()
+                    ->getName() instanceof DateTimeInterface &&
+                !($value instanceof DateTimeInterface)
+            ) {
+                $result[$key] = new DateTimeImmutable($value);
+            } elseif (
+                $this->reflection
+                    ->getProperty($key)
+                    ->getType()
+                    ->getName() == "array"
+            ) {
+                $result[$key] = json_decode($value);
+            } else {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
     }
 
     public function getNamedParameters(array $data): array
