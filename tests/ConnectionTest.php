@@ -1,8 +1,12 @@
 <?php
 
+namespace Tests\Battis\CRUD;
+
 use Battis\CRUD\Connection;
 use Envms\FluentPDO\Query;
+use PDO;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 /**
  * @backupStaticAttributes enabled

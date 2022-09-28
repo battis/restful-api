@@ -2,9 +2,10 @@
 
 namespace Battis\CRUD;
 
+use Battis\CRUD\Utilities\Types;
 use Exception;
 
-class Record
+abstract class Record
 {
     /** @var Spec|null */
     protected static $spec;
@@ -49,9 +50,7 @@ class Record
             $id = Connection::createQuery()
                 ->insertInto(
                     $s->getTableName(),
-                    $s->translatePhpTypesToDbTypes(
-                        $s->mapPropertiesToFields($data)
-                    )
+                    Types::toDatabaseValues(static::objectToDatabaseHook($data))
                 )
                 ->execute()
         ) {
@@ -73,10 +72,10 @@ class Record
         if (
             $data = Connection::createQuery()
                 ->from($s->getTableName())
-                ->where("`" . $s->getPrimaryKeyFieldName() . "` = ?", $id)
+                ->where("`" . $s->getPrimaryKey() . "` = ?", $id)
                 ->fetch()
         ) {
-            return new static($s->mapFieldsToProperties($data));
+            return new static(static::databaseToObjectHook($data));
         }
         return null;
     }
@@ -99,8 +98,10 @@ class Record
         $result = [];
         if ($response = $query->execute()) {
             while ($row = $response->fetch()) {
-                $row = $s->mapFieldsToProperties($row);
-                array_push($result, new static($row));
+                array_push(
+                    $result,
+                    new static(static::databaseToObjectHook($row))
+                );
             }
         }
         return $result;
@@ -116,9 +117,8 @@ class Record
     public static function update(array $data)
     {
         $s = static::getSpec();
-        $data = $s->mapPropertiesToFields($data);
-        if (key_exists($s->getPrimaryKeyFieldName(), $data)) {
-            $result = self::read($data[$s->getPrimaryKeyFieldName()]);
+        if (key_exists($s->getPrimaryKey(), $data)) {
+            $result = self::read($data[$s->getPrimaryKey()]);
             $result->save($data);
             return $result;
         }
@@ -145,10 +145,11 @@ class Record
     private function assign(array $data)
     {
         $s = static::getSpec();
-        $data = $s->mapFieldsToProperties($data);
         foreach ($data as $property => $value) {
             if ($setter = $s->getSetter($property)) {
-                $this->$setter($s->toExpectedArgumentType($setter, $value));
+                $this->$setter(
+                    Types::toExpectedArgumentType($this, $setter, $value)
+                );
             } else {
                 $this->$property = $value;
             }
@@ -162,7 +163,7 @@ class Record
 
     private function getPrimaryKeyValue()
     {
-        $property = static::getSpec()->getPrimaryKeyPropertyName();
+        $property = static::getSpec()->getPrimaryKey();
         return $this->$property;
     }
 
@@ -173,17 +174,14 @@ class Record
             Connection::createQuery()
                 ->update(
                     $s->getTableName(),
-                    $s->translatePhpTypesToDbTypes(
-                        $s->mapPropertiesToFields(
-                            array_merge(
-                                (array) $this,
-                                $s->mapFieldsToProperties($data)
-                            )
+                    Types::toDatabaseValues(
+                        static::objectToDatabaseHook(
+                            array_merge((array) $this, $data)
                         )
                     )
                 )
                 ->where(
-                    "`" . $s->getPrimaryKeyFieldName() . "` = ?",
+                    "`" . $s->getPrimaryKey() . "` = ?",
                     $this->getPrimaryKeyValue()
                 )
         ) {
@@ -194,5 +192,15 @@ class Record
             }
         }
         throw new Exception("Record no longer available");
+    }
+
+    protected static function objectToDatabaseHook(array $data): array
+    {
+        return $data;
+    }
+
+    protected static function databaseToObjectHook(array $data): array
+    {
+        return $data;
     }
 }

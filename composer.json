@@ -20,6 +20,11 @@
             "Battis\\CRUD\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Battis\\CRUD\\": "tests"
+        }
+    },
     "config": {
         "sort-packages": true
     }
