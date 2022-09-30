@@ -2,107 +2,135 @@
 
 namespace Tests\Battis\CRUD;
 
+use Battis\CRUD\Connection;
 use Envms\FluentPDO\Query;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @backupStaticAttributes enabled
+ */
 abstract class AbstractDatabaseTest extends TestCase
 {
-    /** @var PDO */
-    private static $pdo;
+    private $pdo;
 
-    public static function setUpBeforeClass(): void
+    protected function getPDO(): PDO
     {
-        self::$pdo = new PDO(self::getDSN());
-    }
-
-    protected static function getDSN(): string
-    {
-        return "sqlite::memory:";
+        if (!$this->pdo) {
+            $this->pdo = new PDO("sqlite::memory:");
+        }
+        return $this->pdo;
     }
 
     protected function setUp(): void
     {
-        self::$pdo->query($this->getSetupSQL());
+        Connection::getInstance($this->getPDO());
+        $this->getPDO()->query($this->getSetupSQL());
     }
 
     abstract protected function getSetupSQL(): string;
 
     protected function tearDown(): void
     {
-        self::$pdo->query($this->getTearDownSQL());
+        $this->getPDO()->query($this->getTearDownSQL());
     }
 
     abstract protected function getTearDownSQL(): string;
 
     protected function query(): Query
     {
-        return new Query(self::$pdo);
+        return new Query($this->getPDO());
     }
 
     abstract protected function getTableName(): string;
 
-    public function assertDatabaseRowExists($id)
+    protected function insertRow(array $data)
+    {
+        $this->query()
+            ->insertInto($this->getTableName())
+            ->values($data)
+            ->execute();
+    }
+
+    protected function insertRows(array $data)
+    {
+        foreach ($data as $datum) {
+            $this->insertRow($datum);
+        }
+    }
+
+    protected function deleteRow($id)
+    {
+        $this->query()
+            ->delete($this->getTableName(), $id)
+            ->execute();
+    }
+
+    public function assertDatabaseRowExists($id, $message = "")
     {
         $this->assertNotFalse(
             $this->query()
                 ->from($this->getTableName(), $id)
-                ->fetch()
+                ->fetch(),
+            $message
         );
     }
 
-    public function asssertDatabaseRowDoesNotExist($id)
+    public function asssertDatabaseRowDoesNotExist($id, $message = "")
     {
         $this->assertFalse(
             $this->query()
                 ->from($this->getTableName(), $id)
-                ->fetch()
+                ->fetch(),
+            $message
         );
     }
 
-    public function assertDatabaseRowMatch(array $data)
+    public function assertDatabaseRowMatch(array $data, $message = "")
     {
         $query = $this->query()->from($this->getTableName());
         foreach ($data as $key => $value) {
             $query = $query->where("`$key` = ?", $value);
         }
-        $this->assertNotFalse($query->fetch());
+        $this->assertNotFalse($query->fetch(), $message);
     }
 
-    public function assertDatabaseRowDoesNotMatch(array $data)
+    public function assertDatabaseRowDoesNotMatch(array $data, $message = "")
     {
         $query = $this->query()->from($this->getTableName());
         foreach ($data as $key => $value) {
             $query = $query->where("`$key` = ?", $value);
         }
-        $this->assertFalse($query->fetch());
+        $this->assertFalse($query->fetch(), $message);
     }
 
-    public function assertDatabaseExactRowExists(array $data)
+    public function assertDatabaseExactRowExists(array $data, $message = "")
     {
         $query = $this->query()->from($this->getTableName());
         foreach ($data as $key => $value) {
             $query = $query->where("`$key` = ?", $value);
         }
-        $this->assertNotFalse($row = $query->fetch());
+        $this->assertNotFalse($row = $query->fetch(), $message);
 
         foreach ($row as $key => $value) {
-            $this->assertEquals($data[$key], $value);
+            $this->assertEquals($data[$key], $value, $message);
         }
         foreach ($data as $key => $value) {
-            $this->assertEquals($row[$key], $value);
+            $this->assertEquals($row[$key], $value, $message);
         }
     }
 
-    public function assertDatabaseExactRowDoesNotExist(array $data)
-    {
+    public function assertDatabaseExactRowDoesNotExist(
+        array $data,
+        $message = ""
+    ) {
         $query = $this->query()->from($this->getTableName());
         foreach ($data as $key => $value) {
             $query = $query->where("`$key` = ?", $value);
         }
         $row = $query->fetch();
         if ($row == false) {
-            $this->assertFalse($row);
+            $this->assertFalse($row, $message);
         } else {
             $this->assertFalse(
                 array_reduce(
@@ -111,17 +139,18 @@ abstract class AbstractDatabaseTest extends TestCase
                         return $state && in_array($value, array_keys($data));
                     },
                     true
-                )
+                ),
+                $message
             );
         }
     }
 
-    public function assertDatabaseTableEquals(array $data)
+    public function assertDatabaseTableEquals(array $data, $message = "")
     {
         $table = $this->query()
             ->from($this->getTableName())
             ->fetchAll();
-        $this->assertEquals(count($data), count($table));
+        $this->assertEquals(count($data), count($table), $message);
         foreach ($table as $row) {
             $matched = false;
             foreach ($data as $datum) {
@@ -139,7 +168,7 @@ abstract class AbstractDatabaseTest extends TestCase
                     }
                 }
             }
-            $this->assertTrue($matched);
+            $this->assertTrue($matched, $message);
         }
     }
 }

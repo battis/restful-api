@@ -48,8 +48,6 @@ class SpecTest extends TestCase
                 "id" => null,
                 "foo" => "setFoo",
                 "bar" => null,
-                "foo_bar_baz" => "setFooBarBaz",
-                "argleBargle" => "setArgleBargle",
             ]
             as $property => $setter
         ) {

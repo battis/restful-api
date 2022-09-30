@@ -6,7 +6,7 @@ use Battis\CRUD\Record;
 
 class RecordWithFields extends Record
 {
-    protected $id;
-    protected $foo;
-    protected $bar;
+    public $id;
+    public $foo;
+    public $bar;
 }

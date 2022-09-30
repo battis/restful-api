@@ -2,8 +2,8 @@
 
 namespace Battis\CRUD;
 
+use Battis\CRUD\Exceptions\RecordException;
 use Battis\CRUD\Utilities\Types;
-use Exception;
 
 abstract class Record
 {
@@ -46,14 +46,14 @@ abstract class Record
     public static function create(array $data)
     {
         $s = static::getSpec();
-        if (
-            $id = Connection::createQuery()
-                ->insertInto(
-                    $s->getTableName(),
-                    Types::toDatabaseValues(static::objectToDatabaseHook($data))
-                )
-                ->execute()
-        ) {
+
+        $id = Connection::createQuery()
+            ->insertInto($s->getTableName())
+            ->values(
+                Types::toDatabaseValues(static::objectToDatabaseHook($data))
+            )
+            ->execute();
+        if ($id) {
             return static::read($id);
         }
         return null;
@@ -136,7 +136,12 @@ abstract class Record
     {
         $s = static::getSpec();
         $result = static::read($id);
-        if (Connection::createQuery()->delete($s->getTableName(), $id)) {
+        if (
+            $result &&
+            Connection::createQuery()
+                ->delete($s->getTableName())
+                ->where("`" . $s->getPrimaryKey() . "` = ?", $id)
+        ) {
             return $result;
         }
         return null;
@@ -161,7 +166,7 @@ abstract class Record
         $this->assign((array) $other);
     }
 
-    private function getPrimaryKeyValue()
+    private function getPrimaryKey()
     {
         $property = static::getSpec()->getPrimaryKey();
         return $this->$property;
@@ -172,8 +177,8 @@ abstract class Record
         $s = static::getSpec();
         if (
             Connection::createQuery()
-                ->update(
-                    $s->getTableName(),
+                ->update($s->getTableName())
+                ->set(
                     Types::toDatabaseValues(
                         static::objectToDatabaseHook(
                             array_merge((array) $this, $data)
@@ -182,16 +187,21 @@ abstract class Record
                 )
                 ->where(
                     "`" . $s->getPrimaryKey() . "` = ?",
-                    $this->getPrimaryKeyValue()
+                    $this->getPrimaryKey()
                 )
+                ->execute()
         ) {
-            $updated = static::read($this->getPrimaryKeyValue());
+            $updated = static::read($this->getPrimaryKey());
             if ($updated) {
                 $this->cloneIntoSelf($updated);
+                unset($updated);
                 return;
             }
         }
-        throw new Exception("Record no longer available");
+        throw new RecordException(
+            "Record no longer available",
+            RecordException::SAVE_ERROR
+        );
     }
 
     protected static function objectToDatabaseHook(array $data): array

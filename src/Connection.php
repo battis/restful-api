@@ -3,7 +3,6 @@
 namespace Battis\CRUD;
 
 use Envms\FluentPDO\Query;
-use Exception;
 use PDO;
 
 class Connection
@@ -24,10 +23,6 @@ class Connection
 
     private function __construct(PDO $pdo)
     {
-        assert(
-            $pdo !== null,
-            new Exception("Cannot create Connection without PDO instance")
-        );
         $this->pdo = $pdo;
     }
 
