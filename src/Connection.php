@@ -13,6 +13,11 @@ class Connection
     /** @var PDO */
     private $pdo;
 
+    public static function setPDO(PDO $pdo)
+    {
+        self::getInstance($pdo);
+    }
+
     public static function getInstance(PDO $pdo = null): self
     {
         if (empty(self::$instance)) {

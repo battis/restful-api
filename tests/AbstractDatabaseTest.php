@@ -2,7 +2,6 @@
 
 namespace Tests\Battis\CRUD;
 
-use Battis\CRUD\Connection;
 use Envms\FluentPDO\Query;
 use PDO;
 use PHPUnit\Framework\TestCase;
@@ -12,37 +11,55 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class AbstractDatabaseTest extends TestCase
 {
+    /** @var PDO */
     private $pdo;
+
+    /** @var Query[] */
+    private $queries = [];
+
+    protected function setPDO(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
 
     protected function getPDO(): PDO
     {
-        if (!$this->pdo) {
-            $this->pdo = new PDO("sqlite::memory:");
-        }
         return $this->pdo;
     }
 
     protected function setUp(): void
     {
-        Connection::getInstance($this->getPDO());
-        $this->getPDO()->query($this->getSetupSQL());
+        if (!$this->pdo) {
+            $this->pdo = new PDO($this->getDSN());
+        }
     }
-
-    abstract protected function getSetupSQL(): string;
 
     protected function tearDown(): void
     {
-        $this->getPDO()->query($this->getTearDownSQL());
+        foreach ($this->queries as $query) {
+            $query->close();
+        }
+        $this->pdo = null;
     }
-
-    abstract protected function getTearDownSQL(): string;
 
     protected function query(): Query
     {
-        return new Query($this->getPDO());
+        $query = new Query($this->getPDO());
+        $this->queries[] = $query;
+        return $query;
+    }
+
+    protected function getDSN()
+    {
+        return "sqlite::memory:";
     }
 
     abstract protected function getTableName(): string;
+
+    protected function getPrimaryKey(): string
+    {
+        return "id";
+    }
 
     protected function insertRow(array $data)
     {
@@ -59,10 +76,16 @@ abstract class AbstractDatabaseTest extends TestCase
         }
     }
 
+    private function primaryKeyEquals($id)
+    {
+        return ["`" . $this->getPrimaryKey() . "` = ?", $id];
+    }
+
     protected function deleteRow($id)
     {
         $this->query()
-            ->delete($this->getTableName(), $id)
+            ->delete($this->getTableName())
+            ->where(...$this->primaryKeyEquals($id))
             ->execute();
     }
 
@@ -70,7 +93,8 @@ abstract class AbstractDatabaseTest extends TestCase
     {
         $this->assertNotFalse(
             $this->query()
-                ->from($this->getTableName(), $id)
+                ->from($this->getTableName())
+                ->where(...$this->primaryKeyEquals($id))
                 ->fetch(),
             $message
         );
@@ -80,7 +104,8 @@ abstract class AbstractDatabaseTest extends TestCase
     {
         $this->assertFalse(
             $this->query()
-                ->from($this->getTableName(), $id)
+                ->from($this->getTableName())
+                ->where(...$this->primaryKeyEquals($id))
                 ->fetch(),
             $message
         );

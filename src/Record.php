@@ -53,7 +53,15 @@ abstract class Record
                 Types::toDatabaseValues(static::objectToDatabaseHook($data))
             )
             ->execute();
-        if ($id) {
+        if ($id !== false) {
+            /* FIXME: this if statement is a work-around for (I think)
+             * a bug in FluentPDO where the first inserted row always
+             * returns '0' as the lastInsertedId(), even when the id
+             * that was inserted is NOT '0'
+             */
+            if ($id == "0" && key_exists($s->getPrimaryKey(), $data)) {
+                $id = $data[$s->getPrimaryKey()];
+            }
             return static::read($id);
         }
         return null;
@@ -73,6 +81,7 @@ abstract class Record
             $data = Connection::createQuery()
                 ->from($s->getTableName())
                 ->where("`" . $s->getPrimaryKey() . "` = ?", $id)
+                ->limit(1)
                 ->fetch()
         ) {
             return new static(static::databaseToObjectHook($data));
@@ -175,22 +184,19 @@ abstract class Record
     public function save(array $data = []): void
     {
         $s = static::getSpec();
-        if (
-            Connection::createQuery()
-                ->update($s->getTableName())
-                ->set(
-                    Types::toDatabaseValues(
-                        static::objectToDatabaseHook(
-                            array_merge((array) $this, $data)
-                        )
+        $result = Connection::createQuery()
+            ->update($s->getTableName())
+            ->set(
+                Types::toDatabaseValues(
+                    static::objectToDatabaseHook(
+                        array_merge((array) $this, $data)
                     )
                 )
-                ->where(
-                    "`" . $s->getPrimaryKey() . "` = ?",
-                    $this->getPrimaryKey()
-                )
-                ->execute()
-        ) {
+            )
+            ->where("`" . $s->getPrimaryKey() . "` = ?", $this->getPrimaryKey())
+            ->limit(1)
+            ->execute();
+        if ($result) {
             $updated = static::read($this->getPrimaryKey());
             if ($updated) {
                 $this->cloneIntoSelf($updated);

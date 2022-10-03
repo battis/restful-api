@@ -1,10 +1,11 @@
 <?php
 
-namespace Test\Battis\CRUD;
+namespace Tests\Battis\CRUD;
 
 use Tests\Battis\CRUD\fixtures\RecordWithSetters;
 
-class RecordWithSettersTest extends RecordWithFieldsTest
+abstract class RecordWithSettersSqliteMemoryTest extends
+    RecordWithFieldsSqliteMemoryTest
 {
     protected function getType(): string
     {

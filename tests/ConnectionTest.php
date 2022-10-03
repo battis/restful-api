@@ -45,6 +45,12 @@ class ConnectionTest extends TestCase
         $this->assertSame($b, Connection::getInstance());
     }
 
+    public function testSetPDO()
+    {
+        Connection::setPDO($this->getSqliteMemoryPDO());
+        $this->assertInstanceOf(Connection::class, Connection::getInstance());
+    }
+
     public function testCreateQuery()
     {
         Connection::getInstance($this->getSqliteMemoryPDO());

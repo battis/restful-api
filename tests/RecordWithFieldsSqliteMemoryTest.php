@@ -1,12 +1,13 @@
 <?php
 
-namespace Test\Battis\CRUD;
+namespace Tests\Battis\CRUD;
 
+use Battis\CRUD\Connection;
 use Battis\CRUD\Exceptions\RecordException;
 use Tests\Battis\CRUD\AbstractDatabaseTest;
 use Tests\Battis\CRUD\fixtures\RecordWithFields;
 
-abstract class RecordWithFieldsTest extends AbstractDatabaseTest
+abstract class RecordWithFieldsSqliteMemoryTest extends AbstractDatabaseTest
 {
     private $tests = [
         [
@@ -20,7 +21,16 @@ abstract class RecordWithFieldsTest extends AbstractDatabaseTest
             "bar" => "bargle",
             "baz" => "test",
         ],
+        [
+            "id" => 100,
+            "foo" => "argle",
+            "bar" => "argle-bargle",
+            "baz" => "wobbly",
+        ],
     ];
+
+    /** @var string */
+    private $message = "";
 
     protected function getType(): string
     {
@@ -32,31 +42,63 @@ abstract class RecordWithFieldsTest extends AbstractDatabaseTest
         return "record_with_fieldses";
     }
 
-    protected function getSetupSQL(): string
+    protected function setUp(): void
     {
-        return "CREATE TABLE `" .
-            $this->getTableName() .
-            "` (id INTEGER PRIMARY KEY, foo VARCHAR(255), bar VARCHAR(255), baz VARCHAR(255))";
+        parent::setUp();
+        Connection::setPDO($this->getPDO());
+        $this->getPDO()->query(
+            "CREATE TABLE `" .
+                $this->getTableName() .
+                "` (id INTEGER PRIMARY KEY, foo VARCHAR(255), bar VARCHAR(255), baz VARCHAR(255))"
+        );
     }
 
-    protected function getTearDownSQL(): string
+    private function messageText($value)
     {
-        return "DROP TABLE `" . $this->getTableName() . "`";
+        if (is_array($value)) {
+            return json_encode($value);
+        } elseif (is_object($value) || $value === null) {
+            return var_export($value, true);
+        } else {
+            return (string) $value;
+        }
+    }
+
+    protected function initMessage($message)
+    {
+        $this->message = $this->messageText($message);
+    }
+
+    protected function message($details)
+    {
+        return $this->message . " --> " . $this->messageText($details);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->getPDO()->query("DROP TABLE `" . $this->getTableName() . "`");
+        parent::tearDown();
     }
 
     public function testCreate()
     {
         foreach ($this->tests as $test) {
+            $this->initMessage($test);
             $r = $this->getType()::create($test);
-            $this->assertInstanceOf($this->getType(), $r);
+            $this->assertInstanceOf($this->getType(), $r, $this->message($r));
             foreach ($test as $key => $value) {
-                $this->assertEquals($value, $r->$key);
+                $this->assertEquals($value, $r->$key, $this->message($value));
             }
-            $this->assertDatabaseRowExists($test["id"]);
+            $this->assertDatabaseRowExists(
+                $test["id"],
+                $this->message($test["id"])
+            );
             $this->assertDatabaseRowMatch($test);
 
+            $alreadyUsedId = $this->tests[0]["id"];
             $this->assertNull(
-                $this->getType()::create(["id" => $this->tests[0]["id"]])
+                $this->getType()::create(["id" => $this->tests[0]["id"]]),
+                $this->message($alreadyUsedId)
             );
         }
     }
@@ -64,11 +106,16 @@ abstract class RecordWithFieldsTest extends AbstractDatabaseTest
     public function testRead()
     {
         foreach ($this->tests as $test) {
+            $this->initMessage($test);
             $this->insertRow($test);
             $r = $this->getType()::read($test["id"]);
-            $this->assertInstanceOf($this->getType(), $r);
+            $this->assertInstanceOf($this->getType(), $r, $this->message($r));
             foreach ($test as $key => $value) {
-                $this->assertEquals($value, $r->$key);
+                $this->assertEquals(
+                    $value,
+                    $r->$key,
+                    $this->message("{$r->$key} ≠ $value")
+                );
             }
         }
 
@@ -80,7 +127,7 @@ abstract class RecordWithFieldsTest extends AbstractDatabaseTest
         $this->insertRows($this->tests);
 
         $r = $this->getType()::retrieve(["foo" => "argle"]);
-        $this->assertCount(2, $r);
+        $this->assertCount(count($this->tests), $r);
         foreach ($r as $elt) {
             $this->assertInstanceOf($this->getType(), $elt);
         }
@@ -98,23 +145,31 @@ abstract class RecordWithFieldsTest extends AbstractDatabaseTest
     public function testSave()
     {
         foreach ($this->tests as $test) {
+            $this->initMessage($test);
             $this->insertRow($test);
             $r = $this->getType()::read($test["id"]);
-            $this->assertInstanceOf($this->getType(), $r);
+            $this->assertInstanceOf($this->getType(), $r, $this->message($r));
             $r->save(["foo" => "updated"]);
             $this->assertEquals("updated", $r->foo);
         }
 
         $r = $this->getType()::read($this->tests[0]["id"]);
+        $this->assertInstanceOf($this->getType(), $r);
         $this->deleteRow($this->tests[0]["id"]);
         $this->expectException(RecordException::class);
-        $r->save(["foo" => "this is going to be bad"]);
+        $r->save(["foo" => "fail"]);
     }
 
     public function testUpdate()
     {
         foreach ($this->tests as $test) {
+            $this->initMessage($test);
             $this->insertRow($test);
+            $this->assertInstanceOf(
+                $this->getType(),
+                $this->getType()::read($test["id"]),
+                $this->message
+            );
             $r = $this->getType()::update([
                 "id" => $test["id"],
                 "foo" => "updated",
