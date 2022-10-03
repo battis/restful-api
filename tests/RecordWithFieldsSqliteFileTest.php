@@ -36,7 +36,7 @@ class RecordWithFieldsSqliteFileTest extends RecordWithFieldsSqliteMemoryTest
         if (empty(static::$sqlitePath)) {
             $reflection = new ReflectionClass(static::class);
             static::$sqlitePath =
-                __DIR__ . "/" . $reflection->getShortName() . ".sqlite";
+                "./var/" . $reflection->getShortName() . ".sqlite";
         }
         return static::$sqlitePath;
     }
