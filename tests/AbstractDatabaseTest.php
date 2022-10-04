@@ -2,7 +2,6 @@
 
 namespace Tests\Battis\CRUD;
 
-use Envms\FluentPDO\Query;
 use PDO;
 use PHPUnit\Framework\TestCase;
 
@@ -42,13 +41,6 @@ abstract class AbstractDatabaseTest extends TestCase
         $this->pdo = null;
     }
 
-    protected function query(): Query
-    {
-        $query = new Query($this->getPDO());
-        $this->queries[] = $query;
-        return $query;
-    }
-
     protected function getDSN()
     {
         return "sqlite::memory:";
@@ -63,10 +55,16 @@ abstract class AbstractDatabaseTest extends TestCase
 
     protected function insertRow(array $data)
     {
-        $this->query()
-            ->insertInto($this->getTableName())
-            ->values($data)
-            ->execute();
+        $statement = $this->getPDO()->prepare(
+            "INSERT INTO " .
+                $this->getTableName() .
+                " (" .
+                join(",", array_keys($data)) .
+                ") VALUES (" .
+                join(",", array_map(fn($key) => ":$key", array_keys($data))) .
+                ")"
+        );
+        $statement->execute($data);
     }
 
     protected function insertRows(array $data)
@@ -83,59 +81,91 @@ abstract class AbstractDatabaseTest extends TestCase
 
     protected function deleteRow($id)
     {
-        $this->query()
-            ->delete($this->getTableName())
-            ->where(...$this->primaryKeyEquals($id))
-            ->execute();
+        $statement = $this->getPDO()->prepare(
+            "DELETE FROM " .
+                $this->getTableName() .
+                " WHERE " .
+                $this->getPrimaryKey() .
+                " = ? LIMIT 1"
+        );
+        $statement->execute([$id]);
     }
 
     public function assertDatabaseRowExists($id, $message = "")
     {
-        $this->assertNotFalse(
-            $this->query()
-                ->from($this->getTableName())
-                ->where(...$this->primaryKeyEquals($id))
-                ->fetch(),
-            $message
+        $statement = $this->getPDO()->prepare(
+            "SELECT * FROM " .
+                $this->getTableName() .
+                " WHERE " .
+                $this->getPrimaryKey() .
+                " = ? LIMIT 1"
         );
+        $statement->execute([$id]);
+        $this->assertNotFalse($statement->fetch(), $message);
     }
 
     public function asssertDatabaseRowDoesNotExist($id, $message = "")
     {
-        $this->assertFalse(
-            $this->query()
-                ->from($this->getTableName())
-                ->where(...$this->primaryKeyEquals($id))
-                ->fetch(),
-            $message
+        $statement = $this->getPDO()->prepare(
+            "SELECT * FROM " .
+                $this->getTableName() .
+                " WHERE " .
+                $this->getPrimaryKey() .
+                " = ? LIMIT 1"
         );
+        $statement->execute([$id]);
+        $this->assertFalse($statement->fetch(), $message);
     }
 
     public function assertDatabaseRowMatch(array $data, $message = "")
     {
-        $query = $this->query()->from($this->getTableName());
-        foreach ($data as $key => $value) {
-            $query = $query->where("`$key` = ?", $value);
-        }
-        $this->assertNotFalse($query->fetch(), $message);
+        $statement = $this->getPDO()->prepare(
+            "SELECT * FROM " .
+                $this->getTableName() .
+                " WHERE " .
+                join(
+                    " AND ",
+                    array_map(fn($key) => "$key = :$key", array_keys($data))
+                ) .
+                " LIMIT 1"
+        );
+        $statement->execute($data);
+        $this->assertNotFalse($statement->fetch(), $message);
     }
 
     public function assertDatabaseRowDoesNotMatch(array $data, $message = "")
     {
-        $query = $this->query()->from($this->getTableName());
-        foreach ($data as $key => $value) {
-            $query = $query->where("`$key` = ?", $value);
-        }
-        $this->assertFalse($query->fetch(), $message);
+        $statement = $this->getPDO()->prepare(
+            "SELECT * FROM " .
+                $this->getTableName() .
+                " WHERE " .
+                join(
+                    " AND ",
+                    array_map(fn($key) => "$key = :$key", array_keys($data))
+                ) .
+                " LIMIT 1"
+        );
+        $statement->execute($data);
+        $this->assertFalse($statement->fetch(), $message);
     }
 
     public function assertDatabaseExactRowExists(array $data, $message = "")
     {
-        $query = $this->query()->from($this->getTableName());
-        foreach ($data as $key => $value) {
-            $query = $query->where("`$key` = ?", $value);
-        }
-        $this->assertNotFalse($row = $query->fetch(), $message);
+        $statement = $this->getPDO()->prepare(
+            "SELECT * FROM " .
+                $this->getTableName() .
+                " WHERE " .
+                join(
+                    " AND ",
+                    array_map(fn($key) => "$key = :$key", array_keys($data))
+                ) .
+                " LIMIT 1"
+        );
+        $statement->execute($data);
+        $this->assertNotFalse(
+            $row = $statement->fetch(PDO::FETCH_ASSOC),
+            $message
+        );
 
         foreach ($row as $key => $value) {
             $this->assertEquals($data[$key], $value, $message);
@@ -149,11 +179,18 @@ abstract class AbstractDatabaseTest extends TestCase
         array $data,
         $message = ""
     ) {
-        $query = $this->query()->from($this->getTableName());
-        foreach ($data as $key => $value) {
-            $query = $query->where("`$key` = ?", $value);
-        }
-        $row = $query->fetch();
+        $statement = $this->getPDO()->prepare(
+            "SELECT * FROM " .
+                $this->getTableName() .
+                " WHERE " .
+                join(
+                    " AND ",
+                    array_map(fn($key) => "$key = :$key", array_keys($data))
+                ) .
+                " LIMIT 1"
+        );
+        $statement->execute($data);
+        $row = $statement->fetch();
         if ($row == false) {
             $this->assertFalse($row, $message);
         } else {
@@ -172,9 +209,11 @@ abstract class AbstractDatabaseTest extends TestCase
 
     public function assertDatabaseTableEquals(array $data, $message = "")
     {
-        $table = $this->query()
-            ->from($this->getTableName())
-            ->fetchAll();
+        $statement = $this->getPDO()->prepare(
+            "SELECT * FROM " . $this->getTableName()
+        );
+        $statement->execute();
+        $table = $statement->fetchAll(PDO::FETCH_ASSOC);
         $this->assertEquals(count($data), count($table), $message);
         foreach ($table as $row) {
             $matched = false;

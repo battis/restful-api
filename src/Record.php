@@ -4,6 +4,7 @@ namespace Battis\CRUD;
 
 use Battis\CRUD\Exceptions\RecordException;
 use Battis\CRUD\Utilities\Types;
+use PDO;
 
 abstract class Record
 {
@@ -46,23 +47,22 @@ abstract class Record
     public static function create(array $data)
     {
         $s = static::getSpec();
+        $pdo = Connection::getInstance()->getPDO();
 
-        $id = Connection::createQuery()
-            ->insertInto($s->getTableName())
-            ->values(
-                Types::toDatabaseValues(static::objectToDatabaseHook($data))
-            )
-            ->execute();
-        if ($id !== false) {
-            /* FIXME: this if statement is a work-around for (I think)
-             * a bug in FluentPDO where the first inserted row always
-             * returns '0' as the lastInsertedId(), even when the id
-             * that was inserted is NOT '0'
-             */
-            if ($id == "0" && key_exists($s->getPrimaryKey(), $data)) {
-                $id = $data[$s->getPrimaryKey()];
-            }
-            return static::read($id);
+        $_data = Types::toDatabaseValues(static::objectToDatabaseHook($data));
+        $table = $s->getTableName();
+        $fields = join(",", array_keys($_data));
+        $parameters = join(
+            ",",
+            array_map(fn($key) => ":$key", array_keys($_data))
+        );
+
+        $statement = $pdo->prepare(
+            "INSERT INTO $table ($fields) VALUES ($parameters)"
+        );
+
+        if ($statement->execute($_data)) {
+            return static::read($pdo->lastInsertId());
         }
         return null;
     }
@@ -77,14 +77,18 @@ abstract class Record
     public static function read($id)
     {
         $s = static::getSpec();
-        if (
-            $data = Connection::createQuery()
-                ->from($s->getTableName())
-                ->where("`" . $s->getPrimaryKey() . "` = ?", $id)
-                ->limit(1)
-                ->fetch()
-        ) {
-            return new static(static::databaseToObjectHook($data));
+        $pdo = Connection::getInstance()->getPDO();
+
+        $table = $s->getTableName();
+        $primaryKey = $s->getPrimaryKey();
+
+        $statement = $pdo->prepare(
+            "SELECT * FROM $table WHERE $primaryKey = ? LIMIT 1"
+        );
+        if ($statement->execute([$id])) {
+            if ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                return new static(static::databaseToObjectHook($row));
+            }
         }
         return null;
     }
@@ -99,14 +103,28 @@ abstract class Record
     public static function retrieve(array $data = []): array
     {
         $s = static::getSpec();
+        $pdo = Connection::getInstance()->getPDO();
 
-        $query = Connection::createQuery()->from($s->getTableName());
-        if (!empty($data)) {
-            $query = $query->where($data);
+        $table = $s->getTableName();
+        $response = false;
+        if (empty($_data)) {
+            $statement = $pdo->prepare("SELECT * FROM $table");
+            $response = $statement->execute();
+        } else {
+            $_data = Types::toDatabaseValues(
+                static::objectToDatabaseHook($data)
+            );
+            $condition = join(
+                " AND ",
+                array_map(fn($key) => "$key = :$key", array_keys($_data))
+            );
+            $statement = $pdo->prepare("SELECT * FROM $table WHERE $condition");
+            $response = $statement->execute($_data);
         }
+
         $result = [];
-        if ($response = $query->execute()) {
-            while ($row = $response->fetch()) {
+        if ($response) {
+            while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 array_push(
                     $result,
                     new static(static::databaseToObjectHook($row))
@@ -144,13 +162,17 @@ abstract class Record
     public static function delete($id)
     {
         $s = static::getSpec();
+        $pdo = Connection::getInstance()->getPDO();
+
         $result = static::read($id);
-        if (
-            $result &&
-            Connection::createQuery()
-                ->delete($s->getTableName())
-                ->where("`" . $s->getPrimaryKey() . "` = ?", $id)
-        ) {
+
+        $table = $s->getTableName();
+        $primaryKey = $s->getPrimaryKey();
+
+        $statement = $pdo->prepare(
+            "DELETE FROM $table WHERE $primaryKey = ? LIMIT 1"
+        );
+        if ($statement->execute([$id])) {
             return $result;
         }
         return null;
@@ -184,20 +206,28 @@ abstract class Record
     public function save(array $data = []): void
     {
         $s = static::getSpec();
-        $result = Connection::createQuery()
-            ->update($s->getTableName())
-            ->set(
-                Types::toDatabaseValues(
-                    static::objectToDatabaseHook(
-                        array_merge((array) $this, $data)
-                    )
-                )
-            )
-            ->where("`" . $s->getPrimaryKey() . "` = ?", $this->getPrimaryKey())
-            ->limit(1)
-            ->execute();
-        if ($result) {
-            $updated = static::read($this->getPrimaryKey());
+        $pdo = Connection::getInstance()->getPDO();
+
+        $table = $s->getTableName();
+        $primaryKey = $s->getPrimaryKey();
+        $id = $this->getPrimaryKey();
+        $_data = Types::toDatabaseValues(
+            static::objectToDatabaseHook(array_merge((array) $this, $data))
+        );
+        $identifier = Types::toDatabaseValues(
+            static::objectToDatabaseHook([$primaryKey => $id])
+        );
+        $__data = array_diff($_data, $identifier);
+        $values = join(
+            ",",
+            array_map(fn($key) => "$key = :$key", array_keys($__data))
+        );
+
+        $statement = $pdo->prepare(
+            "UPDATE $table SET $values WHERE $primaryKey = :$primaryKey LIMIT 1"
+        );
+        if ($statement->execute($_data)) {
+            $updated = static::read($id);
             if ($updated) {
                 $this->cloneIntoSelf($updated);
                 unset($updated);
