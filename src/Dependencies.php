@@ -12,7 +12,6 @@ use Battis\UserSession;
 use Composer\Autoload\ClassLoader;
 use DateInterval;
 use Defuse\Crypto\Key;
-use Doctrine\DBAL\Connection;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Grant\AuthCodeGrant;
@@ -24,6 +23,7 @@ use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
+use PDO;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use Slim\Views\PhpRenderer;
@@ -103,32 +103,32 @@ class Dependencies
 
             //battis/users-session implementations
             UserSession\Repositories\UserRepositoryInterface::class => fn(
-                Connection $connection
-            ) => new UserRepository($connection),
+                PDO $pdo
+            ) => new UserRepository($pdo),
             PhpRenderer::class => function (ContainerInterface $container) {
                 return new PhpRenderer($container->get(self::TEMPLATES));
             },
 
             // league/oauth2-server implementations
             UserRepositoryInterface::class => fn(
-                Connection $connection
-            ) => new UserRepository($connection),
+                PDO $pdo
+            ) => new UserRepository($pdo),
             ClientRepositoryInterface::class => fn(
-                Connection $connection
-            ) => new ClientRepository($connection),
+                PDO $pdo
+            ) => new ClientRepository($pdo),
             ScopeRepositoryInterface::class => fn(
-                Connection $connection,
+                PDO $pdo,
                 UserRepositoryInterface $userRepo
-            ) => new ScopeRepository($connection, $userRepo),
+            ) => new ScopeRepository($pdo, $userRepo),
             AuthCodeRepositoryInterface::class => fn(
-                Connection $connection
-            ) => new AuthCodeRepository($connection),
+                PDO $pdo
+            ) => new AuthCodeRepository($pdo),
             AccessTokenRepositoryInterface::class => fn(
-                Connection $connection
-            ) => new AccessTokenRepository($connection),
+                PDO $pdo
+            ) => new AccessTokenRepository($pdo),
             RefreshTokenRepositoryInterface::class => fn(
-                Connection $connection
-            ) => new RefreshTokenRepository($connection),
+                PDO $pdo
+            ) => new RefreshTokenRepository($pdo),
 
             // apply settings to league/oauth2-server services
             AuthCodeGrant::class => function (

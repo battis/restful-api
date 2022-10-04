@@ -18,6 +18,14 @@
         {
             "type": "path",
             "url": "../"
+        },
+        {
+            "type": "path",
+            "url": "../../crud"
+        },
+        {
+            "type": "path",
+            "url": "../../user-session"
         }
     ],
     "require": {

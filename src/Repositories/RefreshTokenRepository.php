@@ -4,15 +4,15 @@ namespace Battis\OAuth2\Server\Repositories;
 
 use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\RefreshToken;
-use Doctrine\DBAL;
 use League\OAuth2\Server\Entities\RefreshTokenEntityInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use PDO;
 
 class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
-    public function __construct(DBAL\Connection $connection)
+    public function __construct(PDO $pdo)
     {
-        CRUD\Manager::get($connection);
+        CRUD\Manager::get($pdo);
     }
 
     public function getNewRefreshToken()

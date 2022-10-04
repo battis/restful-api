@@ -13,6 +13,16 @@
             "email": "seth@battis.net"
         }
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../crud"
+        },
+        {
+            "type": "path",
+            "url": "../user-session"
+        }
+    ],
     "require": {
         "ext-json": "*",
         "battis/crud": "dev-main",

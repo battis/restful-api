@@ -5,20 +5,18 @@ namespace Battis\OAuth2\Server\Repositories;
 use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\Interfaces\Scopeable;
 use Battis\OAuth2\Server\Entities\Scope;
-use Doctrine\DBAL;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
+use PDO;
 
 class ScopeRepository implements ScopeRepositoryInterface
 {
     private $userRepository;
 
-    public function __construct(
-        DBAL\Connection $connection,
-        UserRepository $userRepository
-    ) {
-        CRUD\Manager::get($connection);
+    public function __construct(PDO $pdo, UserRepository $userRepository)
+    {
+        CRUD\Manager::get($pdo);
         $this->userRepository = $userRepository;
     }
 

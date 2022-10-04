@@ -4,15 +4,15 @@ namespace Battis\OAuth2\Server\Repositories;
 
 use Battis\CRUD;
 use Battis\OAuth2\Server\Entities\AuthCode;
-use Doctrine\DBAL;
 use League\OAuth2\Server\Entities\AuthCodeEntityInterface;
 use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
+use PDO;
 
 class AuthCodeRepository implements AuthCodeRepositoryInterface
 {
-    public function __construct(DBAL\Connection $connection)
+    public function __construct(PDO $pdo)
     {
-        CRUD\Manager::get($connection);
+        CRUD\Manager::get($pdo);
     }
 
     public function getNewAuthCode()

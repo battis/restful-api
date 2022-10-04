@@ -8,9 +8,9 @@ use Battis\OAuth2\Server\Entities\Interfaces\UserAssignable;
 use Battis\OAuth2\Server\Entities\User;
 use Battis\UserSession\Entities\UserEntityInterface;
 use Battis\UserSession\Repositories as UserSession;
-use Doctrine\DBAL;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use PDO;
 
 class UserRepository implements
     UserRepositoryInterface,
@@ -18,9 +18,9 @@ class UserRepository implements
 {
     protected $table = "users";
 
-    public function __construct(DBAL\Connection $connection)
+    public function __construct(PDO $pdo)
     {
-        CRUD\Manager::get($connection);
+        CRUD\Manager::get($pdo);
     }
 
     public function getUserEntityByUsername(
