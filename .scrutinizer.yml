@@ -16,7 +16,6 @@ build:
             tests:
                 override:
                     - php-scrutinizer-run
-# TODO: enable tests (when created)
 #        tests-and-coverage:
 #            tests:
 #                override:
