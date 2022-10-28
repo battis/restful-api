@@ -25,6 +25,7 @@ abstract class Record
 
     protected static function getSpec(): Spec
     {
+        // TODO: sort out late static binding and static properties and why this isn't working
         //if (empty(static::$spec)) {
         static::$spec = static::defineSpec();
         //}
