@@ -21,7 +21,6 @@ trait MapProperties
 
     private function computeMapping($propertyToFieldMap): array
     {
-        // FIXME: needs verification
         return $propertyToFieldMap ?? static::$DEFAULT_MAPPING;
     }
 
