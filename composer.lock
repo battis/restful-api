@@ -4,29 +4,28 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5d206f4fd7c45203a4ae6869565ea0b",
+    "content-hash": "197d07a358a6a012e8c52584f395842d",
     "packages": [
         {
             "name": "battis/data-utilities",
-            "version": "dev-main",
+            "version": "v1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/battis/data-utilities.git",
-                "reference": "f3ac7e74be93c103d094f9d4a86f5fc82caa740a"
+                "reference": "7b92cd77fd669b21fb1641586a2a278df0fc21a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/battis/data-utilities/zipball/f3ac7e74be93c103d094f9d4a86f5fc82caa740a",
-                "reference": "f3ac7e74be93c103d094f9d4a86f5fc82caa740a",
+                "url": "https://api.github.com/repos/battis/data-utilities/zipball/7b92cd77fd669b21fb1641586a2a278df0fc21a9",
+                "reference": "7b92cd77fd669b21fb1641586a2a278df0fc21a9",
                 "shasum": ""
             },
             "require": {
-                "battis/hydratable": "dev-main"
+                "battis/hydratable": "^0.1"
             },
             "require-dev": {
                 "phpunit/phpunit": "~9.0"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -46,28 +45,27 @@
             "description": "A handful of useful helper functions to process data",
             "support": {
                 "issues": "https://github.com/battis/data-utilities/issues",
-                "source": "https://github.com/battis/data-utilities/tree/main"
+                "source": "https://github.com/battis/data-utilities/tree/v1.0"
             },
-            "time": "2022-11-24T17:30:23+00:00"
+            "time": "2022-11-24T18:10:56+00:00"
         },
         {
             "name": "battis/hydratable",
-            "version": "dev-main",
+            "version": "v0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/battis/hydratable.git",
-                "reference": "a9715a041473e48bd4a5c71881f9f6fab07e3fc5"
+                "reference": "b3f85b98f69691defc913104dac5e84a77da1fdd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/battis/hydratable/zipball/a9715a041473e48bd4a5c71881f9f6fab07e3fc5",
-                "reference": "a9715a041473e48bd4a5c71881f9f6fab07e3fc5",
+                "url": "https://api.github.com/repos/battis/hydratable/zipball/b3f85b98f69691defc913104dac5e84a77da1fdd",
+                "reference": "b3f85b98f69691defc913104dac5e84a77da1fdd",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.3"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -87,9 +85,9 @@
             "description": "Hydrate serialized objects with defaults and overrides",
             "support": {
                 "issues": "https://github.com/battis/hydratable/issues",
-                "source": "https://github.com/battis/hydratable/tree/main"
+                "source": "https://github.com/battis/hydratable/tree/v0.1"
             },
-            "time": "2022-11-24T17:06:25+00:00"
+            "time": "2022-11-24T17:49:34+00:00"
         },
         {
             "name": "envms/fluentpdo",
@@ -2094,10 +2092,8 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "dev",
-    "stability-flags": {
-        "battis/data-utilities": 20
-    },
+    "minimum-stability": "stable",
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
