@@ -2,7 +2,7 @@
 
 namespace Battis\CRUD;
 
-use Battis\CRUD\Utilities\Text;
+use Battis\DataUtilities\Text;
 use ReflectionClass;
 use ReflectionException;
 

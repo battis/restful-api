@@ -7,8 +7,10 @@
             "email": "seth@battis.net"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "ext-pdo": "*",
+        "battis/data-utilities": "dev-main",
         "envms/fluentpdo": "^2.2"
     },
     "require-dev": {
