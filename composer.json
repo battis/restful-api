@@ -32,6 +32,10 @@
         "slim/http": "^1.2",
         "slim/php-view": "^3.2"
     },
+    "require-dev": {
+        "misantron/dbunit": "^5.2",
+        "phpunit/phpunit": "^9.5"
+    },
     "config": {
         "sort-packages": true
     }
