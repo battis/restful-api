@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "97892d20e6dba4c30bef231f74da9c49",
+    "content-hash": "fe52cf0b9fdc8e288118ea64acb5e28a",
     "packages": [
         {
             "name": "battis/crud",
@@ -12,14 +12,15 @@
             "dist": {
                 "type": "path",
                 "url": "../crud",
-                "reference": "99d86a42741fbf22ffcecd9c090ba92c47a03bca"
+                "reference": "0b95c50f68362fb940a3a60b620e0c2087364dc3"
             },
             "require": {
+                "battis/data-utilities": "^1.0",
                 "envms/fluentpdo": "^2.2",
                 "ext-pdo": "*"
             },
             "require-dev": {
-                "phpdocumentor/phpdocumentor": "^3.0",
+                "misantron/dbunit": "^5.2",
                 "phpunit/phpunit": "^9.0"
             },
             "type": "library",
@@ -45,12 +46,101 @@
             }
         },
         {
-            "name": "battis/user-session",
-            "version": "dev-main",
+            "name": "battis/data-utilities",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/battis/data-utilities.git",
+                "reference": "7b92cd77fd669b21fb1641586a2a278df0fc21a9"
+            },
             "dist": {
-                "type": "path",
-                "url": "../user-session",
-                "reference": "324537d962438bb2719ef34453bd755df1ed6890"
+                "type": "zip",
+                "url": "https://api.github.com/repos/battis/data-utilities/zipball/7b92cd77fd669b21fb1641586a2a278df0fc21a9",
+                "reference": "7b92cd77fd669b21fb1641586a2a278df0fc21a9",
+                "shasum": ""
+            },
+            "require": {
+                "battis/hydratable": "^0.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Battis\\DataUtilities\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Seth Battis",
+                    "email": "sethbattis@stmarksschool.org"
+                }
+            ],
+            "description": "A handful of useful helper functions to process data",
+            "support": {
+                "issues": "https://github.com/battis/data-utilities/issues",
+                "source": "https://github.com/battis/data-utilities/tree/v1.0"
+            },
+            "time": "2022-11-24T18:10:56+00:00"
+        },
+        {
+            "name": "battis/hydratable",
+            "version": "v0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/battis/hydratable.git",
+                "reference": "b3f85b98f69691defc913104dac5e84a77da1fdd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/battis/hydratable/zipball/b3f85b98f69691defc913104dac5e84a77da1fdd",
+                "reference": "b3f85b98f69691defc913104dac5e84a77da1fdd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Battis\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Seth Battis",
+                    "email": "seth@battis.net"
+                }
+            ],
+            "description": "Hydrate serialized objects with defaults and overrides",
+            "support": {
+                "issues": "https://github.com/battis/hydratable/issues",
+                "source": "https://github.com/battis/hydratable/tree/v0.1"
+            },
+            "time": "2022-11-24T17:49:34+00:00"
+        },
+        {
+            "name": "battis/user-session",
+            "version": "v0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/battis/user-session.git",
+                "reference": "51c265c897524b4a36c3feef2a900a36d5e2a7e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/battis/user-session/zipball/51c265c897524b4a36c3feef2a900a36d5e2a7e7",
+                "reference": "51c265c897524b4a36c3feef2a900a36d5e2a7e7",
+                "shasum": ""
             },
             "require": {
                 "bryanjhv/slim-session": "^4.0",
@@ -64,6 +154,7 @@
                     "Battis\\UserSession\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -74,9 +165,11 @@
                 }
             ],
             "description": "User session management for Slim Framework",
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/battis/user-session/issues",
+                "source": "https://github.com/battis/user-session/tree/v0.1"
+            },
+            "time": "2022-11-24T15:44:02+00:00"
         },
         {
             "name": "bryanjhv/slim-session",
@@ -3634,8 +3727,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "battis/crud": 20,
-        "battis/user-session": 20
+        "battis/crud": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

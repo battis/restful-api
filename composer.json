@@ -17,16 +17,12 @@
         {
             "type": "path",
             "url": "../crud"
-        },
-        {
-            "type": "path",
-            "url": "../user-session"
         }
     ],
     "require": {
         "ext-json": "*",
         "battis/crud": "dev-main",
-        "battis/user-session": "dev-main",
+        "battis/user-session": "^0.1",
         "league/oauth2-server": "^8.3",
         "psr/container": "^1.0",
         "slim/http": "^1.2",
