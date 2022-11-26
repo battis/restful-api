@@ -1,22 +1,17 @@
 <?php
 
-namespace Battis\CRUD\RecordTraits;
+namespace Battis\CRUD\Traits\Record;
 
-use DateTime as GlobalDateTime;
-use DateTimeImmutable;
-use DateTimeInterface;
 use ReflectionClass;
 
-trait DateTime
+trait JSONArrays
 {
     protected static function objectToDatabaseHook(array $data): array
     {
         return array_combine(
             array_keys($data),
             array_map(
-                fn($value) => $value instanceof DateTimeInterface
-                    ? $value->format("Y-m-d H:i:s")
-                    : $value,
+                fn($value) => is_array($value) ? json_encode($value) : $value,
                 array_values($data)
             )
         );
@@ -28,15 +23,12 @@ trait DateTime
         $result = [];
         array_walk(function ($value, $key) use ($reflection, $result) {
             if (
-                in_array(
-                    $type = $reflection
-                        ->getProperty($key)
-                        ->getType()
-                        ->getName(),
-                    [GlobalDateTime::class, DateTimeImmutable::class]
-                )
+                $reflection
+                    ->getProperty($key)
+                    ->getType()
+                    ->getName() == 'array'
             ) {
-                $result[$key] = new $type($value);
+                $result[$key] = json_decode($value);
             } else {
                 $result[$key] = $value;
             }

@@ -8,7 +8,7 @@ use ReflectionException;
 
 class Spec
 {
-    public const DEFAULT_PRIMARY_KEY = "id";
+    public const DEFAULT_PRIMARY_KEY = 'id';
 
     /** @var ReflectionClass */
     private $reflection;
@@ -22,32 +22,33 @@ class Spec
     public function __construct(
         string $recordType,
         string $tableName = null,
-        string $primaryKey = self::DEFAULT_PRIMARY_KEY,
+        string $primaryKey = null,
         array $options = []
     ) {
         $this->reflection = new ReflectionClass($recordType);
+        assert($this->reflection->isSubclassOf(Record::class));
         $this->tableName = $this->computeTableName($tableName);
         $this->primaryKey = $this->computePrimaryKey($primaryKey);
         $this->constructorHook($options);
     }
 
-    protected function constructorHook(array $options)
+    protected function constructorHook(array $options = [])
     {
+        $options; // ah, Intelephense, if only you could suppress warnings!
     }
 
-    private function computeTableName($tableName): string
+    protected function computeTableName(string $tableName = null): string
     {
-        if (empty($tableName)) {
-            $tableName = Text::pluralize(
+        return empty($tableName) ?
+            Text::pluralize(
                 Text::camelCase_to_snake_case($this->reflection->getShortName())
-            );
-        }
-        return $tableName;
+            ) :
+            $tableName;
     }
 
-    private function computePrimaryKey(string $primaryKey): string
+    protected function computePrimaryKey(string $primaryKey = null): string
     {
-        return $primaryKey ?: static::DEFAULT_PRIMARY_KEY;
+        return empty($primaryKey) ? static::DEFAULT_PRIMARY_KEY : $primaryKey;
     }
 
     public function getTableName(): string
@@ -60,14 +61,20 @@ class Spec
         return $this->primaryKey;
     }
 
-    public function getSetter($property)
+    public function getSetter(string $property, bool $isPublic = true): ?string
     {
         $setter = "set" . Text::snake_case_to_PascalCase($property);
         try {
-            $this->reflection->getMethod($setter);
-            return $setter;
+            $method = $this->reflection->getMethod($setter);
+            if (
+                ($isPublic && $method->isPublic()) ||
+                (!$isPublic && !$method->isPrivate())
+            ) {
+                return $setter;
+            }
         } catch (ReflectionException $e) {
-            return null;
+            // ignore
         }
+        return null;
     }
 }

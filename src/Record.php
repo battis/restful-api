@@ -5,7 +5,9 @@ namespace Battis\CRUD;
 use Battis\CRUD\Exceptions\RecordException;
 use Battis\CRUD\Utilities\Types;
 use PDO;
+use PDOException;
 
+// TODO should Record be using Eloquent queries too?
 abstract class Record
 {
     /** @var Spec|null */
@@ -51,18 +53,21 @@ abstract class Record
 
         $_data = Types::toDatabaseValues(static::objectToDatabaseHook($data));
         $table = $s->getTableName();
-        $fields = join(",", array_keys($_data));
+        $fields = join(',', array_keys($_data));
         $parameters = join(
-            ",",
+            ',',
             array_map(fn($key) => ":$key", array_keys($_data))
         );
+        try {
+            $statement = $pdo->prepare(
+                "INSERT INTO $table ($fields) VALUES ($parameters)"
+            );
 
-        $statement = $pdo->prepare(
-            "INSERT INTO $table ($fields) VALUES ($parameters)"
-        );
-
-        if ($statement->execute($_data)) {
-            return static::read($pdo->lastInsertId());
+            if ($statement->execute($_data)) {
+                return static::read($pdo->lastInsertId());
+            }
+        } catch (PDOException $e) {
+            $e; // ignored
         }
         return null;
     }
@@ -107,7 +112,7 @@ abstract class Record
 
         $table = $s->getTableName();
         $response = false;
-        if (empty($_data)) {
+        if (empty($data)) {
             $statement = $pdo->prepare("SELECT * FROM $table");
             $response = $statement->execute();
         } else {
@@ -115,7 +120,7 @@ abstract class Record
                 static::objectToDatabaseHook($data)
             );
             $condition = join(
-                " AND ",
+                ' AND ',
                 array_map(fn($key) => "$key = :$key", array_keys($_data))
             );
             $statement = $pdo->prepare("SELECT * FROM $table WHERE $condition");
@@ -170,12 +175,11 @@ abstract class Record
         $primaryKey = $s->getPrimaryKey();
 
         $statement = $pdo->prepare(
-            "DELETE FROM $table WHERE $primaryKey = ? LIMIT 1"
+            "DELETE FROM $table WHERE $primaryKey = ?"
         );
         if ($statement->execute([$id])) {
             return $result;
         }
-        return null;
     }
 
     private function assign(array $data)
@@ -219,12 +223,12 @@ abstract class Record
         );
         $__data = array_diff($_data, $identifier);
         $values = join(
-            ",",
+            ',',
             array_map(fn($key) => "$key = :$key", array_keys($__data))
         );
 
         $statement = $pdo->prepare(
-            "UPDATE $table SET $values WHERE $primaryKey = :$primaryKey LIMIT 1"
+            "UPDATE $table SET $values WHERE $primaryKey = :$primaryKey"
         );
         if ($statement->execute($_data)) {
             $updated = static::read($id);
@@ -235,7 +239,7 @@ abstract class Record
             }
         }
         throw new RecordException(
-            "Record no longer available",
+            'Record no longer available',
             RecordException::SAVE_ERROR
         );
     }

@@ -1,25 +1,27 @@
 <?php
 
-namespace Battis\CRUD\SpecTraits;
+namespace Battis\CRUD\Traits\Spec;
 
-use Exception;
+use Battis\CRUD\Exceptions\SpecException;
+use Battis\CRUD\Traits\MapProperties as MapPropertiesConstant;
 
 trait MapProperties
 {
+    use MapPropertiesConstant;
+
     public static $DEFAULT_MAPPING = [];
-    public static $MAPPING = "propertyToFieldMap";
 
     /** @var array */
     private $propertyToFieldMap;
 
-    public function constructorHook(array $options)
+    public function constructorHook(array $options = [])
     {
         $this->propertyToFieldMap = $this->computeMapping(
             $options[self::$MAPPING] ?? []
         );
     }
 
-    private function computeMapping($propertyToFieldMap): array
+    private function computeMapping(array $propertyToFieldMap = null): array
     {
         // FIXME: needs verification
         return $propertyToFieldMap ?? static::$DEFAULT_MAPPING;
@@ -31,8 +33,9 @@ trait MapProperties
         foreach ($data as $property => $value) {
             $field = $this->mapPropertyToField($property);
             if (isset($result[$field])) {
-                throw new Exception(
-                    "Duplicate field `$field` after mapping properties"
+                throw new SpecException(
+                    "Duplicate field `$field` after mapping properties",
+                    SpecException::MAPPING_ERROR
                 );
             }
             $result[$field] = $value;
@@ -46,8 +49,9 @@ trait MapProperties
         foreach ($data as $field => $value) {
             $property = $this->mapFieldToProperty($field);
             if (isset($result[$property])) {
-                throw new Exception(
-                    "Duplicate property `$property` after mapping fields"
+                throw new SpecException(
+                    "Duplicate property `$property` after mapping fields",
+                    SpecException::MAPPING_ERROR
                 );
             }
             $result[$property] = $value;

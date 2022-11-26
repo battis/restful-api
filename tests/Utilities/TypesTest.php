@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Battis\CRUD\Utilities;
+namespace Battis\CRUD\Tests\Utilities;
 
 use Battis\CRUD\Utilities\Types;
 use DateTime;

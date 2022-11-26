@@ -12,7 +12,7 @@ class Types
     public static function toDatabaseValue($value)
     {
         if (is_object($value) && $value instanceof DateTimeInterface) {
-            return $value->format("Y-m-d H:i:s");
+            return $value->format('Y-m-d H:i:s');
         } elseif (is_array($value)) {
             return json_encode($value);
         } else {
@@ -41,7 +41,7 @@ class Types
             $type = $params[$argIndex]->getType();
             if ($type) {
                 $class = $type->getName();
-                if ($class == "array") {
+                if ($class == 'array') {
                     return json_decode($arg) ?? [];
                 }
                 try {
