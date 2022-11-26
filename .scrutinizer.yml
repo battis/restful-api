@@ -10,6 +10,7 @@ tools:
             standard: 'PSR2'
 
 build:
+    image: default-bionic
     nodes:
         analysis:
             tests:
