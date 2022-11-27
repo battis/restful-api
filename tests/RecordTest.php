@@ -11,13 +11,13 @@ class RecordTest extends TestCase
 {
     protected function setUp(): void
     {
-        $this->getPDO()->query(file_get_contents($this->getFixturePath(__FILE__) . '/record_fixtures.sql'));
+        $this->getPDO()->query(file_get_contents($this->getPathToFixture('record_fixtures.sql')));
         parent::setUp();
     }
 
     public function getDataset()
     {
-        return $this->getCsvDataSet(__FILE__, 'record_fixtures');
+        return $this->getCsvDataSet('record_fixtures');
     }
 
     private function assertRecordEquals(array $expected, Record $actual)
@@ -94,14 +94,14 @@ class RecordTest extends TestCase
 
             $record = RecordFixture::create($arg);
 
-            $this->assertTableEqualsCsv('record_fixtures', __FILE__, "record_fixtures-testCreate-$i");
+            $this->assertTableEqualsCsv('record_fixtures', "record_fixtures-testCreate-$i");
             $this->assertRecordEquals($expected, $record);
 
             $i++;
         }
 
         $this->assertNull(RecordFixture::create(['not a field' => 'value']));
-        $this->assertTableEqualsCsv('record_fixtures', __FILE__, "record_fixtures-testCreate-2");
+        $this->assertTableEqualsCsv('record_fixtures', "record_fixtures-testCreate-2");
     }
 
     public function testRead()
@@ -111,13 +111,13 @@ class RecordTest extends TestCase
             2 => [2, 'test row 2', 456, null]
         ];
 
-        $this->assertTableEqualsCsv('record_fixtures', __FILE__, 'record_fixtures');
+        $this->assertTableEqualsCsv('record_fixtures', 'record_fixtures');
 
         foreach($data as $id => $expected) {
 
             $record = RecordFixture::read($id);
 
-            $this->assertTableEqualsCsv('record_fixtures', __FILE__, 'record_fixtures');
+            $this->assertTableEqualsCsv('record_fixtures', 'record_fixtures');
             $this->assertRecordEquals($expected, $record);
         }
 
@@ -161,7 +161,7 @@ class RecordTest extends TestCase
             ]
         ];
 
-        $this->assertTableEqualsCsv('record_fixtures', __FILE__, 'record_fixtures-testRetrieve');
+        $this->assertTableEqualsCsv('record_fixtures', 'record_fixtures-testRetrieve');
 
         foreach($data as list($arg, $count, $values)) {
 
@@ -171,7 +171,7 @@ class RecordTest extends TestCase
                 $result = RecordFixture::retrieve($arg);
             }
 
-            $this->assertTableEqualsCsv('record_fixtures', __FILE__, 'record_fixtures-testRetrieve');
+            $this->assertTableEqualsCsv('record_fixtures', 'record_fixtures-testRetrieve');
 
             $this->assertCount($count, $result);
             for ($i = 0; $i < $count; $i++) {
@@ -187,7 +187,7 @@ class RecordTest extends TestCase
             2 => [2, 'test row 2', 123, 456]
         ];
 
-        $this->assertTableEqualsCsv('record_fixtures', __FILE__, 'record_fixtures');
+        $this->assertTableEqualsCsv('record_fixtures', 'record_fixtures');
 
         foreach($data as $id => $expected) {
             list($id, $field1, $field2, $field3) = $expected;
@@ -197,7 +197,7 @@ class RecordTest extends TestCase
                 'field3' => $field3
             ]);
 
-            $this->assertTableEqualsCsv('record_fixtures', __FILE__, "record_fixtures-testUpdate-$id");
+            $this->assertTableEqualsCsv('record_fixtures', "record_fixtures-testUpdate-$id");
             $this->assertRecordEquals($expected, $record);
         }
 
@@ -214,7 +214,7 @@ class RecordTest extends TestCase
         foreach($data as $id => $expected) {
             $record = RecordFixture::delete($id);
 
-            $this->assertTableEqualsCsv('record_fixtures', __FILE__, "record_fixtures-testDelete-$id");
+            $this->assertTableEqualsCsv('record_fixtures', "record_fixtures-testDelete-$id");
             $this->assertRecordEquals($expected, $record);
         }
 
@@ -228,7 +228,7 @@ class RecordTest extends TestCase
             2 => [2, 'test row 2', 123, 456]
         ];
 
-        $this->assertTableEqualsCsv('record_fixtures', __FILE__, 'record_fixtures');
+        $this->assertTableEqualsCsv('record_fixtures', 'record_fixtures');
 
         foreach($data as $id => $expected) {
             list($id, $field1, $field2, $field3) = $expected;
@@ -240,7 +240,7 @@ class RecordTest extends TestCase
                 'field3' => $field3
             ]);
 
-            $this->assertTableEqualsCsv('record_fixtures', __FILE__, "record_fixtures-testUpdate-$id");
+            $this->assertTableEqualsCsv('record_fixtures', "record_fixtures-testUpdate-$id");
             $this->assertRecordEquals($expected, $record);
         }
 

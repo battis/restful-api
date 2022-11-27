@@ -8,28 +8,28 @@
     "packages": [
         {
             "name": "battis/data-utilities",
-            "version": "v1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/battis/data-utilities.git",
-                "reference": "7b92cd77fd669b21fb1641586a2a278df0fc21a9"
+                "reference": "f463440c8fb6465947b72ef78e1c1932f7a6d50f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/battis/data-utilities/zipball/7b92cd77fd669b21fb1641586a2a278df0fc21a9",
-                "reference": "7b92cd77fd669b21fb1641586a2a278df0fc21a9",
+                "url": "https://api.github.com/repos/battis/data-utilities/zipball/f463440c8fb6465947b72ef78e1c1932f7a6d50f",
+                "reference": "f463440c8fb6465947b72ef78e1c1932f7a6d50f",
                 "shasum": ""
             },
             "require": {
                 "battis/hydratable": "^0.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "~9.0"
+                "phpunit/phpunit": "^9.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Battis\\DataUtilities\\": "src/"
+                    "Battis\\DataUtilities\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -45,9 +45,9 @@
             "description": "A handful of useful helper functions to process data",
             "support": {
                 "issues": "https://github.com/battis/data-utilities/issues",
-                "source": "https://github.com/battis/data-utilities/tree/v1.0"
+                "source": "https://github.com/battis/data-utilities/tree/v1.1.1"
             },
-            "time": "2022-11-24T18:10:56+00:00"
+            "time": "2022-11-27T17:05:51+00:00"
         },
         {
             "name": "battis/hydratable",

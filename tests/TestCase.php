@@ -2,6 +2,7 @@
 
 namespace Battis\CRUD\Tests;
 
+use Battis\DataUtilities\PHPUnit\FixturePath;
 use PDO;
 use PHPUnit\DbUnit\Database\DefaultConnection;
 use PHPUnit\DbUnit\DataSet\CsvDataSet;
@@ -9,13 +10,11 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
 
 abstract class TestCase extends PHPUnitTestCase {
-    use TestCaseTrait;
+    use TestCaseTrait, FixturePath;
 
     static private ?PDO $pdo = null;
 
     private ?DefaultConnection $connection = null;
-
-    static private string $fixturePath = __DIR__ . '/Fixtures';
 
     final public function getPDO(): PDO
     {
@@ -33,22 +32,17 @@ abstract class TestCase extends PHPUnitTestCase {
         return $this->connection;
     }
 
-    final protected function getFixturePath(string $filePath): string
-    {
-        return self::$fixturePath . preg_replace('@^' . __DIR__ . '@', '', dirname($filePath)) . '/' . basename($filePath, '.php');
-    }
-
-    final protected function getCsvDataSet($filePath, $tableName, $datasetName = null): CsvDataSet
+    final protected function getCsvDataSet($tableName, $datasetName = null): CsvDataSet
     {
         $datasetName = $datasetName ?? $tableName;
         $dataset = new CsvDataSet();
-        $dataset->addTable($tableName, $this->getFixturePath($filePath) . '/' . basename($datasetName, '.csv') . '.csv');
+        $dataset->addTable($tableName, $this->getPathToFixture(basename($datasetName, '.csv')) . '.csv');
         return $dataset;
     }
 
-    final protected function assertTableEqualsCsv(string $tableName, string $filePath, string $datasetName) {
+    final protected function assertTableEqualsCsv(string $tableName, string $datasetName) {
         $this->assertTablesEqual(
-            $this->getCsvDataSet($filePath, $tableName, $datasetName)->getTable($tableName),
+            $this->getCsvDataSet($tableName, $datasetName)->getTable($tableName),
             $this->getConnection()->createQueryTable($tableName, "SELECT * FROM `$tableName`")
         );
 
