@@ -1,0 +1,9 @@
+{
+  "actions" : {
+    "run" : {
+      "enabled" : true,
+      "script" : "XDEBUG_MODE=coverage .\\\/vendor\\\/bin\\\/phpunit --coverage-html=coverage --coverage-text"
+    }
+  },
+  "openLogOnRun" : "start"
+}
