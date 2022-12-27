@@ -19,6 +19,7 @@ $app->group("/api/$version", function ($api) {
         ServerRequest $request,
         Response $response
     ) {
+        // TODO this is just an example
         return $response->withJson($request->getParsedBody());
     });
 })->add(OAuth2Middleware::class);

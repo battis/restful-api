@@ -1,5 +1,6 @@
 <?php
 
+// TODO update with relative path from this file to src/api.php
 /* The path here is relative from the _eventual_ location of this file
    in a web-served public folder to the _eventual_ location of the
    server code. By way of examples...
