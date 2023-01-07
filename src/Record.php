@@ -191,7 +191,8 @@ abstract class Record
                     Types::toExpectedArgumentType($this, $setter, $value)
                 );
             } else {
-                $this->$property = $value;
+                // TODO better solution to PHP 8.2 deprecation of dynamic property declaration
+                @($this->$property = $value);
             }
         }
     }
