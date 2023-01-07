@@ -1,4 +1,6 @@
 .phpunit.result.cache
-/.nova/
+/.nova/*
+!/.nova/Artwork
+!/.nova/Configuration.json
 /coverage/
 /vendor/
