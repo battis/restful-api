@@ -15,4 +15,8 @@ class MapPropertiesTest extends TestCase {
     {
         return $this->getCsvDataSet('record_fixtures');
     }
+
+    public function testMapping() {
+
+    }
 }
