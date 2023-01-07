@@ -1,5 +1,7 @@
 /.idea/
-/.nova/
+/.nova/*
+!/.nova/Artwork
+!/.nova/Configuration.json
 /coverage/
 /vendor/
 .phpunit.result.cache
