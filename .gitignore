@@ -3,7 +3,7 @@
 !/.nova/Configuration.json
 /vendor/
 /coverage/
-*.cache
 /logs/*
 /var/*
 !README.md
+.phpunit.*

@@ -13,6 +13,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:battis/oauth2-server.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:battis/crud.git"
         }
     ],
     "require": {
@@ -33,7 +37,8 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.0",
+        "battis/crud": "dev-main"
     },
     "autoload-dev": {
         "psr-4": {
