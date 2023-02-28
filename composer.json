@@ -30,7 +30,7 @@
     },
     "require-dev": {
         "misantron/dbunit": "^5.2",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.0"
     },
     "config": {
         "sort-packages": true

@@ -4,12 +4,12 @@
 # PHP development
 /phpdoc/
 /coverage/
-*.cache
 /db.sqlite
 /external/
 /.nova/*
 !/.nova/Artwork
 !/.nova/Configuration.json
+.phpunit.*
 
 # Runtime
 /logs/*
