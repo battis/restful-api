@@ -1,4 +1,4 @@
-.phpunit.result.cache
+.phpunit.*
 /.nova/*
 !/.nova/Artwork
 !/.nova/Configuration.json

@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "psr-4": {
@@ -23,5 +23,8 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit"
     }
 }
