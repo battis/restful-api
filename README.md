@@ -1,5 +1,7 @@
 # PHPUnit Sessions
 
+[![codecov](https://codecov.io/gh/battis/phpunit-sessions/branch/main/graph/badge.svg?token=ABK4AJLYO0)](https://codecov.io/gh/battis/phpunit-sessions)
+
 Extension to PHPUnit to handle PHP sessions more gracefully
 
 ## Install
@@ -31,7 +33,7 @@ In `phpunit.xml`:
 In `tests/bootstrap.php`:
 
 ```php
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . "/../vendor/autoload.php";
 
 Battis\PHPUnit\Sessions\Bootstrap::execute();
 ```
