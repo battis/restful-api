@@ -67,11 +67,11 @@ $container->set(AuthorizationServer::class, function (
     ContainerInterface $container
 ) {
     $settings = $container->get(AuthorizationServer::class);
-    $clientRepository = new ClientRepository();
-    $scopeRepositroy = new ScopeRepository();
-    $accessTokenRepository = new AccessTokenRepository();
-    $authCodeRepository = new AuthCodeRepository();
-    $refreshTokenRepository = new RefreshTokenRepository();
+    $clientRepository = $container->get(ClientRepository::class);
+    $scopeRepositroy = $container->get(ScopeRepository::class);
+    $accessTokenRepository = $container->get(AccessTokenRepository::class);
+    $authCodeRepository = $container->get(AuthCodeRepository::class);
+    $refreshTokenRepository = $container->get(RefreshTokenRepository::class);
 
     $server = new AuthorizationServer(
         $clientRepository,
@@ -102,7 +102,7 @@ $container->set(ResourceServer::class, function (
 ) {
     $settings = $container->get(ResourceServer::class);
     $server = new ResourceServer(
-        new AccessTokenRepository(),
+        $container->get(AccessTokenRepository::class),
         $settings["public_key_path"]
     );
 
