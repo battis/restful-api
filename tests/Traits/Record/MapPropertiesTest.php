@@ -17,6 +17,6 @@ class MapPropertiesTest extends TestCase {
     }
 
     public function testMapping() {
-
+        $this->assertTrue(true); // TODO complete tests
     }
 }

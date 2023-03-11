@@ -4,4 +4,5 @@
 !/.nova/Configuration.json
 /coverage/
 /vendor/
-.phpunit.result.cache
+.phpunit.*
+/memory
