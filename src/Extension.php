@@ -8,6 +8,8 @@ class Extension implements AfterLastTestHook
 {
     public function executeAfterLastTest(): void
     {
-        ob_flush();
+        if (ob_get_level() > 0) {
+            @ob_flush();
+        }
     }
 }
