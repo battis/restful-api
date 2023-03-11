@@ -11,7 +11,7 @@ class ClientRepository implements ClientRepositoryInterface
 {
     public function __construct(PDO $pdo)
     {
-        CRUD\Manager::get($pdo);
+        CRUD\Connection::setPDO($pdo);
     }
 
     /**

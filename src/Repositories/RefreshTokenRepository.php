@@ -12,7 +12,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 {
     public function __construct(PDO $pdo)
     {
-        CRUD\Manager::get($pdo);
+        CRUD\Connection::setPDO($pdo);
     }
 
     public function getNewRefreshToken()

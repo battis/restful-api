@@ -13,7 +13,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     public function __construct(PDO $pdo)
     {
-        CRUD\Manager::get($pdo);
+        CRUD\Connection::setPDO($pdo);
     }
 
     public function getNewToken(

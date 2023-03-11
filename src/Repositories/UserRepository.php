@@ -20,7 +20,7 @@ class UserRepository implements
 
     public function __construct(PDO $pdo)
     {
-        CRUD\Manager::get($pdo);
+        CRUD\Connection::setPDO($pdo);
     }
 
     public function getUserEntityByUsername(

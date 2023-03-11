@@ -1,38 +1,34 @@
 {
-    "name": "battis/oauth2-server",
-    "description": "League-based OAuth2 Server for Slim Framework",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Battis\\OAuth2\\Server\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Seth Battis",
-            "email": "seth@battis.net"
-        }
-    ],
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../crud"
-        }
-    ],
-    "require": {
-        "ext-json": "*",
-        "battis/crud": "dev-main",
-        "battis/user-session": "^0.1",
-        "league/oauth2-server": "^8.3",
-        "psr/container": "^1.0",
-        "slim/http": "^1.2",
-        "slim/php-view": "^3.2"
-    },
-    "require-dev": {
-        "misantron/dbunit": "^5.2",
-        "phpunit/phpunit": "^9.0"
-    },
-    "config": {
-        "sort-packages": true
+  "name": "battis/oauth2-server",
+  "description": "League-based OAuth2 Server for Slim Framework",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Battis\\OAuth2\\Server\\": "src/"
     }
+  },
+  "authors": [
+    {
+      "name": "Seth Battis",
+      "email": "seth@battis.net"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../crud"
+    }
+  ],
+  "require": {
+    "ext-json": "*",
+    "battis/crud": "dev-main",
+    "battis/user-session": "^0.1",
+    "league/oauth2-server": "^8.3",
+    "psr/container": "^1.0",
+    "slim/http": "^1.2",
+    "slim/php-view": "^3.2"
+  },
+  "config": {
+    "sort-packages": true
+  }
 }

@@ -16,7 +16,7 @@ class ScopeRepository implements ScopeRepositoryInterface
 
     public function __construct(PDO $pdo, UserRepository $userRepository)
     {
-        CRUD\Manager::get($pdo);
+        CRUD\Connection::setPDO($pdo);
         $this->userRepository = $userRepository;
     }
 
