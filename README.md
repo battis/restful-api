@@ -45,6 +45,6 @@ Fundamentally, there are two problems with working with sessions and cookies whe
 1. PHPUnit runs from the CLI, so `$_COOKIES` and `$_SESSIONS` don't exist.
 2. PHPUnit starts output before any of the code under test that works with sessions is executed, generating errors about output being sent before headers, etc.
 
-To address this, this extensions enables an output buffer as PHPUnit starts, buffering all of the output until after the last test is run. (You lose nothing but the immediacy of the output -- you'll still see it all, but only after a heart-stopping pause.)
+To address this, this extension enables an output buffer as PHPUnit starts, buffering all of the output until after the last test is run. (You lose nothing but the immediacy of the output -- you'll still see it all, but only after a heart-stopping pause.)
 
 In addition, when the script run from the CLI, `$_SESSIONS` AND `$_COOKIES` are initialized as empty arrays which can then be manipulated as usual.
