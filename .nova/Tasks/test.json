@@ -2,7 +2,7 @@
   "actions" : {
     "run" : {
       "enabled" : true,
-      "script" : "XDEBUG_MODE=coverage .\/vendor\/bin\/phpunit"
+      "script" : "composer run-script test"
     }
   },
   "openLogOnRun" : "start"

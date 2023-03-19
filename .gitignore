@@ -1,5 +1,6 @@
-/.phpunit.*
+/*.cache
 /coverage/
 clover.xml
 /node_modules/
+/tools/
 /vendor/

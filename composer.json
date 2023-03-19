@@ -10,7 +10,8 @@
   ],
   "require": {
     "symfony/yaml": "^5.0",
-    "battis/hydratable": "^0.1.0"
+    "battis/hydratable": "^0.1",
+    "phpunit/phpunit": "^10.0"
   },
   "autoload": {
     "psr-4": {
@@ -18,19 +19,20 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "^10.0",
-    "battis/data-utilities": "dev-main",
-    "vimeo/psalm": "^5.8",
-    "phpdocumentor/phpdocumentor": "^3.1"
+    "battis/data-utilities": ">=1.1.2.1 <2.0"
   },
   "autoload-dev": {
     "psr-4": {
       "Battis\\PHPUnit\\PDO\\Tests\\": "tests"
     }
   },
+  "scripts": {
+    "test": "XDEBUG_MODE=coverage ./tools/phpunit --coverage-text --coverage-html=coverage",
+    "docs": "./tools/phpDocumentor"
+  },
   "config": {
     "allow-plugins": {
-      "symfony/flex": true
+      "symfony/flex": false
     }
   }
 }
