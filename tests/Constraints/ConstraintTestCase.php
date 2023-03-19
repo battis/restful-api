@@ -20,6 +20,7 @@ abstract class ConstraintTestCase extends TestCase
 
     abstract public function testMatches(): void;
 
+    // TODO is there a more meaningful way to test `toString()`?
     public function testToString(): void
     {
         $this->assertNotEmpty($this->getConstraint()->toString());

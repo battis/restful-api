@@ -42,6 +42,7 @@ class Fixture extends Schema
         if (!$this->getSchema()) {
             throw new SchemaException('Schema not defined');
         }
+        // TODO is there a more robust way to handle multiple SQL queries?
         foreach (explode(';', $this->getSchema()->getSQL()) as $sql) {
             Query::fromString($sql)->executeWith($pdo);
         }

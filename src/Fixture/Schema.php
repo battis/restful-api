@@ -19,6 +19,8 @@ abstract class Schema extends Base
 
     public function withSchema(Query $schema): Schema
     {
+        // TODO test that `$schema` query contains `CREATE TABLE`
+        // TODO insert `IF NOT EXISTS` into `CREATE TABLE` `$schema` query
         $this->schema = $schema;
         return $this;
     }

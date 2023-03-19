@@ -8,6 +8,10 @@ use PDOStatement;
 
 class Query
 {
+    /*
+     * FIXME if `$sql` contains multiple valid queries, only the first will be run
+     *   cf [this whinge-fist](https://stackoverflow.com/questions/6346674)
+     */
     private string $sql;
     private ?PDOStatement $statement = null;
 

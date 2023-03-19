@@ -22,6 +22,13 @@ class TableExists extends Constraint
      */
     public function matches($table): bool
     {
+        /*
+         * TODO find a consistently fast way of checking if table exists
+         *   [Lots of discussion here](https://stackoverflow.com/questions/1717495)
+         *   The core problem is that every database server has its own
+         *   query to specifically check if a table exists, so a server-
+         *   agnostic query is tricky to work out.
+         */
         try {
             $result = Query::fromString(
                 "SELECT COUNT(*) FROM `{$table->getName()}`"
