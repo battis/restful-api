@@ -1,0 +1,5 @@
+/.phpunit.*
+/coverage/
+clover.xml
+/node_modules/
+/vendor/
