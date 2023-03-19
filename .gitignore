@@ -1,6 +1,7 @@
-/*.cache
+/.cache/
+/build/
+/docs/
 /coverage/
-clover.xml
 /node_modules/
 /tools/
 /vendor/

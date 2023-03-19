@@ -27,8 +27,9 @@
     }
   },
   "scripts": {
+      "post-autoload-dump": "phive install",
     "test": "XDEBUG_MODE=coverage ./tools/phpunit --coverage-text --coverage-html=coverage",
-    "docs": "./tools/phpDocumentor"
+    "docs": "./tools/phpdocumentor -d src -t docs"
   },
   "config": {
     "allow-plugins": {

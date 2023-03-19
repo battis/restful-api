@@ -7,9 +7,9 @@
 >
     <paths>
         <output>docs</output>
-        <cache>.phpdoc.cache</cache>
+        <cache>.cache/phpdoc</cache>
     </paths>
-    <version number="3.0.0">
+    <version number="latest">
         <api>
             <source dsn=".">
                 <path>src</path>

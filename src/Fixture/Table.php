@@ -7,8 +7,6 @@ use PDO;
 
 /**
  * @extends Schema<int, Row, Row>
- * @method static Table fromYamlFile(string $pathToFile)
- * @method Table withSchema(Query $schema)
  */
 class Table extends Schema
 {

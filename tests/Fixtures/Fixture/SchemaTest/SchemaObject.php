@@ -6,9 +6,6 @@ use Battis\PHPUnit\PDO\Fixture\Base;
 use Battis\PHPUnit\PDO\Fixture\Schema;
 use PDO;
 
-/**
- * @method static SchemaObject fromArray(array)
- */
 class SchemaObject extends Schema
 {
     public array $array;

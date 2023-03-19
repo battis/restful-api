@@ -8,7 +8,6 @@ use PDO;
 
 /**
  * @extends Base<string, Column, string>
- * @method static Row fromYamlFile(string $pathToFile)
  */
 class Row extends Base
 {

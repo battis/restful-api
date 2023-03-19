@@ -11,7 +11,6 @@ use PDO;
  * @template TypeStored
  * @template TypeAccessed
  * @extends Base<TypeKey, TypeStored, TypeAccessed>
- * @method static Schema fromArray(array)
  */
 abstract class Schema extends Base
 {

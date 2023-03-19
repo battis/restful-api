@@ -8,8 +8,6 @@ use PDO;
 
 /**
  * @extends Schema<string, Table, Table>
- * @method static Fixture fromYamlFile(string $pathToFile)
- * @method Fixture withSchema(Query $schema)
  */
 class Fixture extends Schema
 {
