@@ -145,5 +145,8 @@
     "Zend OPcache",
     "zip",
     "zlib"
-  ]
+  ],
+  "workspace.art_style" : 1,
+  "workspace.color" : 12,
+  "workspace.name" : "phpunit-pdo"
 }
