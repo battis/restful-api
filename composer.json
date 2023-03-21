@@ -1,35 +1,36 @@
 {
-    "name": "battis/crud",
-    "description": "Doctrine DBAL-based CRUD implementation",
-    "authors": [
-        {
-            "name": "Seth Battis",
-            "email": "seth@battis.net"
-        }
-    ],
-    "require": {
-        "ext-pdo": "*",
-        "battis/data-utilities": "^1.0",
-        "envms/fluentpdo": "^2.2"
-    },
-    "require-dev": {
-        "misantron/dbunit": "^5.2",
-        "phpunit/phpunit": "^9.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Battis\\CRUD\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Battis\\CRUD\\Tests\\": "tests"
-        }
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "symfony/flex": true
-        }
+  "name": "battis/crud",
+  "description": "Doctrine DBAL-based CRUD implementation",
+  "authors": [
+    {
+      "name": "Seth Battis",
+      "email": "seth@battis.net"
     }
+  ],
+  "require": {
+    "ext-pdo": "*",
+    "battis/data-utilities": "^1.0",
+    "battis/hydratable": "^0.1.0",
+    "envms/fluentpdo": "^2.2"
+  },
+  "require-dev": {
+    "battis/phpunit-pdo": "dev-main"
+  },
+  "autoload": {
+    "psr-4": {
+      "Battis\\CRUD\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Battis\\CRUD\\Tests\\": "tests"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+      "test": "XDEBUG_MODE=coverage ./tools/phpunit --coverage-text --coverage-html=coverage",
+      "docs": "./tools/phpdocumentor -d src -t docs"
+  }
 }

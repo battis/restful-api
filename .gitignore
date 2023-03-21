@@ -1,8 +1,6 @@
-/.idea/
-/.nova/*
-!/.nova/Artwork
-!/.nova/Configuration.json
+.DS_Store
+/.cache/
 /coverage/
+/docs/
+/tools/
 /vendor/
-.phpunit.*
-/memory
