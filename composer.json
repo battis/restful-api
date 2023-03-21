@@ -36,5 +36,9 @@
     "psr-4": {
       "Battis\\RESTfulAPI\\": "src"
     }
+  },
+  "scripts": {
+      "test": "XDEBUG_MODE=coverage ./tools/phpunit --coverage-text --coverage-html=coverage",
+      "docs": "./tools/phpdocumentor -d src -t docs"
   }
 }
