@@ -1,30 +1,31 @@
 {
-    "name": "battis/phpunit-sessions",
-    "description": "Extension to PHPUnit to handle PHP sessions more gracefully",
-    "license": "GPL-3.0",
-    "authors": [
-        {
-            "name": "Seth Battis",
-            "email": "seth@battis.net"
-        }
-    ],
-    "require": {
-        "phpunit/phpunit": "^9.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Battis\\PHPUnit\\Sessions\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Battis\\PHPUnit\\Sessions\\Tests\\": "tests/"
-        }
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "scripts": {
-        "test": "./vendor/bin/phpunit"
+  "name": "battis/phpunit-sessions",
+  "description": "Extension to PHPUnit to handle PHP sessions more gracefully",
+  "license": "GPL-3.0",
+  "authors": [
+    {
+      "name": "Seth Battis",
+      "email": "seth@battis.net"
     }
+  ],
+  "require": {
+    "phpunit/phpunit": "^10.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Battis\\PHPUnit\\Sessions\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Battis\\PHPUnit\\Sessions\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "scripts": {
+    "test": "XDEBUG_MODE=coverage ./tools/phpunit --coverage-text --coverage-html=coverage",
+    "docs": "./tools/phpdocumentor -d src -t docs"
+  }
 }
