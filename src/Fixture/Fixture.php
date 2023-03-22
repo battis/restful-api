@@ -28,7 +28,7 @@ class Fixture extends Schema
     }
 
     /**
-     * @param fromArray(array{tables: array<string, array{name: string, rows: array<int, array<string, mixed>>}>}) $array
+     * @param array{tables: array<string, array{name: string, rows: array<int, array<string, mixed>>}>} $array
      */
     public static function fromArray(array $array): Fixture
     {

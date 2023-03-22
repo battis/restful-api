@@ -2,6 +2,7 @@
 
 namespace Battis\PHPUnit\PDO;
 
+use Battis\PHPUnit\PDO\Exceptions\QueryException;
 use Battis\PHPUnit\PDO\Fixture\Table;
 use PDO;
 use PDOStatement;
@@ -20,6 +21,14 @@ class Query
         $this->sql = $sql;
     }
 
+    public function getStatement(): PDOStatement {
+        if ($this->statement) {
+            return $this->statement;
+        } else {
+            throw new QueryException('statement not prepared');
+        }
+    }
+
     public static function fromString(string $sqlString): Query
     {
         return new Query($sqlString);
@@ -27,7 +36,12 @@ class Query
 
     public static function fromSqlFile(string $pathToFile): Query
     {
-        return self::fromString(file_get_contents($pathToFile));
+        $sql = file_get_contents($pathToFile);
+        if ($sql) {
+            return self::fromString($sql);
+        } else {
+            throw new QueryException("'$pathToFile' invalid");
+        }
     }
 
     public static function insertInto(Table $table): Query
@@ -107,18 +121,22 @@ class Query
         return $this;
     }
 
+    /**
+     * @param array<string, mixed>|mixed[]|null $params
+     * @return Query
+     */
     public function execute(?array $params = null): Query
     {
-        $this->statement->execute($params);
+        $this->getStatement()->execute($params);
         return $this;
     }
 
     /**
-     * @return array<string, mixed>|false
+     * @return mixed
      */
     public function fetch(int $mode = PDO::FETCH_ASSOC): mixed
     {
-        return $this->statement->fetch($mode);
+        return $this->getStatement()->fetch($mode);
     }
 
     /**
@@ -126,24 +144,41 @@ class Query
      */
     public function fetchAll(int $mode = PDO::FETCH_ASSOC): array
     {
-        return $this->statement->fetchAll($mode);
+        return $this->getStatement()->fetchAll($mode);
     }
 
-    public function executeWith(PDO $pdo, ?array $params = null)
+    /**
+     * @param PDO $pdo
+     * @param array<string, mixed>|mixed[]|null $params
+     * @return Query
+     */
+    public function executeWith(PDO $pdo, ?array $params = null): Query
     {
         return $this->prepare($pdo)->execute($params);
     }
 
+    /**
+     * @param PDO $pdo
+     * @param array<string, mixed>|mixed[]|null $params
+     * @param int $mode
+     * @return mixed
+     */
     public function fetchFrom(
         PDO $pdo,
         ?array $params = null,
         int $mode = PDO::FETCH_ASSOC
-    ) {
+    ): mixed {
         return $this->prepare($pdo)
             ->execute($params)
             ->fetch($mode);
     }
 
+    /**
+     * @param PDO $pdo
+     * @param array<string, mixed>|mixed[]|null $params
+     * @param int $mode
+     * @return mixed[][]
+     */
     public function fetchAllFrom(
         PDO $pdo,
         ?array $params = null,

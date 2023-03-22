@@ -23,15 +23,17 @@ class TableContainsRow extends Constraint
      * @param Row $expected
      * @return bool
      */
-    public function matches($expected): bool
+    public function matches(mixed $expected): bool
     {
-        $response = Query::selectRowFrom($this->table)->fetchFrom(
-            $this->pdo,
-            $expected->getValues()
-        );
-        if ($response) {
-            $actual = Row::fromArray($response);
-            return $actual->equals($expected);
+        if ($expected instanceof Row) {
+            $response = Query::selectRowFrom($this->table)->fetchFrom(
+                $this->pdo,
+                $expected->getValues()
+            );
+            if (is_array($response)) {
+                $actual = Row::fromArray($response);
+                return $actual->equals($expected);
+            }
         }
         return false;
     }

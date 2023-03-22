@@ -14,7 +14,7 @@ trait AssertTableContainsRow
         Row $needle,
         Table $haystack,
         PDO $context
-    ) {
+    ): void {
         Assert::assertThat($needle, new TableContainsRow($haystack, $context));
     }
 
@@ -22,7 +22,7 @@ trait AssertTableContainsRow
         Row $needle,
         Table $haystack,
         PDO $context
-    ) {
+    ): void {
         Assert::assertThat(
             $needle,
             Assert::logicalNot(new TableContainsRow($haystack, $context))

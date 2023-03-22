@@ -2,6 +2,7 @@
 
 namespace Battis\PHPUnit\PDO\Constraints;
 
+use Battis\PHPUnit\PDO\Fixture\Table;
 use Battis\PHPUnit\PDO\Query;
 use Exception;
 use PDO;
@@ -20,7 +21,7 @@ class TableExists extends Constraint
      * @param Table $table
      * @return bool
      */
-    public function matches($table): bool
+    public function matches(mixed $table): bool
     {
         /*
          * TODO find a consistently fast way of checking if table exists

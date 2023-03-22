@@ -30,7 +30,7 @@ class Row extends Base
     /**
      * @param string $offset
      * @param Column $value
-     * @return string
+     * @return mixed
      */
     protected function hookGetValue(mixed $offset, mixed $value): mixed
     {
@@ -51,7 +51,7 @@ class Row extends Base
         return $this;
     }
 
-    public function insertInto(PDO $pdo)
+    public function insertInto(PDO $pdo): void
     {
         if (!$this->parent) {
             throw new RowException('No parent registered');

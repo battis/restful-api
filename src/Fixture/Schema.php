@@ -16,6 +16,10 @@ abstract class Schema extends Base
 {
     private ?Query $schema = null;
 
+    /**
+     * @param Query $schema
+     * @return Schema<TypeKey, TypeStored, TypeAccessed>
+     */
     public function withSchema(Query $schema): Schema
     {
         // TODO test that `$schema` query contains `CREATE TABLE`

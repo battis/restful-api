@@ -10,11 +10,11 @@ trait PDO
 
     public static function getPDO(): GlobalPDO
     {
-        if (!static::$pdo) {
-            static::$pdo = static::createPDO();
-            static::$pdo->setAttribute(GlobalPDO::ATTR_EMULATE_PREPARES, 1);
+        if (!self::$pdo) {
+            self::$pdo = static::createPDO();
+            self::$pdo->setAttribute(GlobalPDO::ATTR_EMULATE_PREPARES, 1);
         }
-        return static::$pdo;
+        return self::$pdo;
     }
 
     public static function createPDO(): GlobalPDO
@@ -24,6 +24,6 @@ trait PDO
 
     public static function destroyPDO(): void
     {
-        static::$pdo = null;
+        self::$pdo = null;
     }
 }

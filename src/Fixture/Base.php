@@ -21,13 +21,20 @@ abstract class Base implements ArrayAccess, Iterator, Countable
     /** @use ImmutableIterableArray<TypeKey, TypeStored, TypeAccessed> */
     use ImmutableIterableArray;
 
+    /**
+     * @param array<string, mixed> $config
+     */
     abstract protected function __construct(array $config);
 
+    /**
+     * @param array<string, mixed> $array
+     * @return Base<TypeKey, TypeStored, TypeAccessed>
+     */
     abstract public static function fromArray(array $array): Base;
 
     /**
      * @param string $pathToFile
-     * @return Base
+     * @return Base<TypeKey, TypeStored, TypeAccessed>
      * @throws BaseException if YAML does not parse to an array
      */
     public static function fromYamlFile(string $pathToFile): Base
@@ -41,5 +48,9 @@ abstract class Base implements ArrayAccess, Iterator, Countable
         }
     }
 
+    /**
+     * @param Base<TypeKey, TypeStored, TypeAccessed> $other
+     * @return bool
+     */
     abstract public function equals(Base $other): bool;
 }

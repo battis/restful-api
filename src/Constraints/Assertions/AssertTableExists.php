@@ -9,12 +9,12 @@ use PHPUnit\Framework\Assert;
 
 trait AssertTableExists
 {
-    public static function assertTableExists(Table $needle, PDO $haystack)
+    public static function assertTableExists(Table $needle, PDO $haystack): void
     {
         Assert::assertThat($needle, new TableExists($haystack));
     }
 
-    public static function assertTableDoesNotExist(Table $needle, PDO $haystack)
+    public static function assertTableDoesNotExist(Table $needle, PDO $haystack): void
     {
         Assert::assertThat(
             $needle,
