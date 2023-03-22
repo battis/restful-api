@@ -2,7 +2,7 @@
   "actions" : {
     "run" : {
       "enabled" : true,
-      "script" : ".\/tools\/phpstan analyze -l 9 src"
+      "script" : "composer run-script analyze"
     }
   },
   "openLogOnRun" : "start"
