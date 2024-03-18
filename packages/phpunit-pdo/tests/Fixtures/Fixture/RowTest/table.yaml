@@ -1,0 +1,11 @@
+name: 'row_test'
+rows:
+  - id: -2
+    foo: 'string'
+    bar: 3.14159
+  - id: 3
+    foo: 'string 2'
+    bar: 1.6178
+  - id: 1002
+    foo: 'string 3'
+    bar: 2.17

@@ -1,0 +1,11 @@
+name: 'table_name'
+rows:
+  - id: -1
+    foo: 'argle-bargle'
+    bar: true
+  - id: 37
+    foo: '37'
+    bar: false
+  - id: 100
+    foo: 'The quick brown fox jumps over the lazy dog'
+    bar: true

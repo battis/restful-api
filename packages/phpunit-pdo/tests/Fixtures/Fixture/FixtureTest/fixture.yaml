@@ -1,0 +1,34 @@
+tables:
+  - name: 'table_a'
+    rows:
+      - id: -2
+        foo: 'string'
+        bar: 3.14159
+      - id: 3
+        foo: 'string 2'
+        bar: 1.6178
+      - id: 1002
+        foo: 'string 3'
+        bar: 2.17
+  - name: 'table_b'
+    rows:
+      - id: 100
+        argle: 'foo bar baz'
+        bargle: false
+      - id: 101
+        argle: 'argle bargle'
+        bargle: true
+      - id: 102
+        argle: 'this is a test'
+        bargle: false
+  - name: 'table_c'
+    rows:
+      - id: 1000
+        testA: 'test'
+        testB: 'test'
+      - id: 1001
+        testA: 'test'
+        testB: 'test'
+      - id: 1002
+        testA: 'test'
+        testB: 'test'
