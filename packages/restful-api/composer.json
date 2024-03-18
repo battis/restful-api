@@ -22,9 +22,9 @@
   "require": {
     "psr/log": "^1.1",
     "vlucas/phpdotenv": "^5.0",
-    "php-di/php-di": "^6.2.2",
-    "slim/slim": "^4.5.0",
-    "slim/http": "^1.0.0",
+    "php-di/php-di": "^6.4",
+    "slim/slim": "^4.5",
+    "slim/http": "^1.2",
     "tuupola/cors-middleware": "^1.1",
     "battis/crud": "dev-main",
     "battis/oauth2-server": "dev-main",
@@ -38,7 +38,7 @@
     }
   },
   "scripts": {
-      "test": "XDEBUG_MODE=coverage ./tools/phpunit --coverage-text --coverage-html=coverage",
-      "docs": "./tools/phpdocumentor -d src -t docs"
+    "test": "XDEBUG_MODE=coverage ./tools/phpunit --coverage-text --coverage-html=coverage",
+    "docs": "./tools/phpdocumentor -d src -t docs"
   }
 }

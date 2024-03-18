@@ -19,8 +19,8 @@
     }
   ],
   "require": {
-    "battis/user-session": "dev-main",
-    "slim/slim": "^4.10",
+    "battis/user-session": "^0.1",
+    "slim/slim": "^4.5",
     "php-di/php-di": "^6.4",
     "slim/http": "^1.2",
     "slim/psr7": "^1.5"
