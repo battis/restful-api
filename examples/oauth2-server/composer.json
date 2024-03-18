@@ -14,16 +14,6 @@
       "Example\\": "src"
     }
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../"
-    },
-    {
-      "type": "path",
-      "url": "../../crud"
-    }
-  ],
   "require": {
     "slim/slim": "^4.5",
     "slim/psr7": "^1.5",

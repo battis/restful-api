@@ -1,84 +1,66 @@
 {
-    "authors": [
-        {
-            "name": "Seth Battis",
-            "email": "seth@battis.net"
-        }
-    ],
-    "require": {
-        "battis/data-utilities": "^1.1",
-        "battis/hydratable": "^0.1.0",
-        "bryanjhv/slim-session": "^4.0",
-        "envms/fluentpdo": "^2.2",
-        "ext-json": "*",
-        "ext-pdo": "*",
-        "illuminate/database": "^8.83",
-        "league/oauth2-server": "^8.3",
-        "monolog/monolog": "^2.0",
-        "php-di/php-di": "^6.4",
-        "phpunit/phpunit": "^10.0",
-        "psr/container": "^1.0",
-        "psr/log": "^1.1",
-        "robmorgan/phinx": "^0.12.12",
-        "slim/http": "^1.2",
-        "slim/php-view": "^3.2",
-        "slim/psr7": "^1.5",
-        "slim/slim": "^4.5",
-        "tuupola/cors-middleware": "^1.1",
-        "vlucas/phpdotenv": "^5.0"
-    },
-    "require-dev": {
-        "battis/phpunit-pdo": "dev-main",
-        "ext-simplexml": "*",
-        "phpspec/prophecy-phpunit": "^2.0",
-        "symplify/monorepo-builder": "^11.2"
-    },
-    "autoload": {
-        "psr-4": {
-            "Battis\\CRUD\\": "packages/crud/src",
-            "Battis\\OAuth2\\Server\\": "packages/oauth2-server/src/",
-            "Battis\\PHPUnit\\Sessions\\": "packages/phpunit-sessions/src/",
-            "Battis\\RESTfulAPI\\": "packages/restful-api/src",
-            "Battis\\UserSession\\": "packages/user-session/src",
-            "Example\\": [
-                "examples/oauth2-server/src",
-                "examples/user-session/src"
-            ]
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Battis\\CRUD\\Tests\\": "packages/crud/tests",
-            "Battis\\PHPUnit\\Sessions\\Tests\\": "packages/phpunit-sessions/tests/",
-            "Battis\\UserSession\\Tests\\": "packages/user-session/tests"
-        }
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": ""
-        },
-        {
-            "type": "path",
-            "url": "crud"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:battis/crud.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:battis/oauth2-server.git"
-        }
-    ],
-    "replace": {
-        "battis/crud": "self.version",
-        "battis/example": "self.version",
-        "battis/oauth2-server": "self.version",
-        "battis/oauth2-server-example": "self.version",
-        "battis/phpunit-sessions": "self.version",
-        "battis/restful-api": "self.version",
-        "battis/user-session": "self.version"
-    },
-    "minimum-stability": "dev"
+  "authors": [
+    {
+      "name": "Seth Battis",
+      "email": "seth@battis.net"
+    }
+  ],
+  "require": {
+    "battis/data-utilities": "^1.1",
+    "battis/hydratable": "^0.1.0",
+    "bryanjhv/slim-session": "^4.0",
+    "envms/fluentpdo": "^2.2",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "illuminate/database": "^8.83",
+    "league/oauth2-server": "^8.3",
+    "monolog/monolog": "^2.0",
+    "php-di/php-di": "^6.4",
+    "phpunit/phpunit": "^10.0",
+    "psr/container": "^1.0",
+    "psr/log": "^1.1",
+    "robmorgan/phinx": "^0.12.12",
+    "slim/http": "^1.2",
+    "slim/php-view": "^3.2",
+    "slim/psr7": "^1.5",
+    "slim/slim": "^4.5",
+    "tuupola/cors-middleware": "^1.1",
+    "vlucas/phpdotenv": "^5.0"
+  },
+  "require-dev": {
+    "battis/phpunit-pdo": "^0.1",
+    "ext-simplexml": "*",
+    "phpspec/prophecy-phpunit": "^2.0",
+    "symplify/monorepo-builder": "^11.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Battis\\CRUD\\": "packages/crud/src",
+      "Battis\\OAuth2\\Server\\": "packages/oauth2-server/src/",
+      "Battis\\PHPUnit\\Sessions\\": "packages/phpunit-sessions/src/",
+      "Battis\\RESTfulAPI\\": "packages/restful-api/src",
+      "Battis\\UserSession\\": "packages/user-session/src",
+      "Example\\": [
+        "examples/oauth2-server/src",
+        "examples/user-session/src"
+      ]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Battis\\CRUD\\Tests\\": "packages/crud/tests",
+      "Battis\\PHPUnit\\Sessions\\Tests\\": "packages/phpunit-sessions/tests/",
+      "Battis\\UserSession\\Tests\\": "packages/user-session/tests"
+    }
+  },
+  "replace": {
+    "battis/crud": "self.version",
+    "battis/example": "self.version",
+    "battis/oauth2-server": "self.version",
+    "battis/oauth2-server-example": "self.version",
+    "battis/phpunit-sessions": "self.version",
+    "battis/restful-api": "self.version",
+    "battis/user-session": "self.version"
+  },
+  "minimum-stability": "dev"
 }

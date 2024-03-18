@@ -12,12 +12,6 @@
       "Example\\": "src"
     }
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../"
-    }
-  ],
   "require": {
     "battis/user-session": "^0.1",
     "slim/slim": "^4.5",

@@ -13,15 +13,9 @@
       "email": "seth@battis.net"
     }
   ],
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../crud"
-    }
-  ],
   "require": {
     "ext-json": "*",
-    "battis/crud": "dev-main",
+    "battis/crud": "^0.1",
     "battis/user-session": "^0.1",
     "league/oauth2-server": "^8.3",
     "psr/container": "^1.0",
