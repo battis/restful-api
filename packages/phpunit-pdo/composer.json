@@ -19,7 +19,7 @@
     }
   },
   "require-dev": {
-    "battis/data-utilities": ">=1.1.2.1 <2.0"
+    "battis/data-utilities": "^1.1"
   },
   "autoload-dev": {
     "psr-4": {

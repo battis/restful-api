@@ -2,7 +2,6 @@
   "name": "battis/oauth2-server-example",
   "description": "Sample setup for OAuth2 Server",
   "license": "MIT",
-  "minimum-stability": "dev",
   "authors": [
     {
       "name": "Seth Battis",
@@ -19,7 +18,7 @@
     "slim/psr7": "^1.5",
     "slim/http": "^1.2",
     "php-di/php-di": "^6.4",
-    "battis/oauth2-server": "dev-main"
+    "battis/oauth2-server": "^0.1"
   },
   "config": {
     "sort-packages": true
