@@ -16,15 +16,15 @@ jobs:
       matrix:
         package:
           - local_path: 'crud'
-            split_repository: 'crud'
+            split_repository: 'restful-api.crud'
           - local_path: 'oauth2-server'
-            split_repository: 'oauth2-server'
+            split_repository: 'restful-api.oauth2-server'
           - local_path: 'phpunit-pdo'
             split_repository: 'phpunit-pdo'
           - local_path: 'phpunit-sessions'
             split_repository: 'phpunit-sessions'
           - local_path: 'user-session'
-            split_repository: 'user-session'
+            split_repository: 'restful-api.user-session'
     steps:
       - uses: actions/checkout@v2
       # no tag
