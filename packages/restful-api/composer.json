@@ -1,0 +1,44 @@
+{
+  "name": "battis/restful-api",
+  "description": "A template to quickly start writing a RESTful API server",
+  "type": "project",
+  "license": "GPL-3.0",
+  "authors": [
+    {
+      "name": "Seth Battis",
+      "email": "seth@battis.net"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:battis/oauth2-server.git"
+    },
+    {
+      "type": "vcs",
+      "url": "git@github.com:battis/crud.git"
+    }
+  ],
+  "require": {
+    "psr/log": "^1.1",
+    "vlucas/phpdotenv": "^5.0",
+    "php-di/php-di": "^6.2.2",
+    "slim/slim": "^4.5.0",
+    "slim/http": "^1.0.0",
+    "tuupola/cors-middleware": "^1.1",
+    "battis/crud": "dev-main",
+    "battis/oauth2-server": "dev-main",
+    "monolog/monolog": "^2.0",
+    "robmorgan/phinx": "^0.12.12",
+    "illuminate/database": "^8.83"
+  },
+  "autoload": {
+    "psr-4": {
+      "Battis\\RESTfulAPI\\": "src"
+    }
+  },
+  "scripts": {
+      "test": "XDEBUG_MODE=coverage ./tools/phpunit --coverage-text --coverage-html=coverage",
+      "docs": "./tools/phpdocumentor -d src -t docs"
+  }
+}
