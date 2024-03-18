@@ -1,16 +1,42 @@
-<?xml version="1.0"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="vendor/autoload.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.0/phpunit.xsd" cacheDirectory=".cache/phpunit" displayDetailsOnTestsThatTriggerWarnings="true" displayDetailsOnTestsThatTriggerNotices="true">
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+  bootstrap="vendor/autoload.php"
+  cacheDirectory=".cache/phpunit"
+  executionOrder="depends,defects"
+  requireCoverageMetadata="true"
+  beStrictAboutCoverageMetadata="true"
+  beStrictAboutOutputDuringTests="true"
+  failOnRisky="true"
+  failOnWarning="true"
+>
   <testsuites>
-    <testsuite name="Battis\DataUtilities">
-      <directory>tests</directory>
+    <testsuite name="default">
+      <!--<directory>packages/crud/tests</directory>-->
+      <directory>packages/phpunit-pdo/tests</directory>
+      <directory>packages/phpunit-sessions/tests</directory>
+      <directory>packages/user-session/tests</directory>
     </testsuite>
   </testsuites>
-  <coverage includeUncoveredFiles="true">
+
+  <source
+    restrictDeprecations="true"
+    restrictNotices="true"
+    restrictWarnings="true"
+  >
     <include>
-      <directory suffix=".php">src</directory>
+      <directory>packages/crud/src</directory>
+      <directory>packages/oauth2-server/src</directory>
+      <directory>packages/phpunit-pdo/src</directory>
+      <directory>packages/phpunit-sessions/src</directory>
+      <directory>packages/restful-api/src</directory>
+      <directory>packages/user-session/src</directory>
     </include>
+  </source>
+  <coverage includeUncoveredFiles="true">
     <report>
-        <clover outputFile="coverage/clover.xml" />
+      <clover outputFile="coverage/clover.xml" />
     </report>
   </coverage>
 </phpunit>

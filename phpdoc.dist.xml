@@ -6,16 +6,17 @@
   xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/phpDocumentor/phpDocumentor/master/data/xsd/phpdoc.xsd"
 >
   <paths>
-    <output>docs</output>
+    <output>docs/latest</output>
     <cache>.cache/phpdoc</cache>
   </paths>
   <version number="latest">
     <api>
       <source dsn=".">
-        <path>packages/appengine-client/src</path>
-        <path>packages/oauth2/src</path>
-        <path>packages/oneroster/src</path>
-        <path>packages/school/src</path>
+        <path>packages/crud/src</path>
+        <path>packages/oauth2-server/src</path>
+        <path>packages/phpunit-pdo/src</path>
+        <path>packages/phpunit-sessions/src</path>
+        <path>packages/user-session/src</path>
       </source>
     </api>
   </version>

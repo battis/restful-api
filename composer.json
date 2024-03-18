@@ -1,5 +1,6 @@
 {
-  "name": "battis/restful-api",
+  "name": "battis/restful-api-monorepo",
+  "description": "",
   "authors": [
     {
       "name": "Seth Battis",
@@ -7,12 +8,12 @@
     }
   ],
   "require": {
+    "ext-json": "*",
+    "ext-pdo": "*",
     "battis/data-utilities": "^1.1",
     "battis/hydratable": "^0.1",
     "bryanjhv/slim-session": "^4.0",
     "envms/fluentpdo": "^2.2",
-    "ext-json": "*",
-    "ext-pdo": "*",
     "illuminate/database": "^8.83",
     "league/oauth2-server": "^8.3",
     "monolog/monolog": "^2.0",
@@ -30,7 +31,6 @@
     "vlucas/phpdotenv": "^5.0"
   },
   "require-dev": {
-    "battis/phpunit-pdo": "^0.1",
     "ext-simplexml": "*",
     "phpspec/prophecy-phpunit": "^2.0",
     "symplify/monorepo-builder": "^11.2"
@@ -66,5 +66,12 @@
     "battis/phpunit-sessions": "self.version",
     "battis/restful-api": "self.version",
     "battis/user-session": "self.version"
+  },
+  "scripts": {
+    "docs": "docker run --rm -v $(pwd):/data phpdoc/phpdoc:3",
+    "test": "XDEBUG_MODE=coverage ./tools/phpunit --coverage-text --coverage-html=coverage"
+  },
+  "config": {
+    "sort-packages": true
   }
 }

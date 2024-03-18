@@ -26,11 +26,6 @@
       "Battis\\PHPUnit\\PDO\\Tests\\": "tests"
     }
   },
-  "scripts": {
-    "test": "XDEBUG_MODE=coverage ./tools/phpunit --coverage-text --coverage-html=coverage",
-    "docs": "./tools/phpdocumentor -d src -t docs",
-    "analyze": "./tools/phpstan analyze"
-  },
   "config": {
     "allow-plugins": {
       "symfony/flex": false

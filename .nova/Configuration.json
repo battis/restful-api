@@ -146,6 +146,6 @@
     "zlib"
   ],
   "workspace.art_style" : 1,
-  "workspace.color" : 12,
+  "workspace.color" : 9,
   "workspace.name" : "restful-api"
 }

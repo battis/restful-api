@@ -24,8 +24,5 @@
   },
   "config": {
     "sort-packages": true
-  },
-  "scripts": {
-    "docs": "./tools/phpdocumentor -d src -t docs"
   }
 }
