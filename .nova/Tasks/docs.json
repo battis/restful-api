@@ -1,6 +1,6 @@
 {
   "actions" : {
-    "run" : {
+    "build" : {
       "enabled" : true,
       "script" : "composer run docs"
     }
