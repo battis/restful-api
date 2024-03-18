@@ -19,6 +19,8 @@ jobs:
             split_repository: 'crud'
           - local_path: 'oauth2-server'
             split_repository: 'oauth2-server'
+          - local_path: 'phpunit-pdo'
+            split_repository: 'phpunit-pdp'
           - local_path: 'phpunit-sessions'
             split_repository: 'phpunit-sessions'
           - local_path: 'user-session'
